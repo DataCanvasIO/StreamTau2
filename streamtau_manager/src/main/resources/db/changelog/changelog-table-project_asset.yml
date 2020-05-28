@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-project_asset
+      author: jiaoyg
+      comment: Create table project_asset.
+      changes:
+        - createTable:
+            tableName: project_asset
+            columns:
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_asset_project_id
+                    references: project(project_id)
+                    deleteCascade: true
+              - column:
+                  name: asset_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_asset_id
+                    references: asset(asset_id)
+                    deleteCascade: true
+              - column:
+                  name: project_asset_id
+                  type: char(36)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: project_asset
+            columnNames: project_id, asset_id

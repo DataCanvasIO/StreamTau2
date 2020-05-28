@@ -1,0 +1,66 @@
+<!--
+  ~ Copyright 2020 Zetyun
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xsi:schemaLocation="
+          http://maven.apache.org/ASSEMBLY/2.0.0
+          http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+
+    <id>bin</id>
+
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>../conf</directory>
+            <outputDirectory>conf</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+    </fileSets>
+
+    <moduleSets>
+        <moduleSet>
+            <!-- This module set includes artifacts for directly deployment of StreamTau. -->
+
+            <!-- Enable access to all projects in the current multimodule build! -->
+            <useAllReactorProjects>true</useAllReactorProjects>
+
+            <!-- Now, select which projects to include in this module-set. -->
+            <includes>
+                <!-- Sorted in lexicographic order to avoid conflict in introducing new modules. -->
+                <include>com.zetyun.streamtau:streamtau-manager</include>
+            </includes>
+
+            <binaries>
+                <outputDirectory>lib/</outputDirectory>
+                <unpack>false</unpack>
+                <includeDependencies>false</includeDependencies>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+
+</assembly>

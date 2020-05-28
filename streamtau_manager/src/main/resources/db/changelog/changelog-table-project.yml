@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-project
+      author: jiaoyg
+      comment: Create table project.
+      changes:
+        - createTable:
+            tableName: project
+            columns:
+              - column:
+                  name: project_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: project_name
+                  type: char(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: project_description
+                  type: varchar(512)
+              - column:
+                  name: project_type
+                  type: char(63)
+        - loadData:
+            tableName: project
+            encoding: UTF-8
+            quotchar: '"'
+            separator: ','
+            commentLineStartsWith: '#'
+            relativeToChangelogFile: true
+            file: data/init_project.csv
+            columns:
+              - column:
+                  name: project_id
+                  type: numeric
+              - column:
+                  name: project_name
+                  type: string
+              - column:
+                  name: project_description
+                  type: string
+              - column:
+                  name: project_type
+                  type: string

@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-user-project
+      author: jiaoyg
+      comment: Create table user_project.
+      changes:
+        - createTable:
+            tableName: user_project
+            columns:
+              - column:
+                  name: user_id
+                  type: char(63)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_project_id
+                    references: project(project_id)
+                    deleteCascade: true
+              - column:
+                  name: user_project_id
+                  type: char(36)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: user_project
+            columnNames: user_id, project_id

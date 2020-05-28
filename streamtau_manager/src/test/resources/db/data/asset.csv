@@ -1,0 +1,7 @@
+"asset_id","asset_name"    ,"asset_description"  ,"asset_type"      ,"script_format"   ,"script"
+1         ,"localhost"     ,"localhost"          ,"HOST"            ,"text/plain"      ,"localhost"
+2         ,"host 127.0.0.1","A host"             ,"HOST"            ,"text/plain"      ,"127.0.0.1"
+3         ,"Cmd3"          ,"The ""ls"" command.","COMMAND_LINE"    ,"text/plain"      ,"ls"
+4         ,"Cmd4"          ,"The ""ps"" command.","COMMAND_LINE"    ,"text/plain"      ,"ps"
+5         ,"Cmd5"          ,"The ""df"" command.","COMMAND_LINE"    ,"text/plain"      ,"df"
+6         ,"Cmd App"       ,"A cmd app"          ,"COMMAND_LINE_APP","application/yaml","{commandLine: f4e3ddd6-c57c-4fcd-befc-ee7be4157bde, host: 98f46d32-f0e1-4afa-bc0c-873db4c651ab}"

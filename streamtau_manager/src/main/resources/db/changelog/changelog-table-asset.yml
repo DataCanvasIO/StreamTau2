@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-asset
+      author: jiaoyg
+      comment: Create table asset.
+      changes:
+        - createTable:
+            tableName: asset
+            columns:
+              - column:
+                  name: asset_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: asset_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: asset_description
+                  type: varchar(512)
+              - column:
+                  name: asset_type
+                  type: char(63)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: script_format
+                  type: char(31)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: script
+                  type: clob

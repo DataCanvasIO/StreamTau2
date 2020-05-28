@@ -1,0 +1,52 @@
+<!--
+  ~ Copyright 2020 Zetyun
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zetyun.streamtau.manager.db.mapper.UserProjectMapper">
+
+    <select id="findAll" resultType="UserProject">
+        select * from user_project
+    </select>
+
+    <insert id="addToUser" parameterType="UserProject">
+        <selectKey keyProperty="model.userProjectId" resultType="String" order="BEFORE">
+            select uuid()
+        </selectKey>
+        insert into user_project(user_id, project_id, user_project_id)
+        values (#{model.userId}, #{model.projectId}, #{model.userProjectId})
+    </insert>
+
+    <delete id="deleteFromUser" parameterType="UserProject">
+        delete from user_project
+        <where>
+            user_id = #{model.userId}
+            and user_project_id = #{model.userProjectId}
+        </where>
+    </delete>
+
+    <select id="getByIds" parameterType="UserProject" resultType="UserProject">
+        select * from user_project
+        <where>
+            user_id = #{model.userId}
+            <if test="model.projectId != null">and project_id = #{model.projectId},</if>
+            <if test="model.userProjectId != null">and user_project_id = #{model.userProjectId}</if>
+        </where>
+    </select>
+
+</mapper>

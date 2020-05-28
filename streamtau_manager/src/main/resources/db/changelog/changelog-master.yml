@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changelog-table-project.yml
+  - include:
+      file: db/changelog/changelog-table-user_project.yml
+  - include:
+      file: db/changelog/changelog-table-asset.yml
+  - include:
+      file: db/changelog/changelog-table-project_asset.yml

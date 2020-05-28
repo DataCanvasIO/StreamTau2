@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright 2020 Zetyun
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zetyun.streamtau.manager.db.mapper.AssetMapper">
+
+    <select id="findById" parameterType="long" resultType="Asset">
+        select * from asset
+        <where>
+            asset_id = #{assetId}
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="Asset" useGeneratedKeys="true" keyProperty="assetId">
+        insert into asset(
+        <trim suffixOverrides=",">
+            asset_name,
+            <if test="model.assetDescription != null">asset_description,</if>
+            asset_type,
+            script_format,
+            <if test="model.script != null">script</if>
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            #{model.assetName},
+            <if test="model.assetDescription != null">#{model.assetDescription},</if>
+            #{model.assetType},
+            #{model.scriptFormat},
+            <if test="model.script != null">#{model.script}</if>
+        </trim>
+        )
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        delete from asset
+        <where>
+            asset_id = #{assetId}
+        </where>
+    </delete>
+
+    <select id="findAllOfProject" parameterType="long" resultType="Asset">
+        select * from asset a left join project_asset t on a.asset_id = t.asset_id
+        <where>
+            project_id = #{projectId}
+            or project_id = 1
+        </where>
+    </select>
+
+    <select id="findByIdInProject" parameterType="map" resultType="Asset">
+        select * from asset a left join project_asset t on a.asset_id = t.asset_id
+        <where>
+            (t.project_id = #{projectId} or t.project_id = 1)
+            and t.project_asset_id = #{projectAssetId}
+        </where>
+    </select>
+
+    <update id="updateInProject" parameterType="map">
+        update asset
+        <set>
+            <if test="model.assetName != null">asset_name = #{model.assetName},</if>
+            <if test="model.assetDescription != null">asset_description = #{model.assetDescription},</if>
+            <if test="model.script != null">script = #{model.script}</if>
+        </set>
+        <where>
+            exists (
+            select * from project_asset t
+            <where>
+                t.project_id = #{projectId}
+                and t.asset_id = asset.asset_id
+                and t.project_asset_id = #{model.projectAssetId}
+            </where>
+            )
+        </where>
+    </update>
+
+</mapper>

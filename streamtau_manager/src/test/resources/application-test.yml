@@ -1,0 +1,29 @@
+server:
+  port: 13630
+  context-path: /
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  data:
+    rest:
+      base-path: /
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:test
+    username: test
+    password:
+    initialization-mode: always
+    schema: classpath:db/schema-h2.sql
+    data: classpath:db/data-h2.sql
+  h2:
+    console:
+      enabled: true
+  liquibase:
+    enabled: false
+    change-log: 'classpath:/db/changelog/changelog-master.yml'
+mybatis:
+  config-location: 'classpath:/db/mybatis-config.xml'
