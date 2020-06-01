@@ -16,10 +16,15 @@
 
 package com.zetyun.streamtau.manager.pea;
 
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
+import com.fasterxml.jackson.databind.introspect.AnnotatedClassResolver;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.zetyun.streamtau.manager.db.model.ScriptFormat;
@@ -27,6 +32,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PeaParser {
@@ -64,6 +72,24 @@ public class PeaParser {
             .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
     }
 
+    Map<String, Class<?>> getSubtypeClasses(Class<?> clazz) {
+        DeserializationConfig config = mapper.getDeserializationConfig();
+        AnnotationIntrospector annotationIntrospector = config.getAnnotationIntrospector();
+        AnnotatedClass annotatedClass = AnnotatedClassResolver.resolveWithoutSuperTypes(config, clazz);
+        List<NamedType> typeList = annotationIntrospector.findSubtypes(annotatedClass);
+        final Map<String, Class<?>> map = new LinkedHashMap<>(typeList.size());
+        for (NamedType type : typeList) {
+            String name = type.getName();
+            Class<?> cls = type.getType();
+            if (name == null) {
+                AnnotatedClass ac = AnnotatedClassResolver.resolveWithoutSuperTypes(config, cls);
+                name = annotationIntrospector.findTypeName(ac);
+            }
+            map.put(name, cls);
+        }
+        return map;
+    }
+
     public void parse(Object pea, String json) throws IOException {
         mapper.readerForUpdating(pea).readValue(json);
     }
@@ -72,17 +98,20 @@ public class PeaParser {
         return mapper.readValue(json, clazz);
     }
 
-    public String stringAll(Object pea) throws IOException {
-        return mapper.writeValueAsString(pea);
+    public String stringShowAll(Object pea) throws IOException {
+        return mapper.writerWithView(Show.class).writeValueAsString(pea);
     }
 
-    public String stringWithoutHidden(Object pea) throws IOException {
-        return mapper.writerWithView(NoHidden.class).writeValueAsString(pea);
+    public String stringHideSome(Object pea) throws IOException {
+        return mapper.writerWithView(Hide.class).writeValueAsString(pea);
     }
 
-    public static class Hidden {
+    public static class Show {
     }
 
-    public static class NoHidden {
+    public static class Hide {
+    }
+
+    public static class ShowId {
     }
 }

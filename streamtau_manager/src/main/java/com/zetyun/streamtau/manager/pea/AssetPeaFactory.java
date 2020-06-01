@@ -18,13 +18,21 @@ package com.zetyun.streamtau.manager.pea;
 
 import com.zetyun.streamtau.manager.pea.generic.PeaFactory;
 
+import java.util.Map;
+
 public class AssetPeaFactory extends PeaFactory<String, String, AssetPea> {
     public static final AssetPeaFactory INS = new AssetPeaFactory();
 
     private AssetPeaFactory() {
-        for (PeaType type : PeaType.values()) {
-            register(type.name(), type.getSupplier());
+        for (Map.Entry<String, Class<?>> entry : PeaParser.JSON.getSubtypeClasses(AssetPea.class).entrySet()) {
+            register(entry.getKey(), () -> {
+                try {
+                    return (AssetPea) entry.getValue().newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    // Cannot get here.
+                    return null;
+                }
+            });
         }
-
     }
 }

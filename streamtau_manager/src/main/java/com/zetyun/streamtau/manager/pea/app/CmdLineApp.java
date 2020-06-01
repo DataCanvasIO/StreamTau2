@@ -17,13 +17,14 @@
 package com.zetyun.streamtau.manager.pea.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.manager.pea.AssetPeaId;
-import com.zetyun.streamtau.manager.pea.PeaType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@JsonTypeName("CmdLineApp")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CmdLineApp extends App {
@@ -35,9 +36,4 @@ public class CmdLineApp extends App {
     @Getter
     @Setter
     private AssetPeaId host;
-
-    @Override
-    public String getType() {
-        return PeaType.CMD_LINE_APP.name();
-    }
 }

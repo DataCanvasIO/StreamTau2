@@ -17,14 +17,15 @@
 package com.zetyun.streamtau.manager.pea.misc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.PeaType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@JsonTypeName("CmdLine")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CmdLine extends AssetPea {
@@ -32,11 +33,6 @@ public class CmdLine extends AssetPea {
     @Getter
     @Setter
     private String cmd;
-
-    @Override
-    public String getType() {
-        return PeaType.CMD_LINE.name();
-    }
 
     @Override
     public void mapFrom(Asset model) {

@@ -17,14 +17,15 @@
 package com.zetyun.streamtau.manager.pea.plat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.PeaType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@JsonTypeName("HostPlat")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class HostPlat extends AssetPea {
@@ -32,11 +33,6 @@ public class HostPlat extends AssetPea {
     @Getter
     @Setter
     private String hostname;
-
-    @Override
-    public String getType() {
-        return PeaType.HOST_PLAT.name();
-    }
 
     @Override
     public void mapFrom(Asset model) {

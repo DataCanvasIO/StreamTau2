@@ -30,6 +30,6 @@ public abstract class JsonAssetPea extends AssetPea {
     @Override
     public void mapTo(Asset model) throws IOException {
         PeaParser parser = PeaParser.get(model.getScriptFormat());
-        model.setScript(parser.stringWithoutHidden(this));
+        model.setScript(parser.stringHideSome(this));
     }
 }

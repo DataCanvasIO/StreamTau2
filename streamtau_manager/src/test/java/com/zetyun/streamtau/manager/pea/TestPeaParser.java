@@ -19,22 +19,19 @@ package com.zetyun.streamtau.manager.pea;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.junit.Test;
 
-import java.util.function.Supplier;
+import java.util.Map;
 
-@RequiredArgsConstructor
-public enum PeaType {
-    // Misc
-    CMD_LINE(CmdLine::new),
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    // Platform
-    HOST_PLAT(HostPlat::new),
-
-    // App
-    CMD_LINE_APP(CmdLineApp::new);
-
-    @Getter
-    private final Supplier<AssetPea> supplier;
+public class TestPeaParser {
+    @Test
+    public void testGetSubtypeClasses() {
+        Map<String, Class<?>> map = PeaParser.JSON.getSubtypeClasses(AssetPea.class);
+        assertThat(map.get("HostPlat"), is(HostPlat.class));
+        assertThat(map.get("CmdLine"), is(CmdLine.class));
+        assertThat(map.get("CmdLineApp"), is(CmdLineApp.class));
+    }
 }

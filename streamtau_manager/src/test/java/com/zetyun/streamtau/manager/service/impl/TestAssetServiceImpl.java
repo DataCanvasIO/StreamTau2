@@ -22,7 +22,6 @@ import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.ProjectAsset;
 import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.PeaType;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
 import com.zetyun.streamtau.manager.service.AssetService;
@@ -76,7 +75,7 @@ public class TestAssetServiceImpl {
         Asset asset = new Asset();
         asset.setAssetId(1L);
         asset.setProjectAssetId("AAA");
-        asset.setAssetType(PeaType.CMD_LINE.name());
+        asset.setAssetType("CmdLine");
         asset.setAssetName("1st");
         asset.setAssetDescription("The first asset.");
         asset.setScriptFormat(ScriptFormat.TEXT_PLAIN);
