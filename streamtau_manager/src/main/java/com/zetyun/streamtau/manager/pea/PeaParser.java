@@ -112,6 +112,6 @@ public class PeaParser {
     public static class Hide {
     }
 
-    public static class ShowId {
+    public static class ShowIdType {
     }
 }

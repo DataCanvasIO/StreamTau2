@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.pea;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -41,23 +42,24 @@ import java.io.IOException;
     // app
     @JsonSubTypes.Type(CmdLineApp.class),
 })
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ToString
 @EqualsAndHashCode
 public abstract class AssetPea implements Pea<String, String> {
-    @JsonView({PeaParser.ShowId.class})
+    @JsonView({PeaParser.ShowIdType.class})
     @Getter
     @Setter
     private String id;
-    @JsonView({PeaParser.Show.class})
+    @JsonView({PeaParser.Show.class, PeaParser.ShowIdType.class})
     @Getter
     @Setter
     private String name;
-    @JsonView({PeaParser.Show.class})
+    @JsonView({PeaParser.Show.class, PeaParser.ShowIdType.class})
     @Getter
     @Setter
     private String description;
 
-    @JsonView({PeaParser.Show.class})
+    @JsonView({PeaParser.ShowIdType.class})
     public String getType() {
         JsonTypeName name = getClass().getAnnotation(JsonTypeName.class);
         return name.value();

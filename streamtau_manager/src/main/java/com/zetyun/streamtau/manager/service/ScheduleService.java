@@ -14,32 +14,10 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.generic;
+package com.zetyun.streamtau.manager.service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class MapPod<I, T, P extends Pea<I, T>> implements Pod<I, T, P> {
-    protected final Map<I, P> peaMap;
-
-    public MapPod() {
-        this(new HashMap<>());
-    }
-
-    public MapPod(Map<I, P> peaMap) {
-        this.peaMap = peaMap;
-    }
-
-    @Override
-    public P load(I id) {
-        P pea = peaMap.get(id);
-        pea.setId(id);
-        return pea;
-    }
-
-    @Override
-    public void save(P pea) throws IOException {
-        peaMap.put(pea.getId(), pea);
-    }
+public interface ScheduleService {
+    void schedule() throws IOException;
 }

@@ -38,7 +38,6 @@ import java.util.Collections;
 
 import static com.zetyun.streamtau.manager.helper.Utils.errorCode;
 import static com.zetyun.streamtau.manager.helper.Utils.success;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.mockito.AdditionalAnswers.returnsSecondArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -78,7 +77,6 @@ public class TestAssetController {
             .andExpect(jsonPath("$.data.size()").value(1))
             .andExpect(jsonPath("$.data[0].id").value("AAA"))
             .andExpect(jsonPath("$.data[0].name").value("testListAll"))
-            .andExpect(jsonPath("$.data[0].description").value(nullValue()))
             .andExpect(jsonPath("$.data[0].type").value("CmdLine"))
             .andExpect(jsonPath("$.data[0].cmd").value("ls"));
         verify(assetService, times(1)).listAll("ABC");
@@ -100,7 +98,6 @@ public class TestAssetController {
             .andExpect(success())
             .andExpect(jsonPath("$.data.id").value("AAA"))
             .andExpect(jsonPath("$.data.name").value("testCreate"))
-            .andExpect(jsonPath("$.data.description").value(nullValue()))
             .andExpect(jsonPath("$.data.type").value("HostPlat"))
             .andExpect(jsonPath("$.data.hostname").value("localhost"));
         verify(assetService, times(1)).create(eq("ABC"), any(AssetPea.class));
@@ -130,7 +127,6 @@ public class TestAssetController {
             .andExpect(success())
             .andExpect(jsonPath("$.data.id").value("AAA"))
             .andExpect(jsonPath("$.data.name").value("testUpdate"))
-            .andExpect(jsonPath("$.data.description").value(nullValue()))
             .andExpect(jsonPath("$.data.type").value("HostPlat"))
             .andExpect(jsonPath("$.data.hostname").value("localhost"));
         verify(assetService, times(1)).update(eq("ABC"), any(AssetPea.class));

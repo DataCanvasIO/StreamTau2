@@ -39,5 +39,6 @@
         <mapper resource="db/mappers/UserProjectMapper.xml"/>
         <mapper resource="db/mappers/AssetMapper.xml"/>
         <mapper resource="db/mappers/ProjectAssetMapper.xml"/>
+        <mapper resource="db/mappers/JobMapper.xml"/>
     </mappers>
 </configuration>

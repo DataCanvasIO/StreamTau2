@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.app;
+package com.zetyun.streamtau.manager.db.model;
 
-import com.zetyun.streamtau.manager.pea.JsonAssetPea;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public abstract class App extends JsonAssetPea {
+public enum JobStatus {
+    WAITING,
+    READY,
+    SUBMITTED,
+    FINISHED,
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea;
+package com.zetyun.streamtau.manager.service;
 
-import com.zetyun.streamtau.manager.pea.generic.PeaId;
-import lombok.Getter;
+import com.zetyun.streamtau.manager.service.dto.JobDto;
 
-public class AssetPeaId implements PeaId<String, String, AssetPea> {
-    @Getter
-    private String id;
+import java.io.IOException;
+
+public interface JobService {
+    JobDto create(String userProjectId, JobDto dto) throws IOException;
 }

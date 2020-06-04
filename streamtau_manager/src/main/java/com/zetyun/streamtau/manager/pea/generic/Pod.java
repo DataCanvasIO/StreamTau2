@@ -22,4 +22,12 @@ public interface Pod<I, T, P extends Pea<I, T>> {
     P load(I id) throws IOException;
 
     void save(P pea) throws IOException;
+
+    default void transfer(I id, Pod<I, T, P> pod) throws IOException {
+        P pea = load(id);
+        pod.save(pea);
+        for (I cid : pea.children()) {
+            transfer(cid, pod);
+        }
+    }
 }

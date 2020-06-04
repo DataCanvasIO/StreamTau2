@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service;
+package com.zetyun.streamtau.manager.db.mapper;
 
-import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.JobDefPod;
+import com.zetyun.streamtau.manager.db.model.Job;
+import com.zetyun.streamtau.manager.db.model.JobStatus;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import java.io.IOException;
 import java.util.List;
 
-public interface AssetService {
-    List<AssetPea> listAll(String userProjectId) throws IOException;
+@Mapper
+public interface JobMapper {
+    Job findById(@Param("jobId") Long jobId);
 
-    AssetPea create(String userProjectId, AssetPea pea) throws IOException;
+    List<Job> findJobOfStatus(@Param("jobStatus") JobStatus jobStatus);
 
-    AssetPea update(String userProjectId, AssetPea pea) throws IOException;
+    int insert(@Param("model") Job model);
 
-    void delete(String userProjectId, String projectAssetId);
-
-    JobDefPod synthesizeJobDef(String userProjectId, String projectAssetId) throws IOException;
+    int updateJobStatus(@Param("jobId") Long jobId, @Param("jobStatus") JobStatus jobStatus);
 }

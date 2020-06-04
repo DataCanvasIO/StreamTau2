@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service;
+package com.zetyun.streamtau.manager.runner;
 
-import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.JobDefPod;
+import com.zetyun.streamtau.manager.db.model.Job;
 
 import java.io.IOException;
-import java.util.List;
 
-public interface AssetService {
-    List<AssetPea> listAll(String userProjectId) throws IOException;
-
-    AssetPea create(String userProjectId, AssetPea pea) throws IOException;
-
-    AssetPea update(String userProjectId, AssetPea pea) throws IOException;
-
-    void delete(String userProjectId, String projectAssetId);
-
-    JobDefPod synthesizeJobDef(String userProjectId, String projectAssetId) throws IOException;
+public interface Runner {
+    void run(Job job, Runnable onFinish) throws IOException;
 }

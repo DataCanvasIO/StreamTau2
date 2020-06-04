@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changelog-table-asset.yml
   - include:
       file: db/changelog/changelog-table-project_asset.yml
+  - include:
+      file: db/changelog/changelog-table-job.yml

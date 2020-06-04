@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-job
+      author: jiaoyg
+      comment: Create table job.
+      changes:
+        - createTable:
+            tableName: job
+            columns:
+              - column:
+                  name: job_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: job_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_job_project_id
+                    references: project(project_id)
+                    deleteCascade: true
+              - column:
+                  name: app_id
+                  type: char(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: app_type
+                  type: char(63)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: job_definition
+                  type: clob
+              - column:
+                  name: job_status
+                  type: char(15)
+                  constraints:
+                    nullable: false

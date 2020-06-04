@@ -19,11 +19,11 @@ package com.zetyun.streamtau.manager.pea;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.pea.generic.Pod;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AssetPod implements Pod<String, String, AssetPea> {
     private final AssetMapper assetMapper;
     private final Long projectId;

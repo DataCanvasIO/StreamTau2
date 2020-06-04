@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.generic;
+package com.zetyun.streamtau.manager.db.model;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import lombok.Data;
 
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface PeaId {
+@Data
+public class Job {
+    private Long jobId;
+    private String jobName;
+    private Long projectId;
+    private String appId;
+    private String appType;
+    private Integer version;
+    private String jobDefinition;
+    private JobStatus jobStatus;
 }

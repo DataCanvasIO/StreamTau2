@@ -65,6 +65,9 @@
         <log4j2.version>2.10.0</log4j2.version>
         <logstash.version>6.2</logstash.version>
 
+        <!-- jetbrains -->
+        <jetbrains-annotations.version>19.0.0</jetbrains-annotations.version>
+
         <!-- plugins -->
         <maven-checkstyle.version>3.1.1</maven-checkstyle.version>
         <checkstyle.version>8.30</checkstyle.version>
@@ -246,6 +249,13 @@
                 <version>${logstash.version}</version>
             </dependency>
 
+            <!-- jetbrains -->
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${jetbrains-annotations.version}</version>
+            </dependency>
+
             <!-- this project -->
         </dependencies>
     </dependencyManagement>
@@ -295,6 +305,13 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- jetbrains -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

@@ -22,6 +22,7 @@ import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.ProjectAsset;
 import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
 import com.zetyun.streamtau.manager.service.AssetService;
@@ -141,5 +142,37 @@ public class TestAssetServiceImpl {
         assetService.delete("ABC", "AAA");
         verify(projectService, times(1)).mapProjectId("ABC");
         verify(projectAssetMapper, times(1)).deleteFromProject(any(ProjectAsset.class));
+    }
+
+    @Test
+    public void testSynthesizeJobDef() throws IOException {
+        when(projectService.mapProjectId(anyString())).thenReturn(2L);
+        Asset app = new Asset();
+        app.setAssetId(1L);
+        app.setProjectAssetId("APP");
+        app.setAssetName("app");
+        app.setAssetType("CmdLineApp");
+        app.setScriptFormat(ScriptFormat.APPLICATION_YAML);
+        app.setScript("{host: LH, cmdLine: CMD}");
+        when(assetMapper.findByIdInProject(2L, "APP")).thenReturn(app);
+        Asset cmd = new Asset();
+        cmd.setAssetId(2L);
+        cmd.setProjectAssetId("CMD");
+        cmd.setAssetName("cmd");
+        cmd.setAssetType("CmdLine");
+        cmd.setScript("ls -l");
+        when(assetMapper.findByIdInProject(2L, "CMD")).thenReturn(cmd);
+        Asset lh = new Asset();
+        lh.setAssetId(3L);
+        lh.setProjectAssetId("LH");
+        lh.setAssetName("lh'");
+        lh.setAssetType("HostPlat");
+        lh.setScript("localhost");
+        when(assetMapper.findByIdInProject(2L, "LH")).thenReturn(lh);
+        JobDefPod jobDefPod = assetService.synthesizeJobDef("PRJ", "APP");
+        assertThat(jobDefPod.toJobDefinition(), is("{\"appId\":\"APP\",\"map\":{"
+            + "\"APP\":{\"type\":\"CmdLineApp\",\"name\":\"app\",\"cmdLine\":\"CMD\",\"host\":\"LH\"},"
+            + "\"CMD\":{\"type\":\"CmdLine\",\"name\":\"cmd\",\"cmd\":\"ls -l\"},"
+            + "\"LH\":{\"type\":\"HostPlat\",\"name\":\"lh'\",\"hostname\":\"localhost\"}}}"));
     }
 }

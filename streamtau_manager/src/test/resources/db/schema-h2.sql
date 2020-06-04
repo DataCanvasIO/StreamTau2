@@ -1,3 +1,4 @@
+drop table if exists job;
 drop table if exists project_asset;
 drop table if exists asset;
 drop table if exists user_project;
@@ -34,4 +35,16 @@ create table project_asset (
     primary key (project_id, asset_id),
     foreign key (project_id) references project(project_id) on delete cascade,
     foreign key (asset_id) references asset(asset_id) on delete cascade
+    );
+
+create table job (
+    job_id long primary key auto_increment,
+    job_name char(255) not null,
+    project_id long not null,
+    app_id char(36) not null,
+    app_type char(63) not null,
+    version int not null,
+    job_definition clob,
+    job_status char(15) not null,
+    foreign key (project_id) references project(project_id) on delete cascade
     );

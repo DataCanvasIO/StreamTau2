@@ -23,6 +23,7 @@ import com.zetyun.streamtau.manager.db.model.ProjectAsset;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.AssetPod;
+import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +81,14 @@ public class AssetServiceImpl implements AssetService {
         if (projectAssetMapper.deleteFromProject(projectAsset) == 0) {
             throw new StreamTauException("10002", projectAssetId);
         }
+    }
+
+    @Override
+    public JobDefPod synthesizeJobDef(String userProjectId, String projectAssetId) throws IOException {
+        Long projectId = projectService.mapProjectId(userProjectId);
+        AssetPod assetPod = new AssetPod(assetMapper, projectId);
+        JobDefPod jobDefPod = new JobDefPod(projectAssetId);
+        assetPod.transfer(projectAssetId, jobDefPod);
+        return jobDefPod;
     }
 }

@@ -16,10 +16,32 @@
 
 package com.zetyun.streamtau.manager.pea.generic;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 public interface Pea<I, T> {
     I getId();
 
     void setId(I id);
 
     T getType();
+
+    @SuppressWarnings("unchecked")
+    default Collection<I> children() {
+        Set<I> set = new HashSet<>();
+        Field[] fields = getClass().getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(PeaId.class)) {
+                    field.setAccessible(true);
+                    set.add((I) field.get(this));
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("This cannot happen.");
+        }
+        return set;
+    }
 }

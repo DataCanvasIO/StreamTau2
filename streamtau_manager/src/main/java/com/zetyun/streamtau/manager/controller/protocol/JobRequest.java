@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.generic;
+package com.zetyun.streamtau.manager.controller.protocol;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.zetyun.streamtau.manager.db.model.JobStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface PeaId {
+@Data
+public class JobRequest {
+    @Schema(description = "The name of the job.", example = "New Job")
+    private String name;
+    @Schema(description = "The id of the app.", required = true, example = "8eeac63d-05c0-4f98-b38b-851db722f640")
+    private String appId;
+    @Schema(description = "The initial status of the job.", example = "READY")
+    private JobStatus jobStatus;
 }
