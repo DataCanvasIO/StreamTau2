@@ -22,10 +22,20 @@ import lombok.Data;
 
 @Data
 public class JobRequest {
-    @Schema(description = "The name of the job.", example = "New Job")
+    @Schema(
+        description = "The name of the job.",
+        example = "New Job"
+    )
     private String name;
-    @Schema(description = "The id of the app.", required = true, example = "8eeac63d-05c0-4f98-b38b-851db722f640")
+    @Schema(
+        description = "The id of the app.",
+        required = true,
+        example = "8eeac63d-05c0-4f98-b38b-851db722f640"
+    )
     private String appId;
-    @Schema(description = "The initial status of the job.", example = "READY")
+    @Schema(
+        description = "The initial status of the job.",
+        example = "READY"
+    )
     private JobStatus jobStatus;
 }

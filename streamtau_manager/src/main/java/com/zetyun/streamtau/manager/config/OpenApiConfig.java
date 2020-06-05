@@ -16,21 +16,14 @@
 
 package com.zetyun.streamtau.manager.config;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import org.springframework.context.annotation.Bean;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@OpenAPIDefinition(info = @Info(
+    title = "StreamTau Manager API",
+    description = "This is StreamTau Manager API using springdoc-openapi and OpenAPI 3."
+))
 public class OpenApiConfig {
-    @Bean
-    public OpenAPI api() {
-        return new OpenAPI()
-            .components(new Components())
-            .info(new Info()
-                .title("StreamTau Manager API")
-                .description("This is StreamTau Manager API using springdoc-openapi and OpenAPI 3.")
-            );
-    }
 }

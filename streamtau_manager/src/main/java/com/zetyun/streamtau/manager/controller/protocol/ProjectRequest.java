@@ -21,10 +21,20 @@ import lombok.Data;
 
 @Data
 public class ProjectRequest {
-    @Schema(description = "The name of the project.", example = "My project", required = true)
+    @Schema(
+        description = "The name of the project.",
+        required = true,
+        example = "My project"
+    )
     private String name;
-    @Schema(description = "The description of the project.", example = "blah blah ...")
+    @Schema(
+        description = "The description of the project.",
+        example = "blah blah ..."
+    )
     private String description;
-    @Schema(description = "The type of the project.", example = "CONTAINER")
+    @Schema(
+        description = "The type of the project.",
+        example = "CONTAINER"
+    )
     private String type;
 }

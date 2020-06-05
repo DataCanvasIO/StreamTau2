@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.manager.pea.JsonAssetPea;
 import com.zetyun.streamtau.manager.pea.generic.PeaId;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,11 +30,19 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CmdLineApp extends JsonAssetPea {
+    @Schema(
+        description = "The id of the CmdLine asset to run.",
+        example = "01B2752D-28D6-4B1C-80BD-4B7A0531539C"
+    )
     @JsonProperty("cmdLine")
     @Getter
     @Setter
     @PeaId
     private String cmdLine;
+    @Schema(
+        description = "The id of the host to run on.",
+        example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
+    )
     @JsonProperty("host")
     @Getter
     @Setter
