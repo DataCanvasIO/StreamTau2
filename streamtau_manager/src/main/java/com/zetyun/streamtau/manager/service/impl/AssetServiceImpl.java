@@ -54,6 +54,13 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    public AssetPea findById(String userProjectId, String projectAssetId) throws IOException {
+        Long projectId = projectService.mapProjectId(userProjectId);
+        Asset model = assetMapper.findByIdInProject(projectId, projectAssetId);
+        return AssetPod.fromModel(model);
+    }
+
+    @Override
     public AssetPea create(String userProjectId, AssetPea pea) throws IOException {
         Asset model = AssetPod.toModel(pea);
         assetMapper.insert(model);

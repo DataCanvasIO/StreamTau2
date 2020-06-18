@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service;
+package com.zetyun.streamtau.manager.service.impl;
 
+import com.zetyun.streamtau.manager.service.StorageService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Paths;
 
-public interface StorageService {
-    String createFile();
+public class LocalFileStorageService implements StorageService {
+    @Override
+    public String createFile() {
+        // TODO
+        return null;
+    }
 
-    void saveFile(String uri, MultipartFile file) throws IOException;
+    @Override
+    public void saveFile(String uri, MultipartFile file) throws IOException {
+        file.transferTo(Paths.get(URI.create(uri)));
+    }
 }

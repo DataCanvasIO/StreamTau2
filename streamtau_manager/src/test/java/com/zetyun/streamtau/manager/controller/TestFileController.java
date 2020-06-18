@@ -18,9 +18,9 @@ package com.zetyun.streamtau.manager.controller;
 
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
-import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.service.AssetService;
+import com.zetyun.streamtau.manager.service.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.zetyun.streamtau.manager.helper.Utils.success;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,37 +53,28 @@ public class TestFileController {
     private MockMvc mvc;
     @MockBean
     private AssetService assetService;
+    @MockBean
+    private StorageService storageService;
 
     @Test
     public void testUpload() throws Exception {
+        when(assetService.findById(eq("ABC"), eq("AAA"))).then(args -> {
+            JarFile pea = new JarFile();
+            pea.setId("AAA");
+            pea.setName("testJar");
+            pea.setDescription("A jar file.");
+            return pea;
+        });
+        when(storageService.createFile()).thenReturn("file://abc");
         MockMultipartFile file = new MockMultipartFile(
             "file",
             "test.jar",
             "application/java-archive",
             (byte[]) null
         );
-        MockMultipartFile name = new MockMultipartFile(
-            "name",
-            null,
-            "text/plain",
-            "testJar".getBytes()
-        );
-        MockMultipartFile desc = new MockMultipartFile(
-            "description",
-            null,
-            "text/plain",
-            "A jar file.".getBytes()
-        );
-        when(assetService.create(eq("ABC"), any(AssetPea.class))).then(args -> {
-            AssetPea pea = args.getArgument(1);
-            pea.setId("AAA");
-            return pea;
-        });
         mvc.perform(
-            multipart("/projects/ABC/files")
+            multipart("/projects/ABC/assets/AAA/upload")
                 .file(file)
-                .file(name)
-                .file(desc)
         )
             .andDo(print())
             .andExpect(success())
@@ -90,7 +82,10 @@ public class TestFileController {
             .andExpect(jsonPath("$.data.name").value("testJar"))
             .andExpect(jsonPath("$.data.description").value("A jar file."))
             .andExpect(jsonPath("$.data.type").value("JarFile"));
-        verify(assetService, times(1)).create(eq("ABC"), any(JarFile.class));
+        verify(assetService, times(1)).findById(eq("ABC"), eq("AAA"));
+        verify(assetService, times(1)).update(eq("ABC"), any(JarFile.class));
+        verify(storageService, times(1)).createFile();
+        verify(storageService, times(1)).saveFile(eq("file://abc"), any(MultipartFile.class));
     }
 
     // Mock application

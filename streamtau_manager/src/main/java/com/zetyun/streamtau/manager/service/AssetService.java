@@ -25,6 +25,8 @@ import java.util.List;
 public interface AssetService {
     List<AssetPea> listAll(String userProjectId) throws IOException;
 
+    AssetPea findById(String userProjectId, String projectAssetId) throws IOException;
+
     AssetPea create(String userProjectId, AssetPea pea) throws IOException;
 
     AssetPea update(String userProjectId, AssetPea pea) throws IOException;

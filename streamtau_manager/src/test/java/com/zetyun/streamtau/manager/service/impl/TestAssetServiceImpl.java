@@ -46,7 +46,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -57,9 +56,10 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {AssetServiceImpl.class})
 public class TestAssetServiceImpl {
+    private static CmdLine cmdLinePea;
+    private static Asset cmdLineAsset;
     @Autowired
     private AssetService assetService;
-
     @MockBean
     private AssetMapper assetMapper;
     @MockBean
@@ -69,19 +69,47 @@ public class TestAssetServiceImpl {
 
     @BeforeClass
     public static void setupClass() {
+        cmdLinePea = new CmdLine();
+        cmdLinePea.setId("AAA");
+        cmdLinePea.setName("1st");
+        cmdLinePea.setDescription("The first asset.");
+        cmdLinePea.setCmd("ls");
+        cmdLineAsset = new Asset();
+        cmdLineAsset.setAssetId(1L);
+        cmdLineAsset.setProjectAssetId("AAA");
+        cmdLineAsset.setAssetType("CmdLine");
+        cmdLineAsset.setAssetName("1st");
+        cmdLineAsset.setAssetDescription("The first asset.");
+        cmdLineAsset.setScriptFormat(ScriptFormat.TEXT_PLAIN);
+        cmdLineAsset.setScript("ls");
     }
 
     @Before
     public void setup() {
-        Asset asset = new Asset();
-        asset.setAssetId(1L);
-        asset.setProjectAssetId("AAA");
-        asset.setAssetType("CmdLine");
-        asset.setAssetName("1st");
-        asset.setAssetDescription("The first asset.");
-        asset.setScriptFormat(ScriptFormat.TEXT_PLAIN);
-        asset.setScript("ls");
-        when(assetMapper.findAllOfProject(anyLong())).thenReturn(Collections.singletonList(asset));
+        when(assetMapper.findAllOfProject(1L)).thenReturn(Collections.singletonList(cmdLineAsset));
+        when(assetMapper.findByIdInProject(1L, "AAA")).thenReturn(cmdLineAsset);
+        when(projectService.mapProjectId("ABC")).thenReturn(1L);
+    }
+
+    @Test
+    public void testListAll() throws IOException {
+        List<AssetPea> peas = assetService.listAll("ABC");
+        assertThat(peas.size(), is(1));
+        assertThat(peas, hasItem(is(cmdLinePea)));
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetMapper, times(1)).findAllOfProject(1L);
+    }
+
+    @Test
+    public void testFindById() throws IOException {
+        AssetPea pea = assetService.findById("ABC", "AAA");
+        assertThat(pea, is(cmdLinePea));
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetMapper, times(1)).findByIdInProject(1L, "AAA");
+    }
+
+    @Test
+    public void testCreate() throws IOException {
         when(assetMapper.insert(any(Asset.class))).then(args -> {
             Asset model = args.getArgument(0);
             model.setAssetId(2L);
@@ -92,27 +120,6 @@ public class TestAssetServiceImpl {
             model.setProjectAssetId("BBB");
             return 1;
         });
-        when(projectAssetMapper.deleteFromProject(any(ProjectAsset.class))).thenReturn(1);
-        when(assetMapper.updateInProject(anyLong(), any(Asset.class))).thenReturn(1);
-        when(projectService.mapProjectId(anyString())).thenReturn(1L);
-    }
-
-    @Test
-    public void testListAll() throws IOException {
-        List<AssetPea> peas = assetService.listAll("ABC");
-        assertThat(peas.size(), is(1));
-        CmdLine pea = new CmdLine();
-        pea.setId("AAA");
-        pea.setName("1st");
-        pea.setDescription("The first asset.");
-        pea.setCmd("ls");
-        assertThat(peas, hasItem(is(pea)));
-        verify(projectService, times(1)).mapProjectId("ABC");
-        verify(assetMapper, times(1)).findAllOfProject(1L);
-    }
-
-    @Test
-    public void testCreate() throws IOException {
         AssetPea pea = new HostPlat();
         pea.setName("forCreate");
         pea = assetService.create("ABC", pea);
@@ -126,6 +133,7 @@ public class TestAssetServiceImpl {
 
     @Test
     public void testUpdate() throws IOException {
+        when(assetMapper.updateInProject(eq(1L), any(Asset.class))).thenReturn(1);
         AssetPea pea = new CmdLine();
         pea.setId("AAA");
         pea.setName("forUpdate");
@@ -139,6 +147,7 @@ public class TestAssetServiceImpl {
 
     @Test
     public void testDelete() {
+        when(projectAssetMapper.deleteFromProject(any(ProjectAsset.class))).thenReturn(1);
         assetService.delete("ABC", "AAA");
         verify(projectService, times(1)).mapProjectId("ABC");
         verify(projectAssetMapper, times(1)).deleteFromProject(any(ProjectAsset.class));
