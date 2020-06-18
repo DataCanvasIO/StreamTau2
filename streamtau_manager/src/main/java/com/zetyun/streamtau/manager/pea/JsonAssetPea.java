@@ -17,18 +17,19 @@
 package com.zetyun.streamtau.manager.pea;
 
 import com.zetyun.streamtau.manager.db.model.Asset;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
 public abstract class JsonAssetPea extends AssetPea {
     @Override
-    public void mapFrom(Asset model) throws IOException {
+    public void mapFrom(@NotNull Asset model) throws IOException {
         PeaParser parser = PeaParser.get(model.getScriptFormat());
         parser.parse(this, model.getScript());
     }
 
     @Override
-    public void mapTo(Asset model) throws IOException {
+    public void mapTo(@NotNull Asset model) throws IOException {
         PeaParser parser = PeaParser.get(model.getScriptFormat());
         model.setScript(parser.stringHideSome(this));
     }

@@ -25,6 +25,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 @JsonTypeName("HostPlat")
 @ToString(callSuper = true)
@@ -40,12 +41,12 @@ public class HostPlat extends AssetPea {
     private String hostname;
 
     @Override
-    public void mapFrom(Asset model) {
+    public void mapFrom(@NotNull Asset model) {
         hostname = model.getScript();
     }
 
     @Override
-    public void mapTo(Asset model) {
+    public void mapTo(@NotNull Asset model) {
         model.setScript(hostname);
     }
 }

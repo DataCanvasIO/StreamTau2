@@ -16,8 +16,10 @@
 
 package com.zetyun.streamtau.manager.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.manager.controller.mapper.JobRequestMapper;
 import com.zetyun.streamtau.manager.controller.protocol.JobRequest;
+import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.service.JobService;
 import com.zetyun.streamtau.manager.service.dto.JobDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +37,7 @@ import java.io.IOException;
 @Tag(name = "Job APIs")
 @RestController
 @RequestMapping("/projects/{projectId}/jobs")
+@JsonView({PeaParser.Public.class})
 public class JobController {
     @Autowired
     private JobService jobService;

@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
+import com.zetyun.streamtau.manager.pea.file.JarFile;
+import com.zetyun.streamtau.manager.pea.file.TxtFile;
 import com.zetyun.streamtau.manager.pea.generic.Pea;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
@@ -46,10 +48,13 @@ import java.io.IOException;
 @JsonSubTypes({
     // Misc
     @JsonSubTypes.Type(value = CmdLine.class, name = "CmdLine"),
-    // plat
+    // Plat
     @JsonSubTypes.Type(HostPlat.class),
-    // app
+    // App
     @JsonSubTypes.Type(CmdLineApp.class),
+    // File
+    @JsonSubTypes.Type(JarFile.class),
+    @JsonSubTypes.Type(TxtFile.class),
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ToString
@@ -59,23 +64,26 @@ public abstract class AssetPea implements Pea<String, String> {
         description = "The id of the asset in the project.",
         example = "EFF8318B-91BE-4325-9F1D-4EC192D43B82"
     )
-    @JsonView({PeaParser.ShowIdType.class})
+    @JsonView({PeaParser.Public.class})
     @Getter
     @Setter
     private String id;
     @Schema(description = "The name of the asset.", example = "Some name", required = true)
-    @JsonView({PeaParser.Show.class, PeaParser.ShowIdType.class})
+    @JsonView({PeaParser.Show.class, PeaParser.Public.class})
     @Getter
     @Setter
     private String name;
     @Schema(description = "The description of the asset.", example = "blah blah...")
-    @JsonView({PeaParser.Show.class, PeaParser.ShowIdType.class})
+    @JsonView({PeaParser.Show.class, PeaParser.Public.class})
     @Getter
     @Setter
     private String description;
 
+    // In controller response, the `type` from the class of pea is missing, so make it explicit.
+    // However, for internal use, the `type` is generated from the class of pea, jackson will
+    // generate an additional `type` field if this field is seen.
     @Schema(description = "The type of the asset, determines the other fields.")
-    @JsonView({PeaParser.ShowIdType.class})
+    @JsonView({PeaParser.Public.class})
     public String getType() {
         JsonTypeName name = getClass().getAnnotation(JsonTypeName.class);
         return name.value();

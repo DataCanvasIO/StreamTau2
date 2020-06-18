@@ -16,7 +16,9 @@
 
 package com.zetyun.streamtau.manager.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.service.AssetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,6 +39,7 @@ import java.util.List;
 @Tag(name = "Asset APIs")
 @RestController
 @RequestMapping("/projects/{projectId}/assets")
+@JsonView({PeaParser.Public.class})
 public class AssetController {
     @Autowired
     private AssetService assetService;

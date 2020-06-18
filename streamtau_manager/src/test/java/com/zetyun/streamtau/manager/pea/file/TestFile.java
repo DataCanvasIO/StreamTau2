@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.config;
+package com.zetyun.streamtau.manager.pea.file;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
-import org.springframework.context.annotation.Configuration;
+import org.junit.Test;
 
-@Configuration
-@OpenAPIDefinition(
-    info = @Info(
-        title = "StreamTau Manager API",
-        description = "This is StreamTau Manager API using springdoc-openapi and OpenAPI 3."
-    )
-)
-public class OpenApiConfig {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class TestFile {
+    @Test
+    public void testTypeFromName() {
+        assertThat(File.typeFromName("a.txt"), is("TxtFile"));
+        assertThat(File.typeFromName("b.jar"), is("JarFile"));
+    }
 }
