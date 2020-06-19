@@ -37,8 +37,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.Locale;
 
-import static com.zetyun.streamtau.manager.helper.Utils.errorCode;
-import static com.zetyun.streamtau.manager.helper.Utils.success;
+import static com.zetyun.streamtau.manager.helper.WebMvcTestUtils.errorCode;
+import static com.zetyun.streamtau.manager.helper.WebMvcTestUtils.success;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;

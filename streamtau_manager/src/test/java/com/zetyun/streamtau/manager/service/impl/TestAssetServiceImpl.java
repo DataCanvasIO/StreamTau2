@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJsonCompact;
+import static com.zetyun.streamtau.manager.helper.ResourceUtils.readObjectFromCsv;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -58,6 +60,7 @@ import static org.mockito.Mockito.when;
 public class TestAssetServiceImpl {
     private static CmdLine cmdLinePea;
     private static Asset cmdLineAsset;
+
     @Autowired
     private AssetService assetService;
     @MockBean
@@ -156,32 +159,11 @@ public class TestAssetServiceImpl {
     @Test
     public void testSynthesizeJobDef() throws IOException {
         when(projectService.mapProjectId(anyString())).thenReturn(2L);
-        Asset app = new Asset();
-        app.setAssetId(1L);
-        app.setProjectAssetId("APP");
-        app.setAssetName("app");
-        app.setAssetType("CmdLineApp");
-        app.setScriptFormat(ScriptFormat.APPLICATION_YAML);
-        app.setScript("{host: LH, cmdLine: CMD}");
-        when(assetMapper.findByIdInProject(2L, "APP")).thenReturn(app);
-        Asset cmd = new Asset();
-        cmd.setAssetId(2L);
-        cmd.setProjectAssetId("CMD");
-        cmd.setAssetName("cmd");
-        cmd.setAssetType("CmdLine");
-        cmd.setScript("ls -l");
-        when(assetMapper.findByIdInProject(2L, "CMD")).thenReturn(cmd);
-        Asset lh = new Asset();
-        lh.setAssetId(3L);
-        lh.setProjectAssetId("LH");
-        lh.setAssetName("lh'");
-        lh.setAssetType("HostPlat");
-        lh.setScript("localhost");
-        when(assetMapper.findByIdInProject(2L, "LH")).thenReturn(lh);
+        List<Asset> assets = readObjectFromCsv("/jobdef/cmdline/cmd_ls.csv", Asset.class);
+        for (Asset asset : assets) {
+            when(assetMapper.findByIdInProject(2L, asset.getProjectAssetId())).thenReturn(asset);
+        }
         JobDefPod jobDefPod = assetService.synthesizeJobDef("PRJ", "APP");
-        assertThat(jobDefPod.toJobDefinition(), is("{\"appId\":\"APP\",\"map\":{"
-            + "\"APP\":{\"type\":\"CmdLineApp\",\"name\":\"app\",\"cmdLine\":\"CMD\",\"host\":\"LH\"},"
-            + "\"CMD\":{\"type\":\"CmdLine\",\"name\":\"cmd\",\"cmd\":\"ls -l\"},"
-            + "\"LH\":{\"type\":\"HostPlat\",\"name\":\"lh'\",\"hostname\":\"localhost\"}}}"));
+        assertThat(jobDefPod.toJobDefinition(), is(readJsonCompact("/jobdef/cmdline/cmd_ls.json")));
     }
 }

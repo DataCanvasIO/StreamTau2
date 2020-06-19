@@ -34,7 +34,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.zetyun.streamtau.manager.helper.Utils.success;
+import static com.zetyun.streamtau.manager.helper.WebMvcTestUtils.success;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;

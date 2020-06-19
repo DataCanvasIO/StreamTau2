@@ -31,6 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.Collections;
 
+import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJsonCompact;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,10 +56,7 @@ public class TestScheduleServiceImpl {
         job.setAppId("CMD");
         job.setVersion(1);
         job.setJobStatus(JobStatus.READY);
-        job.setJobDefinition("{\"appId\":\"APP\",\"map\":{"
-            + "\"APP\":{\"type\":\"CmdLineApp\",\"name\":\"app\",\"cmdLine\":\"CMD\",\"host\":\"LH\"},"
-            + "\"CMD\":{\"type\":\"CmdLine\",\"name\":\"cmd\",\"cmd\":\"ls -l\"},"
-            + "\"LH\":{\"type\":\"HostPlat\",\"name\":\"lh'\",\"hostname\":\"localhost\"}}}");
+        job.setJobDefinition(readJsonCompact("/jobdef/cmdline/cmd_ls.json"));
         when(jobMapper.findJobOfStatus(JobStatus.READY)).thenReturn(Collections.singletonList(job));
         scheduleService.schedule();
         verify(jobMapper, times(1)).findJobOfStatus(JobStatus.READY);

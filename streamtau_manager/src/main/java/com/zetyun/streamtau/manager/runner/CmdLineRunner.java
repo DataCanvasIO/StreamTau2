@@ -24,16 +24,21 @@ import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CmdLineRunner implements Runner {
     private static final Logger logger = LoggerFactory.getLogger(CmdLineRunner.class);
 
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
+
     @Override
-    public void run(Job job, Runnable onFinish) throws IOException {
+    public void run(@NotNull Job job, Runnable onFinish) throws IOException {
         JobDefPod pod = PeaParser.JSON.parse(job.getJobDefinition(), JobDefPod.class);
         CmdLineApp cmdLineApp = (CmdLineApp) pod.getApp();
         CmdLine cmdLine = (CmdLine) pod.load(cmdLineApp.getCmdLine());
@@ -42,10 +47,18 @@ public class CmdLineRunner implements Runner {
         String cmd = cmdLine.getCmd();
         if (host.equals("localhost")) {
             logger.info("Command line job \"{}\" starts to run.", job.getJobName());
-            Process process = Runtime.getRuntime().exec(cmd);
-            IOUtils.copy(process.getInputStream(), System.out);
-            onFinish.run();
-            logger.info("Command line app \"{}\" finished.", job.getJobName());
+            executorService.execute(() -> {
+                try {
+                    Process process = Runtime.getRuntime().exec(cmd);
+                    IOUtils.copy(process.getInputStream(), System.out);
+                    if (onFinish != null) {
+                        onFinish.run();
+                    }
+                    logger.info("Command line app \"{}\" finished.", job.getJobName());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } else {
             throw new StreamTauException("10102");
         }

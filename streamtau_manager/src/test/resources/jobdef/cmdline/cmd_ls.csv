@@ -1,0 +1,4 @@
+"asset_id","project_asset_id","asset_name","asset_description","asset_type","script_format"   ,"script"
+1         ,"APP"             ,"app"       ,""                 ,"CmdLineApp","application/yaml","{cmdLine: CMD, host: LH}"
+2         ,"CMD"             ,"cmd"       ,""                 ,"CmdLine"   ,"text/plain"      ,"ls -l"
+3         ,"LH"              ,"lh"        ,""                 ,"HostPlat"  ,"text/plain"      ,"localhost"

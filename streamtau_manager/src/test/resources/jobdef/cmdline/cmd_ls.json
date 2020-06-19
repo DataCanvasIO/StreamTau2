@@ -1,0 +1,21 @@
+{
+  "appId": "APP",
+  "map": {
+    "APP": {
+      "type": "CmdLineApp",
+      "name": "app",
+      "cmdLine": "CMD",
+      "host": "LH"
+    },
+    "CMD": {
+      "type": "CmdLine",
+      "name": "cmd",
+      "cmd": "ls -l"
+    },
+    "LH": {
+      "type": "HostPlat",
+      "name": "lh",
+      "hostname": "localhost"
+    }
+  }
+}

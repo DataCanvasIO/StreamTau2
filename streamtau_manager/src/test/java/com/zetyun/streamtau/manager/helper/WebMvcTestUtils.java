@@ -16,15 +16,8 @@
 
 package com.zetyun.streamtau.manager.helper;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultMatcher;
-
-import java.io.IOException;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -32,16 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class Utils {
-    public static <T> List<T> readObjectFromCsv(String classPath, Class<T> clazz) throws IOException {
-        MappingIterator<T> objIterator = new CsvMapper()
-            .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
-            .readerFor(clazz)
-            .with(CsvSchema.emptySchema().withHeader())
-            .readValues(Utils.class.getResourceAsStream(classPath));
-        return objIterator.readAll();
-    }
-
+public class WebMvcTestUtils {
     /**
      * Define 'success' for WebMvcTest.
      *

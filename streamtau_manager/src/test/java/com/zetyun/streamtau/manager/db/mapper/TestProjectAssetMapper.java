@@ -17,7 +17,6 @@
 package com.zetyun.streamtau.manager.db.mapper;
 
 import com.zetyun.streamtau.manager.db.model.ProjectAsset;
-import com.zetyun.streamtau.manager.helper.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.List;
 
+import static com.zetyun.streamtau.manager.helper.ResourceUtils.readObjectFromCsv;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -49,7 +49,7 @@ public class TestProjectAssetMapper {
 
     @BeforeClass
     public static void setupClass() throws IOException {
-        projectAssets = Utils.readObjectFromCsv("/db/data/project_asset.csv", ProjectAsset.class);
+        projectAssets = readObjectFromCsv("/db/data/project_asset.csv", ProjectAsset.class);
     }
 
     @Test
