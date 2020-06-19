@@ -17,17 +17,41 @@
 package com.zetyun.streamtau.manager.service.impl;
 
 import com.zetyun.streamtau.manager.service.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Service
+@ConditionalOnProperty(name = "file.storage.type", havingValue = "local", matchIfMissing = true)
+@EnableConfigurationProperties(LocalFileStorageProperties.class)
 public class LocalFileStorageService implements StorageService {
+    private final Path root;
+
+    @Autowired
+    public LocalFileStorageService(LocalFileStorageProperties properties) {
+        String dir = properties.getDir();
+        if (dir == null || dir.isEmpty()) {
+            root = Paths.get(System.getProperty("java.io.tmpdir"), "StreamTau");
+        } else {
+            root = Paths.get(dir).toAbsolutePath();
+        }
+    }
+
     @Override
-    public String createFile() {
-        // TODO
-        return null;
+    public String createFile(String extension) throws IOException {
+        if (!Files.isDirectory(root)) {
+            Files.createDirectory(root);
+        }
+        Path path = Files.createTempFile(root, "STA_", "." + extension);
+        return path.toUri().toString();
     }
 
     @Override

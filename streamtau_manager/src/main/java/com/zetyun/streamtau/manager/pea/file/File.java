@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.pea.file;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.ImmutableMap;
 import com.zetyun.streamtau.manager.db.model.Asset;
@@ -47,6 +48,9 @@ public abstract class File extends AssetPea {
         }
         return typeMap.get(name.substring(index + 1));
     }
+
+    @JsonIgnore
+    public abstract String getExtension();
 
     @Override
     public void mapFrom(@NotNull Asset model) throws IOException {

@@ -27,3 +27,8 @@ spring:
     change-log: 'classpath:/db/changelog/changelog-master.yml'
 mybatis:
   config-location: 'classpath:/db/mybatis-config.xml'
+file:
+  storage:
+    type: local
+    local:
+      dir: ~

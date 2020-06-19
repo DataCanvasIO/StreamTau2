@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static com.zetyun.streamtau.manager.helper.Utils.success;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,7 +66,7 @@ public class TestFileController {
             pea.setDescription("A jar file.");
             return pea;
         });
-        when(storageService.createFile()).thenReturn("file://abc");
+        when(storageService.createFile(anyString())).thenReturn("file://abc");
         MockMultipartFile file = new MockMultipartFile(
             "file",
             "test.jar",
@@ -84,7 +85,7 @@ public class TestFileController {
             .andExpect(jsonPath("$.data.type").value("JarFile"));
         verify(assetService, times(1)).findById(eq("ABC"), eq("AAA"));
         verify(assetService, times(1)).update(eq("ABC"), any(JarFile.class));
-        verify(storageService, times(1)).createFile();
+        verify(storageService, times(1)).createFile("jar");
         verify(storageService, times(1)).saveFile(eq("file://abc"), any(MultipartFile.class));
     }
 

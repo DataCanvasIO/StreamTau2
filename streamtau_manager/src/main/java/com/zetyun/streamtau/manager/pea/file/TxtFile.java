@@ -24,4 +24,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class TxtFile extends File {
+    @Override
+    public String getExtension() {
+        return "txt";
+    }
 }

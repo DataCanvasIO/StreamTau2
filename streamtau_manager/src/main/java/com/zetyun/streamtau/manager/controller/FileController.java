@@ -68,7 +68,7 @@ public class FileController {
         }
         String uri = pea.getUri();
         if (uri == null || uri.isEmpty()) {
-            uri = storageService.createFile();
+            uri = storageService.createFile(pea.getExtension());
             pea.setUri(uri);
             assetService.update(projectId, pea);
         }

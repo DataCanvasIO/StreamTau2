@@ -30,3 +30,8 @@ springdoc:
   packagesToScan: 'com.zetyun.streamtau.manager.controller'
   swagger-ui:
     enabled: true
+file:
+  storage:
+    type: local
+    local:
+      dir: ~

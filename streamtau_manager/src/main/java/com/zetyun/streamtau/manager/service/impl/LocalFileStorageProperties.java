@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.file;
+package com.zetyun.streamtau.manager.service.impl;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@JsonTypeName("JarFile")
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class JarFile extends File {
-    @Override
-    public String getExtension() {
-        return "jar";
-    }
+@Getter
+@Setter
+@ConfigurationProperties("file.storage.local")
+public class LocalFileStorageProperties {
+    private String dir;
 }
