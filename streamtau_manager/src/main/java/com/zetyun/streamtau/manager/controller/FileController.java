@@ -66,13 +66,13 @@ public class FileController {
         if (!pea.getType().equals(fileType)) {
             throw new StreamTauException("10203", pea.getType(), fileType);
         }
-        String uri = pea.getUri();
-        if (uri == null || uri.isEmpty()) {
-            uri = storageService.createFile(pea.getExtension());
-            pea.setUri(uri);
+        String path = pea.getPath();
+        if (path == null || path.isEmpty()) {
+            path = storageService.createFile(pea.getExtension());
+            pea.setPath(path);
             assetService.update(projectId, pea);
         }
-        storageService.saveFile(uri, file);
+        storageService.saveFile(path, file);
         return pea;
     }
 }

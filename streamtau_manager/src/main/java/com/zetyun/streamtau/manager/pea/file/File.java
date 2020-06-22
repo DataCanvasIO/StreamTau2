@@ -17,11 +17,14 @@
 package com.zetyun.streamtau.manager.pea.file;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.ImmutableMap;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.PeaParser;
+import com.zetyun.streamtau.manager.service.StorageService;
+import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -37,9 +40,10 @@ public abstract class File extends AssetPea {
         .build();
 
     @JsonView({PeaParser.Show.class})
+    @JsonProperty("path")
     @Getter
     @Setter
-    private String uri;
+    private String path;
 
     public static @Nullable String typeFromName(@NotNull String name) {
         int index = name.lastIndexOf('.');
@@ -54,11 +58,25 @@ public abstract class File extends AssetPea {
 
     @Override
     public void mapFrom(@NotNull Asset model) throws IOException {
-        uri = model.getScript();
+        path = model.getScript();
     }
 
     @Override
     public void mapTo(@NotNull Asset model) throws IOException {
-        model.setScript(uri);
+        model.setScript(path);
+    }
+
+    @Override
+    public void transferAnnex() {
+        StorageService storageService = ApplicationContextProvider.getStorageService();
+        int index = path.lastIndexOf('.');
+        String ext = (index == -1) ? "" : path.substring(index + 1);
+        try {
+            String newPath = storageService.createFile(ext);
+            storageService.copyFile(path, newPath);
+            setPath(newPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -25,6 +25,7 @@ public interface Pod<I, T, P extends Pea<I, T>> {
 
     default void transfer(I id, Pod<I, T, P> pod) throws IOException {
         P pea = load(id);
+        pea.transferAnnex();
         pod.save(pea);
         for (I cid : pea.children()) {
             transfer(cid, pod);

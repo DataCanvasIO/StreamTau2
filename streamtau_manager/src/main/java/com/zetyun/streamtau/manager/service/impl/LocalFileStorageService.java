@@ -24,10 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 @ConditionalOnProperty(name = "file.storage.type", havingValue = "local", matchIfMissing = true)
@@ -47,15 +47,19 @@ public class LocalFileStorageService implements StorageService {
 
     @Override
     public String createFile(String extension) throws IOException {
-        if (!Files.isDirectory(root)) {
-            Files.createDirectory(root);
-        }
-        Path path = Files.createTempFile(root, "STA_", "." + extension);
-        return path.toUri().toString();
+        return UUID.randomUUID().toString().replace('-', '_') + "." + extension;
     }
 
     @Override
-    public void saveFile(String uri, MultipartFile file) throws IOException {
-        file.transferTo(Paths.get(URI.create(uri)));
+    public void saveFile(String path, MultipartFile file) throws IOException {
+        if (!Files.isDirectory(root)) {
+            Files.createDirectory(root);
+        }
+        file.transferTo(root.resolve(path));
+    }
+
+    @Override
+    public void copyFile(String path, String newPath) throws IOException {
+        Files.copy(root.resolve(path), root.resolve(newPath));
     }
 }

@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
+import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.file.TxtFile;
 import com.zetyun.streamtau.manager.pea.generic.Pea;
@@ -52,6 +53,7 @@ import java.io.IOException;
     @JsonSubTypes.Type(HostPlat.class),
     // App
     @JsonSubTypes.Type(CmdLineApp.class),
+    @JsonSubTypes.Type(JavaJarApp.class),
     // File
     @JsonSubTypes.Type(JarFile.class),
     @JsonSubTypes.Type(TxtFile.class),

@@ -14,45 +14,38 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.plat;
+package com.zetyun.streamtau.manager.pea.app;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.zetyun.streamtau.manager.db.model.Asset;
-import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.JsonAssetPea;
+import com.zetyun.streamtau.manager.pea.generic.PeaId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 
-@JsonTypeName("HostPlat")
+@JsonTypeName("JavaJarApp")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class HostPlat extends AssetPea {
+public class JavaJarApp extends JsonAssetPea {
     @Schema(
-        description = "The hostname or IP of the host.",
-        example = "localhost"
+        description = "The id of the JarFile asset to run.",
+        example = "01B2752D-28D6-4B1C-80BD-4B7A0531539C"
     )
-    @JsonProperty("hostname")
+    @JsonProperty("jarFile")
     @Getter
     @Setter
-    private String hostname;
-
-    @Override
-    public void mapFrom(@NotNull Asset model) {
-        hostname = model.getScript();
-    }
-
-    @Override
-    public void mapTo(@NotNull Asset model) {
-        model.setScript(hostname);
-    }
-
-    @JsonIgnore
-    public boolean isLocalhost() {
-        return hostname.equals("localhost") || hostname.equals("127.0.0.1");
-    }
+    @PeaId
+    private String jarFile;
+    @Schema(
+        description = "The id of the host to run on.",
+        example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
+    )
+    @JsonProperty("host")
+    @Getter
+    @Setter
+    @PeaId
+    private String host;
 }

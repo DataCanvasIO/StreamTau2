@@ -29,6 +29,7 @@ public class RunnerFactory {
 
     static {
         registerRunner("CmdLineApp", new CmdLineRunner());
+        registerRunner("JavaJarApp", new JavaJarRunner());
     }
 
     private RunnerFactory() {

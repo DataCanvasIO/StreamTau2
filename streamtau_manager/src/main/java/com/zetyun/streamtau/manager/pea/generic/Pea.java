@@ -28,6 +28,9 @@ public interface Pea<I, T> {
 
     T getType();
 
+    default void transferAnnex() {
+    }
+
     @SuppressWarnings("unchecked")
     default Collection<I> children() {
         Set<I> set = new HashSet<>();

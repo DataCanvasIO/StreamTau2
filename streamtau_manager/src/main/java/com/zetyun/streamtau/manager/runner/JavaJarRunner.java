@@ -20,48 +20,33 @@ import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.PeaParser;
-import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
-import com.zetyun.streamtau.manager.pea.misc.CmdLine;
+import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
+import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
-import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CmdLineRunner implements Runner {
-    private static final Logger logger = LoggerFactory.getLogger(CmdLineRunner.class);
+public class JavaJarRunner extends CmdLineRunner {
+    private static final Logger logger = LoggerFactory.getLogger(JavaJarRunner.class);
 
     private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     @Override
     public void run(@NotNull Job job, Runnable onFinish) throws IOException {
         JobDefPod pod = PeaParser.JSON.parse(job.getJobDefinition(), JobDefPod.class);
-        CmdLineApp cmdLineApp = (CmdLineApp) pod.getApp();
-        CmdLine cmdLine = (CmdLine) pod.load(cmdLineApp.getCmdLine());
-        HostPlat hostPlat = (HostPlat) pod.load(cmdLineApp.getHost());
+        JavaJarApp javaJarApp = (JavaJarApp) pod.getApp();
+        JarFile jarFile = (JarFile) pod.load(javaJarApp.getJarFile());
+        HostPlat hostPlat = (HostPlat) pod.load(javaJarApp.getHost());
         if (!hostPlat.isLocalhost()) {
-            throw new StreamTauException("10102", cmdLineApp.getType());
+            throw new StreamTauException("10102", javaJarApp.getType());
         }
-        runCmdOnLocalhost(cmdLine.getCmd(), job.getJobName(), onFinish);
-    }
-
-    protected void runCmdOnLocalhost(String cmd, String jobName, Runnable onFinish) {
-        logger.info("Job \"{}\" starts to run on localhost.", jobName);
-        executorService.execute(() -> {
-            try {
-                Process process = Runtime.getRuntime().exec(cmd);
-                IOUtils.copy(process.getInputStream(), System.out);
-                if (onFinish != null) {
-                    onFinish.run();
-                }
-                logger.info("Job \"{}\" finished.", jobName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        String path = Paths.get(jarFile.getPath()).toAbsolutePath().toString();
+        runCmdOnLocalhost("java -jar \"" + path + "\"", job.getJobName(), onFinish);
     }
 }

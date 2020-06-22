@@ -23,5 +23,7 @@ import java.io.IOException;
 public interface StorageService {
     String createFile(String extension) throws IOException;
 
-    void saveFile(String uri, MultipartFile file) throws IOException;
+    void saveFile(String path, MultipartFile file) throws IOException;
+
+    void copyFile(String path, String newPath) throws IOException;
 }
