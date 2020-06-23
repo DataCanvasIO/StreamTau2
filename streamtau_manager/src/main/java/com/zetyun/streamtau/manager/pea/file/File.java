@@ -25,14 +25,18 @@ import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
 
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public abstract class File extends AssetPea {
     private static final Map<String, String> typeMap = ImmutableMap.<String, String>builder()
         .put("txt", "TxtFile")

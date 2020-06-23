@@ -1,0 +1,21 @@
+{
+  "appId": "APP",
+  "map": {
+    "APP": {
+      "type": "JavaJarApp",
+      "name": "app",
+      "jarFile": "JAR",
+      "host": "LH"
+    },
+    "JAR": {
+      "type": "JarFile",
+      "name": "jarFile",
+      "path": "BBB.jar"
+    },
+    "LH": {
+      "type": "HostPlat",
+      "name": "lh",
+      "hostname": "localhost"
+    }
+  }
+}

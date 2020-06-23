@@ -16,7 +16,10 @@
 
 package com.zetyun.streamtau.manager.pea.file;
 
+import com.zetyun.streamtau.manager.pea.PeaParser;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -26,5 +29,14 @@ public class TestFile {
     public void testTypeFromName() {
         assertThat(File.typeFromName("a.txt"), is("TxtFile"));
         assertThat(File.typeFromName("b.jar"), is("JarFile"));
+    }
+
+    @Test
+    public void testSerialize() throws IOException {
+        File file = new TxtFile();
+        file.setName("text");
+        file.setPath("AAA.txt");
+        String json = PeaParser.JSON.stringShowAll(file);
+        assertThat(json, is("{\"type\":\"TxtFile\",\"name\":\"text\",\"path\":\"AAA.txt\"}"));
     }
 }
