@@ -51,6 +51,7 @@ public class CmdLineRunner implements Runner {
 
     protected void runCmdOnLocalhost(String cmd, String jobName, Runnable onFinish) {
         logger.info("Job \"{}\" starts to run on localhost.", jobName);
+        logger.info("The command is: `{}`", cmd);
         executorService.execute(() -> {
             try {
                 Process process = Runtime.getRuntime().exec(cmd);

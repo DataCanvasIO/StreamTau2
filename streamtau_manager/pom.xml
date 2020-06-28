@@ -118,6 +118,22 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+
+        <!-- citrus -->
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-java-dsl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-http</artifactId>
+        </dependency>
+
+        <!-- this project -->
     </dependencies>
 
     <build>
@@ -135,6 +151,20 @@
                         <goals>
                             <goal>build-info</goal>
                             <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>start-spring-boot-server</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-spring-boot-server</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -160,6 +190,31 @@
                             <srcDir>src/main/resources/messages</srcDir>
                             <targetDir>${project.build.outputDirectory}/messages</targetDir>
                             <includes>**/*.properties</includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources-it</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.parent.basedir}/streamtau_test/hello_world/target/</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>streamtau-test-hello-world.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>

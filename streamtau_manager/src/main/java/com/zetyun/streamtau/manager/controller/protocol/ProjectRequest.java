@@ -17,9 +17,13 @@
 package com.zetyun.streamtau.manager.controller.protocol;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProjectRequest {
     @Schema(
         description = "The name of the project.",

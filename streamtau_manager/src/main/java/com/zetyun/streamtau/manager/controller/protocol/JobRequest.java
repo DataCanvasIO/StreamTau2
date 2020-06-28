@@ -18,9 +18,13 @@ package com.zetyun.streamtau.manager.controller.protocol;
 
 import com.zetyun.streamtau.manager.db.model.JobStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class JobRequest {
     @Schema(
         description = "The name of the job.",
