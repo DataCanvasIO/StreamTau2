@@ -17,26 +17,21 @@
 package com.zetyun.streamtau.manager.runner;
 
 import com.google.common.base.Charsets;
+import com.zetyun.streamtau.manager.boot.WebAppInitializer;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+@Slf4j
 public class CmdLineRunner implements Runner {
-    private static final Logger logger = LoggerFactory.getLogger(CmdLineRunner.class);
-
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
-
     @Override
     public void run(@NotNull Job job, Runnable onFinish) throws IOException {
         JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
@@ -50,20 +45,20 @@ public class CmdLineRunner implements Runner {
     }
 
     protected void runCmdOnLocalhost(String cmd, String jobName, Runnable onFinish) {
-        if (logger.isInfoEnabled()) {
-            logger.info("Job \"{}\" starts to run on localhost.", jobName);
-            logger.info("The command is: `{}`", cmd);
+        if (log.isInfoEnabled()) {
+            log.info("Job \"{}\" starts to run on localhost.", jobName);
+            log.info("The command is: `{}`", cmd);
         }
-        executorService.execute(() -> {
+        WebAppInitializer.executorService.execute(() -> {
             try {
                 Process process = Runtime.getRuntime().exec(cmd);
                 if (onFinish != null) {
                     onFinish.run();
                 }
-                if (logger.isInfoEnabled()) {
+                if (log.isInfoEnabled()) {
                     String output = IOUtils.toString(process.getInputStream(), Charsets.UTF_8);
-                    logger.info("The console output is: \n{}", output);
-                    logger.info("Job \"{}\" finished.", jobName);
+                    log.info("The console output is: \n{}", output);
+                    log.info("Job \"{}\" finished.", jobName);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

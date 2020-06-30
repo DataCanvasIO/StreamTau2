@@ -17,8 +17,7 @@
 package com.zetyun.streamtau.manager.controller.advise;
 
 import com.zetyun.streamtau.manager.exception.StreamTauException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,9 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestControllerAdvice(basePackages = {"com.zetyun.streamtau.manager.controller"})
+@Slf4j
 public class GlobalExceptionHandler {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
     private static ResourceBundle errorMessages = null;
 
     private static StreamTauResponse getApiResponse(String errorCode, Object[] args) {
@@ -58,7 +56,7 @@ public class GlobalExceptionHandler {
         Exception exception,
         HttpServletResponse response
     ) {
-        logger.error("Exception thrown: ", exception);
+        log.error("Exception thrown: ", exception);
         loadMeassages();
         return getApiResponse("10201", null);
     }
@@ -80,7 +78,7 @@ public class GlobalExceptionHandler {
         Exception exception,
         HttpServletResponse response
     ) {
-        logger.error("Exception thrown: ", exception);
+        log.error("Exception thrown: ", exception);
         return getApiResponse("100000", null);
     }
 }

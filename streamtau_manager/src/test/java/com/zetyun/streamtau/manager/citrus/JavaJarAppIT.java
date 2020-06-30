@@ -28,6 +28,7 @@ import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,8 +39,9 @@ import static com.zetyun.streamtau.manager.citrus.CitrusCommon.updateChildrenId;
 import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJobDef;
 
-public class CmdLineAppIT extends JUnit4CitrusTest {
+public class JavaJarAppIT extends JUnit4CitrusTest {
     @Test
+    @Ignore
     @CitrusTest
     public void testRun(@CitrusResource TestDesigner designer) throws IOException {
         String projectId = "test";
@@ -47,12 +49,13 @@ public class CmdLineAppIT extends JUnit4CitrusTest {
             projectId,
             new ProjectRequest("test", "for citrus", "CONTAINER")
         ));
-        JobDefPod pod = readJobDef("/jobdef/cmdline/cmd_ls.json");
+        JobDefPod pod = readJobDef("/jobdef/javajar/jar_app.json");
         List<AssetPea> peaList = getSortedAssetList(pod.getPeaMap());
         for (AssetPea pea : peaList) {
             updateChildrenId(pea);
             designer.applyBehavior(new Assets.Create(projectId, pea.getId(), pea));
         }
+        // TODO: call upload file for the JarFile pea.
         designer.applyBehavior(new Jobs.Create(
             projectId,
             "job",

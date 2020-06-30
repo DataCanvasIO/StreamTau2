@@ -23,19 +23,11 @@ import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class JavaJarRunner extends CmdLineRunner {
-    private static final Logger logger = LoggerFactory.getLogger(JavaJarRunner.class);
-
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
-
     @Override
     public void run(@NotNull Job job, Runnable onFinish) throws IOException {
         JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
