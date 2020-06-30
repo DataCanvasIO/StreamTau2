@@ -19,7 +19,7 @@ package com.zetyun.streamtau.manager.citrus.behavior;
 import com.consol.citrus.dsl.design.AbstractTestBehavior;
 import com.consol.citrus.message.MessageType;
 import com.zetyun.streamtau.manager.controller.advise.StreamTauResponse;
-import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
+import com.zetyun.streamtau.manager.pea.AssetPea;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
@@ -28,50 +28,51 @@ import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.JSON_MAPPER;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class Projects {
+public class Assets {
     public static String idVarName(String id) {
-        return "project_id" + "_" + id;
+        return "asset_id" + "_" + id;
     }
 
     @RequiredArgsConstructor
     public static class Create extends AbstractTestBehavior {
+        private final String projectId;
         private final String id;
-        private final ProjectRequest request;
+        private final AssetPea pea;
 
         @Override
         public void apply() {
             http().client(SERVER_ID).send()
-                .post("/projects/")
+                .post("/projects/" + varRef(Projects.idVarName(projectId)) + "/assets/")
                 .accept(APPLICATION_JSON_VALUE)
-                .payload(request, JSON_MAPPER);
+                .payload(pea, JSON_MAPPER);
             http().client(SERVER_ID).receive()
                 .response(HttpStatus.OK)
                 .messageType(MessageType.JSON)
                 .jsonPath("$.status", StreamTauResponse.OK)
                 .jsonPath("$.message", StreamTauResponse.SUCCESS)
-                .jsonPath("$.data.name", request.getName())
-                .jsonPath("$.data.description", request.getDescription())
-                .jsonPath("$.data.type", request.getType())
+                .jsonPath("$.data.name", pea.getName())
+                .jsonPath("$.data.type", pea.getType())
                 .extractFromPayload("$.data.id", idVarName(id));
-            echo("Created project " + varRef(idVarName(id)) + " successfully.");
+            echo("Created asset " + varRef(idVarName(id)) + " successfully.");
         }
     }
 
     @RequiredArgsConstructor
     public static class Delete extends AbstractTestBehavior {
+        private final String projectId;
         private final String id;
 
         @Override
         public void apply() {
             http().client(SERVER_ID).send()
-                .delete("/projects/" + varRef(idVarName(id)))
+                .delete("/projects/" + varRef(Projects.idVarName(projectId)) + "/assets/" + varRef(idVarName(id)))
                 .accept(APPLICATION_JSON_VALUE);
             http().client(SERVER_ID).receive()
                 .response(HttpStatus.OK)
                 .messageType(MessageType.JSON)
                 .jsonPath("$.status", StreamTauResponse.OK)
                 .jsonPath("$.message", StreamTauResponse.SUCCESS);
-            echo("Delete project " + varRef(idVarName(id)) + " successfully.");
+            echo("Delete asset " + varRef(idVarName(id)) + " successfully.");
         }
     }
 }

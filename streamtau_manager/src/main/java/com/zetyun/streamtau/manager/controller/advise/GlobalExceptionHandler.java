@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
 
     private static ResourceBundle errorMessages = null;
 
-    private static ApiResponse getApiResponse(String errorCode, Object[] args) {
+    private static StreamTauResponse getApiResponse(String errorCode, Object[] args) {
         loadMeassages();
         String message;
         try {
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
         } catch (MissingResourceException e) {
             message = "Unknown error!";
         }
-        return new ApiResponse(errorCode, message);
+        return new StreamTauResponse(errorCode, message);
     }
 
     private static void loadMeassages() {
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
-    public ApiResponse requestExceptionHandler(
+    public StreamTauResponse requestExceptionHandler(
         HttpServletRequest request,
         Exception exception,
         HttpServletResponse response
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {StreamTauException.class})
-    public ApiResponse streamTauExceptionHandler(
+    public StreamTauResponse streamTauExceptionHandler(
         HttpServletRequest request,
         Exception exception,
         HttpServletResponse response
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {Exception.class})
-    public ApiResponse globalExceptionHandler(
+    public StreamTauResponse globalExceptionHandler(
         HttpServletRequest request,
         Exception exception,
         HttpServletResponse response

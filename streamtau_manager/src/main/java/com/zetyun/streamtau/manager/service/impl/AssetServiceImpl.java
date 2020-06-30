@@ -91,8 +91,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public JobDefPod synthesizeJobDef(String userProjectId, String projectAssetId) throws IOException {
-        Long projectId = projectService.mapProjectId(userProjectId);
+    public JobDefPod synthesizeJobDef(Long projectId, String projectAssetId) throws IOException {
         AssetPod assetPod = new AssetPod(assetMapper, projectId);
         JobDefPod jobDefPod = new JobDefPod(projectAssetId);
         assetPod.transfer(projectAssetId, jobDefPod);

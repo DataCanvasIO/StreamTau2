@@ -16,23 +16,21 @@
 
 package com.zetyun.streamtau.manager.pea;
 
-import com.zetyun.streamtau.manager.db.model.Asset;
-import com.zetyun.streamtau.manager.db.model.ScriptFormat;
-import org.jetbrains.annotations.NotNull;
+import com.zetyun.streamtau.manager.helper.ResourceUtils;
+import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
-public abstract class JsonAssetPea extends AssetPea {
-    @Override
-    public void mapFrom(@NotNull Asset model) throws IOException {
-        PeaParser parser = PeaParser.get(model.getScriptFormat());
-        parser.parse(this, model.getScript());
-    }
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    @Override
-    public void mapTo(@NotNull Asset model) throws IOException {
-        model.setScriptFormat(ScriptFormat.APPLICATION_JSON);
-        PeaParser parser = PeaParser.get(model.getScriptFormat());
-        model.setScript(parser.stringHideSome(this));
+public class TestJobDefPod {
+    @Test
+    public void testFromJobDefinition() throws IOException {
+        JobDefPod pod = ResourceUtils.readJobDef("/jobdef/cmdline/cmd_ls.json");
+        for (Map.Entry<String, AssetPea> entry : pod.getPeaMap().entrySet()) {
+            assertThat(entry.getValue().getId(), is(entry.getKey()));
+        }
     }
 }

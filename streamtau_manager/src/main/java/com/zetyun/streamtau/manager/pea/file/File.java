@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.ImmutableMap;
 import com.zetyun.streamtau.manager.db.model.Asset;
+import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.service.StorageService;
@@ -67,6 +68,7 @@ public abstract class File extends AssetPea {
 
     @Override
     public void mapTo(@NotNull Asset model) throws IOException {
+        model.setScriptFormat(ScriptFormat.TEXT_PLAIN);
         model.setScript(path);
     }
 

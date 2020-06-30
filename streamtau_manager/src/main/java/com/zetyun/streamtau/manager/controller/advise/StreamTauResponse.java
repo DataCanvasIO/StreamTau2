@@ -21,18 +21,21 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class ApiResponse {
+public class StreamTauResponse {
+    public static final String OK = "0";
+    public static final String SUCCESS = "success";
+
     private final String status;
     private final String message;
     private final Object data;
 
-    public ApiResponse(Object data) {
+    public StreamTauResponse(Object data) {
         this.data = data;
-        this.status = "0";
-        this.message = "success";
+        this.status = OK;
+        this.message = SUCCESS;
     }
 
-    public ApiResponse(String errorCode, String message) {
+    public StreamTauResponse(String errorCode, String message) {
         this.status = errorCode;
         this.message = message;
         this.data = null;

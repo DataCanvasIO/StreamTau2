@@ -33,5 +33,5 @@ public interface AssetService {
 
     void delete(String userProjectId, String projectAssetId);
 
-    JobDefPod synthesizeJobDef(String userProjectId, String projectAssetId) throws IOException;
+    JobDefPod synthesizeJobDef(Long projectId, String projectAssetId) throws IOException;
 }

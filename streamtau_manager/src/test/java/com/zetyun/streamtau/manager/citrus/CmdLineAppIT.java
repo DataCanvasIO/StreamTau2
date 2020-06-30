@@ -20,18 +20,43 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.junit.JUnit4CitrusTest;
+import com.zetyun.streamtau.manager.citrus.behavior.Assets;
+import com.zetyun.streamtau.manager.citrus.behavior.Jobs;
 import com.zetyun.streamtau.manager.citrus.behavior.Projects;
+import com.zetyun.streamtau.manager.controller.protocol.JobRequest;
 import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
+import com.zetyun.streamtau.manager.db.model.JobStatus;
+import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.JobDefPod;
 import org.junit.Test;
 
-public class CmdLineAppIT extends JUnit4CitrusTest {
-    private static final String SERVER_ID = "streamtau-manager";
+import java.io.IOException;
+import java.util.List;
 
+import static com.zetyun.streamtau.manager.citrus.CitrusCommon.getSortedAssetList;
+import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
+import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJobDef;
+
+public class CmdLineAppIT extends JUnit4CitrusTest {
     @Test
     @CitrusTest
-    public void testRun(@CitrusResource TestDesigner designer) {
+    public void testRun(@CitrusResource TestDesigner designer) throws IOException {
+        String projectId = "test";
         designer.applyBehavior(new Projects.Create(
+            projectId,
             new ProjectRequest("test", "for citrus", "CONTAINER")
         ));
+        JobDefPod pod = readJobDef("/jobdef/cmdline/cmd_ls.json");
+        List<AssetPea> peaList = getSortedAssetList(pod.getPeaMap());
+        for (AssetPea pea : peaList) {
+            CitrusCommon.updateChildrenId(pea);
+            designer.applyBehavior(new Assets.Create(projectId, pea.getId(), pea));
+        }
+        designer.applyBehavior(new Jobs.Create(
+            projectId,
+            "job",
+            new JobRequest("test", varRef(Assets.idVarName(pod.getAppId())), JobStatus.READY)
+        ));
+        designer.applyBehavior(new Projects.Delete(projectId));
     }
 }

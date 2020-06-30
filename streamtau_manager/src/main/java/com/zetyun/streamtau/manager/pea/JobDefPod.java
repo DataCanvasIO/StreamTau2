@@ -23,6 +23,7 @@ import com.zetyun.streamtau.manager.pea.generic.MapPod;
 import lombok.Getter;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 public class JobDefPod extends MapPod<String, String, AssetPea> {
@@ -45,7 +46,21 @@ public class JobDefPod extends MapPod<String, String, AssetPea> {
     }
 
     public static JobDefPod fromJobDefinition(String json) throws IOException {
-        return PeaParser.JSON.parse(json, JobDefPod.class);
+        JobDefPod pod = PeaParser.JSON.parse(json, JobDefPod.class);
+        pod.setPeaIdsFromKey();
+        return pod;
+    }
+
+    public static JobDefPod fromJobDefinition(InputStream json) throws IOException {
+        JobDefPod pod = PeaParser.JSON.parse(json, JobDefPod.class);
+        pod.setPeaIdsFromKey();
+        return pod;
+    }
+
+    private void setPeaIdsFromKey() {
+        for (Map.Entry<String, AssetPea> entry : peaMap.entrySet()) {
+            entry.getValue().setId(entry.getKey());
+        }
     }
 
     @JsonProperty(value = "map", access = JsonProperty.Access.READ_ONLY)

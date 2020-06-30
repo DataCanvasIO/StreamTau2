@@ -48,7 +48,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -158,12 +157,11 @@ public class TestAssetServiceImpl {
 
     @Test
     public void testSynthesizeJobDef() throws IOException {
-        when(projectService.mapProjectId(anyString())).thenReturn(2L);
         List<Asset> assets = readObjectFromCsv("/jobdef/cmdline/cmd_ls.csv", Asset.class);
         for (Asset asset : assets) {
             when(assetMapper.findByIdInProject(2L, asset.getProjectAssetId())).thenReturn(asset);
         }
-        JobDefPod jobDefPod = assetService.synthesizeJobDef("PRJ", "APP");
+        JobDefPod jobDefPod = assetService.synthesizeJobDef(2L, "APP");
         assertThat(jobDefPod.toJobDefinition(), is(readJsonCompact("/jobdef/cmdline/cmd_ls.json")));
     }
 }

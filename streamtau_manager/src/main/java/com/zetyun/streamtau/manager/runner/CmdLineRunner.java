@@ -16,10 +16,10 @@
 
 package com.zetyun.streamtau.manager.runner;
 
+import com.google.common.base.Charsets;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
-import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
@@ -39,7 +39,7 @@ public class CmdLineRunner implements Runner {
 
     @Override
     public void run(@NotNull Job job, Runnable onFinish) throws IOException {
-        JobDefPod pod = PeaParser.JSON.parse(job.getJobDefinition(), JobDefPod.class);
+        JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
         CmdLineApp cmdLineApp = (CmdLineApp) pod.getApp();
         CmdLine cmdLine = (CmdLine) pod.load(cmdLineApp.getCmdLine());
         HostPlat hostPlat = (HostPlat) pod.load(cmdLineApp.getHost());
@@ -50,16 +50,21 @@ public class CmdLineRunner implements Runner {
     }
 
     protected void runCmdOnLocalhost(String cmd, String jobName, Runnable onFinish) {
-        logger.info("Job \"{}\" starts to run on localhost.", jobName);
-        logger.info("The command is: `{}`", cmd);
+        if (logger.isInfoEnabled()) {
+            logger.info("Job \"{}\" starts to run on localhost.", jobName);
+            logger.info("The command is: `{}`", cmd);
+        }
         executorService.execute(() -> {
             try {
                 Process process = Runtime.getRuntime().exec(cmd);
-                IOUtils.copy(process.getInputStream(), System.out);
                 if (onFinish != null) {
                     onFinish.run();
                 }
-                logger.info("Job \"{}\" finished.", jobName);
+                if (logger.isInfoEnabled()) {
+                    String output = IOUtils.toString(process.getInputStream(), Charsets.UTF_8);
+                    logger.info("The console output is: \n{}", output);
+                    logger.info("Job \"{}\" finished.", jobName);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -67,34 +67,17 @@ public class TestProjectServiceImpl {
 
     @Before
     public void setup() {
+        when(userService.getLoginUser()).thenReturn("user1");
+    }
+
+    @Test
+    public void testListAll() {
         Project project = new Project();
         project.setProjectId(1L);
         project.setUserProjectId("AAA");
         project.setProjectName("1st");
         project.setProjectDescription("The first project.");
         when(projectMapper.findAllOfUser(anyString())).thenReturn(Collections.singletonList(project));
-        when(projectMapper.insert(any(Project.class))).then(args -> {
-            Project model = args.getArgument(0);
-            model.setProjectId(2L);
-            return 1;
-        });
-        when(userProjectMapper.addToUser(any(UserProject.class))).then(args -> {
-            UserProject model = args.getArgument(0);
-            model.setUserProjectId("BBB");
-            return 1;
-        });
-        when(userProjectMapper.deleteFromUser(any(UserProject.class))).thenReturn(1);
-        when(userProjectMapper.getByIds(any(UserProject.class))).then(args -> {
-            UserProject model = args.getArgument(0);
-            model.setProjectId(3L);
-            return model;
-        });
-        when(projectMapper.updateForUser(anyString(), any(Project.class))).thenReturn(1);
-        when(userService.getLoginUser()).thenReturn("user1");
-    }
-
-    @Test
-    public void testListAll() {
         List<ProjectDto> dtoList = projectService.listAll();
         assertThat(dtoList.size(), is(1));
         ProjectDto dto = new ProjectDto();
@@ -107,6 +90,16 @@ public class TestProjectServiceImpl {
 
     @Test
     public void testCreate() {
+        when(projectMapper.insert(any(Project.class))).then(args -> {
+            Project model = args.getArgument(0);
+            model.setProjectId(2L);
+            return 1;
+        });
+        when(userProjectMapper.addToUser(any(UserProject.class))).then(args -> {
+            UserProject model = args.getArgument(0);
+            model.setUserProjectId("BBB");
+            return 1;
+        });
         ProjectDto dto = new ProjectDto();
         dto.setName("forCreate");
         dto = projectService.create(dto);
@@ -120,6 +113,7 @@ public class TestProjectServiceImpl {
 
     @Test
     public void testUpdate() {
+        when(projectMapper.updateForUser(anyString(), any(Project.class))).thenReturn(1);
         ProjectDto dto = new ProjectDto();
         dto.setId("AAA");
         dto.setName("forUpdate");
@@ -133,12 +127,18 @@ public class TestProjectServiceImpl {
 
     @Test
     public void testDelete() {
+        when(userProjectMapper.deleteFromUser(any(UserProject.class))).thenReturn(1);
         projectService.delete("AAA");
         verify(userProjectMapper, times(1)).deleteFromUser(any(UserProject.class));
     }
 
     @Test
     public void testMapProjectId() {
+        when(userProjectMapper.getByIds(any(UserProject.class))).then(args -> {
+            UserProject model = args.getArgument(0);
+            model.setProjectId(3L);
+            return model;
+        });
         assertThat(projectService.mapProjectId("AAA"), is(3L));
     }
 }

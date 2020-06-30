@@ -47,4 +47,21 @@ public interface Pea<I, T> {
         }
         return set;
     }
+
+    default boolean reference(I id) {
+        Field[] fields = getClass().getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(PeaId.class)) {
+                    field.setAccessible(true);
+                    if (id.equals(field.get(this))) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("This cannot happen.");
+        }
+    }
 }

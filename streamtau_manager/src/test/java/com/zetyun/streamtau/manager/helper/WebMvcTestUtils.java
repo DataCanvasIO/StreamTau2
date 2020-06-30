@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.helper;
 
+import com.zetyun.streamtau.manager.controller.advise.StreamTauResponse;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultMatcher;
 
@@ -35,8 +36,8 @@ public class WebMvcTestUtils {
         return ResultMatcher.matchAll(
             status().isOk(),
             content().contentType(MediaType.APPLICATION_JSON),
-            jsonPath("$.status").value("0"),
-            jsonPath("$.message").value("success")
+            jsonPath("$.status").value(StreamTauResponse.OK),
+            jsonPath("$.message").value(StreamTauResponse.SUCCESS)
         );
     }
 

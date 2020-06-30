@@ -32,6 +32,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +96,10 @@ public class PeaParser {
     }
 
     public <T> T parse(String json, Class<T> clazz) throws IOException {
+        return mapper.readValue(json, clazz);
+    }
+
+    public <T> T parse(InputStream json, Class<T> clazz) throws IOException {
         return mapper.readValue(json, clazz);
     }
 

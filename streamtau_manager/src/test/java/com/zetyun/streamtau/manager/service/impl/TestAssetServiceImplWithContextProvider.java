@@ -40,7 +40,6 @@ import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJsonCompact;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readObjectFromCsv;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
@@ -64,13 +63,12 @@ public class TestAssetServiceImplWithContextProvider {
 
     @Test
     public void testSynthesizeJobDefWithFile() throws IOException {
-        when(projectService.mapProjectId(anyString())).thenReturn(3L);
         when(storageService.createFile("jar")).thenReturn("BBB.jar");
         List<Asset> assets = readObjectFromCsv("/jobdef/javajar/jar_app.csv", Asset.class);
         for (Asset asset : assets) {
             when(assetMapper.findByIdInProject(3L, asset.getProjectAssetId())).thenReturn(asset);
         }
-        JobDefPod jobDefPod = assetService.synthesizeJobDef("PRJ", "APP");
+        JobDefPod jobDefPod = assetService.synthesizeJobDef(3L, "APP");
         assertThat(jobDefPod.toJobDefinition(), is(readJsonCompact("/jobdef/javajar/jar_app.json")));
     }
 }

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.manager.db.model.Asset;
+import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
@@ -48,6 +49,7 @@ public class HostPlat extends AssetPea {
 
     @Override
     public void mapTo(@NotNull Asset model) {
+        model.setScriptFormat(ScriptFormat.TEXT_PLAIN);
         model.setScript(hostname);
     }
 

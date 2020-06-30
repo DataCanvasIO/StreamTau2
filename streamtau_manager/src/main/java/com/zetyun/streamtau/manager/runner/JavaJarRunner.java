@@ -19,7 +19,6 @@ package com.zetyun.streamtau.manager.runner;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
-import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
@@ -39,7 +38,7 @@ public class JavaJarRunner extends CmdLineRunner {
 
     @Override
     public void run(@NotNull Job job, Runnable onFinish) throws IOException {
-        JobDefPod pod = PeaParser.JSON.parse(job.getJobDefinition(), JobDefPod.class);
+        JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
         JavaJarApp javaJarApp = (JavaJarApp) pod.getApp();
         JarFile jarFile = (JarFile) pod.load(javaJarApp.getJarFile());
         HostPlat hostPlat = (HostPlat) pod.load(javaJarApp.getHost());

@@ -45,6 +45,6 @@ public class ResponseBodyDecorator implements ResponseBodyAdvice<Object> {
         ServerHttpRequest serverHttpRequest,
         ServerHttpResponse serverHttpResponse
     ) {
-        return new ApiResponse(body);
+        return new StreamTauResponse(body);
     }
 }
