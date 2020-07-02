@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.controller;
+package com.zetyun.streamtau.manager.junit4.controller;
 
+import com.zetyun.streamtau.manager.controller.AssetController;
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
-import com.zetyun.streamtau.manager.exception.StreamTauException;
-import com.zetyun.streamtau.manager.service.ProjectService;
-import com.zetyun.streamtau.manager.service.dto.ProjectDto;
+import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.misc.CmdLine;
+import com.zetyun.streamtau.manager.service.AssetService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +36,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
-import java.util.Locale;
 
 import static com.zetyun.streamtau.manager.helper.WebMvcTestUtils.errorCode;
 import static com.zetyun.streamtau.manager.helper.WebMvcTestUtils.success;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.AdditionalAnswers.returnsSecondArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -55,21 +55,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers = {ProjectController.class})
-public class TestProjectController {
+@WebMvcTest(controllers = {AssetController.class})
+public class TestAssetController {
     @Autowired
     private MockMvc mvc;
     @MockBean
-    private ProjectService projectService;
+    private AssetService assetService;
 
     @Test
     public void testListAll() throws Exception {
-        ProjectDto dto = new ProjectDto();
-        dto.setId("AAA");
-        dto.setName("testListAll");
-        when(projectService.listAll()).thenReturn(Collections.singletonList(dto));
+        CmdLine pea = new CmdLine();
+        pea.setId("AAA");
+        pea.setName("testListAll");
+        pea.setCmd("ls");
+        when(assetService.listAll("ABC")).thenReturn(Collections.singletonList(pea));
         mvc.perform(
-            get("/projects")
+            get("/projects/ABC/assets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
@@ -77,87 +78,77 @@ public class TestProjectController {
             .andExpect(jsonPath("$.data.size()").value(1))
             .andExpect(jsonPath("$.data[0].id").value("AAA"))
             .andExpect(jsonPath("$.data[0].name").value("testListAll"))
-            .andExpect(jsonPath("$.data[0].description").value(nullValue()));
-        verify(projectService, times(1)).listAll();
+            .andExpect(jsonPath("$.data[0].type").value("CmdLine"))
+            .andExpect(jsonPath("$.data[0].cmd").value("ls"));
+        verify(assetService, times(1)).listAll("ABC");
     }
 
     @Test
     public void testCreate() throws Exception {
-        when(projectService.create(any(ProjectDto.class))).then(args -> {
-            ProjectDto dto = args.getArgument(0);
-            dto.setId("AAA");
-            return dto;
+        when(assetService.create(eq("ABC"), any(AssetPea.class))).then(args -> {
+            AssetPea pea = args.getArgument(1);
+            pea.setId("AAA");
+            return pea;
         });
         mvc.perform(
-            post("/projects")
+            post("/projects/ABC/assets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"testCreate\"}")
+                .content("{\"name\": \"testCreate\", \"type\": \"HostPlat\", \"hostname\": \"localhost\"}")
         )
             .andDo(print())
             .andExpect(success())
             .andExpect(jsonPath("$.data.id").value("AAA"))
             .andExpect(jsonPath("$.data.name").value("testCreate"))
-            .andExpect(jsonPath("$.data.description").value(nullValue()));
-        verify(projectService, times(1)).create(any(ProjectDto.class));
+            .andExpect(jsonPath("$.data.type").value("HostPlat"))
+            .andExpect(jsonPath("$.data.hostname").value("localhost"));
+        verify(assetService, times(1)).create(eq("ABC"), any(AssetPea.class));
+    }
+
+    @Test
+    public void testCreateWrongFormat() throws Exception {
+        mvc.perform(
+            post("/projects/ABC/assets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"testCreate\", \"format\": \"json\"}")
+        )
+            .andDo(print())
+            .andExpect(errorCode("10201"));
+        verifyNoInteractions(assetService);
     }
 
     @Test
     public void testUpdate() throws Exception {
-        when(projectService.update(any(ProjectDto.class))).then(returnsFirstArg());
+        when(assetService.update(eq("ABC"), any(AssetPea.class))).then(returnsSecondArg());
         mvc.perform(
-            put("/projects/AAA")
+            put("/projects/ABC/assets/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"testUpdate\"}")
+                .content("{\"name\": \"testUpdate\", \"type\": \"HostPlat\", \"hostname\": \"localhost\"}")
         )
             .andDo(print())
             .andExpect(success())
             .andExpect(jsonPath("$.data.id").value("AAA"))
             .andExpect(jsonPath("$.data.name").value("testUpdate"))
-            .andExpect(jsonPath("$.data.description").value(nullValue()));
-        verify(projectService, times(1)).update(any(ProjectDto.class));
+            .andExpect(jsonPath("$.data.type").value("HostPlat"))
+            .andExpect(jsonPath("$.data.hostname").value("localhost"));
+        verify(assetService, times(1)).update(eq("ABC"), any(AssetPea.class));
     }
 
     @Test
     public void testDelete() throws Exception {
         mvc.perform(
-            delete("/projects/AAA")
+            delete("/projects/ABC/assets/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
             .andExpect(success());
-        verify(projectService, times(1)).delete("AAA");
-    }
-
-    @Test
-    public void testDeleteException() throws Exception {
-        Locale.setDefault(Locale.ENGLISH);
-        doThrow(new StreamTauException("10001", "AAA")).when(projectService).delete("AAA");
-        mvc.perform(
-            delete("/projects/AAA")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andDo(print())
-            .andExpect(errorCode("10001"));
-        verify(projectService, times(1)).delete("AAA");
-    }
-
-    @Test
-    public void testUnknownError() throws Exception {
-        Locale.setDefault(Locale.ENGLISH);
-        doThrow(new RuntimeException("unknown")).when(projectService).delete("AAA");
-        mvc.perform(
-            delete("/projects/AAA")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andDo(print())
-            .andExpect(errorCode("100000"));
+        verify(assetService, times(1)).delete("ABC", "AAA");
     }
 
     // Mock application
     @Configuration
     @EnableAutoConfiguration
     @Import({
-        ProjectController.class,
+        AssetController.class,
         ResponseBodyDecorator.class,
         GlobalExceptionHandler.class,
     })

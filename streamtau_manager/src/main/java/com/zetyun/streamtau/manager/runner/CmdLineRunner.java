@@ -16,16 +16,15 @@
 
 package com.zetyun.streamtau.manager.runner;
 
-import com.google.common.base.Charsets;
-import com.zetyun.streamtau.manager.boot.WebAppInitializer;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import com.zetyun.streamtau.manager.service.ExecuteService;
+import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -41,28 +40,7 @@ public class CmdLineRunner implements Runner {
         if (!hostPlat.isLocalhost()) {
             throw new StreamTauException("10102", cmdLineApp.getType());
         }
-        runCmdOnLocalhost(cmdLine.getCmd(), job.getJobName(), onFinish);
-    }
-
-    protected void runCmdOnLocalhost(String cmd, String jobName, Runnable onFinish) {
-        if (log.isInfoEnabled()) {
-            log.info("Job \"{}\" starts to run on localhost.", jobName);
-            log.info("The command is: `{}`", cmd);
-        }
-        WebAppInitializer.executorService.execute(() -> {
-            try {
-                Process process = Runtime.getRuntime().exec(cmd);
-                if (onFinish != null) {
-                    onFinish.run();
-                }
-                if (log.isInfoEnabled()) {
-                    String output = IOUtils.toString(process.getInputStream(), Charsets.UTF_8);
-                    log.info("The console output is: \n{}", output);
-                    log.info("Job \"{}\" finished.", jobName);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        ExecuteService executeService = ApplicationContextProvider.getExecuteService();
+        executeService.cmdLine(new String[]{"sh", "-c", cmdLine.getCmd()}, onFinish);
     }
 }

@@ -18,32 +18,49 @@ package com.zetyun.streamtau.manager.runner;
 
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j
 public class RunnerFactory {
-    private static final Map<String, Runner> runnerMap = new HashMap<>();
+    private static RunnerFactory INS;
 
-    static {
+    private final Map<String, Runner> runnerMap;
+
+    private RunnerFactory() {
+        runnerMap = new LinkedHashMap<>(10);
         registerRunner("CmdLineApp", new CmdLineRunner());
         registerRunner("JavaJarApp", new JavaJarRunner());
     }
 
-    private RunnerFactory() {
+    public static RunnerFactory get() {
+        if (INS == null) {
+            INS = new RunnerFactory();
+        }
+        return INS;
     }
 
-    private static void registerRunner(String type, Runner runner) {
+    private void registerRunner(String type, Runner runner) {
         runnerMap.put(type, runner);
     }
 
-    public static void run(@NotNull Job job, Runnable onFinish) throws IOException {
+    public void run(@NotNull Job job, Runnable onFinish) throws IOException {
         Runner runner = runnerMap.get(job.getAppType());
         if (runner == null) {
             throw new StreamTauException("10101", job.getAppType());
         }
-        runner.run(job, onFinish);
+        if (log.isInfoEnabled()) {
+            log.info("Job \"{}\" starts to run on localhost.", job.getJobName());
+        }
+        runner.run(job, () -> {
+            onFinish.run();
+            if (log.isInfoEnabled()) {
+                log.info("Job \"{}\" finished.", job.getJobName());
+            }
+        });
     }
 }

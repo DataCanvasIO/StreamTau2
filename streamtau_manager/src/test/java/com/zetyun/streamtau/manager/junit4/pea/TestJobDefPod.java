@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea;
+package com.zetyun.streamtau.manager.junit4.pea;
 
-import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
-import com.zetyun.streamtau.manager.pea.misc.CmdLine;
-import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import com.zetyun.streamtau.manager.helper.ResourceUtils;
+import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.JobDefPod;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class TestPeaParser {
+public class TestJobDefPod {
     @Test
-    public void testGetSubtypeClasses() {
-        Map<String, Class<?>> map = PeaParser.JSON.getSubtypeClasses(AssetPea.class);
-        assertThat(map.get("HostPlat"), is(HostPlat.class));
-        assertThat(map.get("CmdLine"), is(CmdLine.class));
-        assertThat(map.get("CmdLineApp"), is(CmdLineApp.class));
+    public void testFromJobDefinition() throws IOException {
+        JobDefPod pod = ResourceUtils.readJobDef("/jobdef/cmdline/cmd_ls.json");
+        for (Map.Entry<String, AssetPea> entry : pod.getPeaMap().entrySet()) {
+            assertThat(entry.getValue().getId(), is(entry.getKey()));
+        }
     }
 }

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.controller;
+package com.zetyun.streamtau.manager.junit4.controller;
 
+import com.zetyun.streamtau.manager.controller.JobController;
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
 import com.zetyun.streamtau.manager.db.model.JobStatus;

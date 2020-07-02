@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.db.mapper;
+package com.zetyun.streamtau.manager.junit4.mapper;
 
-import com.zetyun.streamtau.manager.db.model.ProjectAsset;
+import com.zetyun.streamtau.manager.db.mapper.JobMapper;
+import com.zetyun.streamtau.manager.db.model.Job;
+import com.zetyun.streamtau.manager.db.model.JobStatus;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.annotation.MapperScans;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -32,56 +36,69 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readObjectFromCsv;
-import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class TestProjectAssetMapper {
-    private static List<ProjectAsset> projectAssets;
+public class TestJobMapper {
+    private static List<Job> jobs;
 
     @Autowired
-    private ProjectAssetMapper projectAssetMapper;
+    private JobMapper jobMapper;
 
     @BeforeClass
     public static void setupClass() throws IOException {
-        projectAssets = readObjectFromCsv("/db/data/project_asset.csv", ProjectAsset.class);
+        jobs = readObjectFromCsv("/db/data/job.csv", Job.class);
     }
 
     @Test
-    public void testFindAll() {
-        List<ProjectAsset> modelList = projectAssetMapper.findAll();
-        assertThat(modelList.size(), is(projectAssets.size()));
-        for (ProjectAsset projectAsset : projectAssets) {
-            assertThat(modelList, hasItem(projectAsset));
-        }
+    public void testFindById() {
+        Job model = jobMapper.findById(1L);
+        assertThat(model, is(jobs.get(0)));
     }
 
     @Test
-    public void testAddToProject() {
-        ProjectAsset model = new ProjectAsset(2L, 5L, null);
-        assertThat(projectAssetMapper.addToProject(model), is(1));
-        assertThat(model.getProjectAssetId(), notNullValue());
+    public void testFindJobOfStatus() {
+        List<Job> jobList = jobMapper.findJobOfStatus(JobStatus.READY);
+        assertThat(jobList, hasItems(jobs.get(0)));
     }
 
     @Test
-    public void testDeleteFromProject() {
-        ProjectAsset model = new ProjectAsset(2L, null, "f4e3ddd6-c57c-4fcd-befc-ee7be4157bde");
-        assertThat(projectAssetMapper.deleteFromProject(model), is(1));
+    public void testFindJobOfStatusNone() {
+        List<Job> jobList = jobMapper.findJobOfStatus(JobStatus.WAITING);
+        assertThat(jobList, empty());
     }
 
     @Test
-    public void testDeleteFromProjectNotOwn() {
-        ProjectAsset model = new ProjectAsset(1L, null, "f4e3ddd6-c57c-4fcd-befc-ee7be4157bde");
-        assertThat(projectAssetMapper.deleteFromProject(model), is(0));
+    public void testInsert() {
+        Job model = new Job();
+        model.setJobName("New Asset");
+        model.setProjectId(2L);
+        model.setAppId("060a01a7-d298-45ac-999e-ab1eb4f921b8");
+        model.setAppType("CmdLine");
+        model.setVersion(1);
+        model.setJobDefinition("{ }");
+        model.setJobStatus(JobStatus.READY);
+        assertThat(jobMapper.insert(model), is(1));
+        assertThat(model.getJobId(), notNullValue());
+    }
+
+    @Test
+    public void testUpdateJobStatus() {
+        assertThat(jobMapper.updateJobStatus(1L, JobStatus.FINISHED), is(1));
+        Job model = jobMapper.findById(1L);
+        assertThat(model.getJobStatus(), is(JobStatus.FINISHED));
     }
 
     @Configuration
     @EnableAutoConfiguration
+    @MapperScans({@MapperScan("com.zetyun.streamtau.manager.db.mapper")})
     static class Config {
     }
 }

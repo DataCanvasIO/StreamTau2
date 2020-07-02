@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service.impl;
+package com.zetyun.streamtau.manager.junit4.service.impl;
 
 import com.zetyun.streamtau.manager.db.mapper.JobMapper;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
+import com.zetyun.streamtau.manager.service.ExecuteService;
 import com.zetyun.streamtau.manager.service.ScheduleService;
+import com.zetyun.streamtau.manager.service.impl.ScheduleServiceImpl;
+import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +37,30 @@ import java.io.IOException;
 import java.util.Collections;
 
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJsonCompact;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {ScheduleServiceImpl.class})
+@SpringBootTest(classes = {
+    ScheduleServiceImpl.class,
+    ApplicationContextProvider.class,
+})
+@Slf4j
 public class TestScheduleServiceImpl {
     @Autowired
     private ScheduleService scheduleService;
 
     @MockBean
     private JobMapper jobMapper;
+    @MockBean
+    private ExecuteService executeService;
+
+    @Before
+    public void setup() {
+    }
 
     @Test
     public void testSchedule() throws IOException {
@@ -61,7 +77,6 @@ public class TestScheduleServiceImpl {
         scheduleService.schedule();
         verify(jobMapper, times(1)).findJobOfStatus(JobStatus.READY);
         verify(jobMapper, times(1)).updateJobStatus(1L, JobStatus.SUBMITTED);
-        // Not guaranteed for asynchronous running.
-        // verify(jobMapper, times(1)).updateJobStatus(1L, JobStatus.FINISHED);
+        verify(executeService, times(1)).cmdLine(any(String[].class), any(Runnable.class));
     }
 }

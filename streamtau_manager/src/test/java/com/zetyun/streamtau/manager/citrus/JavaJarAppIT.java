@@ -21,6 +21,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.junit.JUnit4CitrusTest;
 import com.zetyun.streamtau.manager.citrus.behavior.Assets;
+import com.zetyun.streamtau.manager.citrus.behavior.Files;
 import com.zetyun.streamtau.manager.citrus.behavior.Jobs;
 import com.zetyun.streamtau.manager.citrus.behavior.Projects;
 import com.zetyun.streamtau.manager.controller.protocol.JobRequest;
@@ -28,8 +29,8 @@ import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +42,6 @@ import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJobDef;
 
 public class JavaJarAppIT extends JUnit4CitrusTest {
     @Test
-    @Ignore
     @CitrusTest
     public void testRun(@CitrusResource TestDesigner designer) throws IOException {
         String projectId = "test";
@@ -55,7 +55,11 @@ public class JavaJarAppIT extends JUnit4CitrusTest {
             updateChildrenId(pea);
             designer.applyBehavior(new Assets.Create(projectId, pea.getId(), pea));
         }
-        // TODO: call upload file for the JarFile pea.
+        designer.applyBehavior(new Files.Upload(
+            projectId,
+            "JAR",
+            new ClassPathResource("streamtau-test-hello-world.jar")
+        ));
         designer.applyBehavior(new Jobs.Create(
             projectId,
             "job",

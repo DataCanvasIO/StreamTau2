@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service.impl;
+package com.zetyun.streamtau.manager.junit4.service.impl;
 
 import com.zetyun.streamtau.manager.db.mapper.ProjectMapper;
 import com.zetyun.streamtau.manager.db.mapper.UserProjectMapper;
@@ -23,6 +23,7 @@ import com.zetyun.streamtau.manager.db.model.UserProject;
 import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.UserService;
 import com.zetyun.streamtau.manager.service.dto.ProjectDto;
+import com.zetyun.streamtau.manager.service.impl.ProjectServiceImpl;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

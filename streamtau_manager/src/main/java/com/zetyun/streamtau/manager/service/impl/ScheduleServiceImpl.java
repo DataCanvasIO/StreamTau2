@@ -36,7 +36,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void schedule() throws IOException {
         List<Job> jobs = jobMapper.findJobOfStatus(JobStatus.READY);
         for (Job job : jobs) {
-            RunnerFactory.run(job, () -> jobMapper.updateJobStatus(job.getJobId(), JobStatus.FINISHED));
+            RunnerFactory.get().run(job, () -> jobMapper.updateJobStatus(job.getJobId(), JobStatus.FINISHED));
             jobMapper.updateJobStatus(job.getJobId(), JobStatus.SUBMITTED);
         }
     }

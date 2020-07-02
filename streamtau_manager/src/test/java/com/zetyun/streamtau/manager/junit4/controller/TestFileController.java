@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.controller;
+package com.zetyun.streamtau.manager.junit4.controller;
 
+import com.zetyun.streamtau.manager.controller.FileController;
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
@@ -74,7 +75,7 @@ public class TestFileController {
             (byte[]) null
         );
         mvc.perform(
-            multipart("/projects/ABC/assets/AAA/upload")
+            multipart("/projects/ABC/assets/AAA/file")
                 .file(file)
         )
             .andDo(print())

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service.impl;
+package com.zetyun.streamtau.manager.junit4.service.impl;
 
 import com.zetyun.streamtau.manager.service.StorageService;
+import com.zetyun.streamtau.manager.service.impl.LocalFileStorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

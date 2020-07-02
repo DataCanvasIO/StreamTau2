@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.db.mapper;
+package com.zetyun.streamtau.manager.junit4.mapper;
 
+import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.annotation.MapperScans;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -115,6 +118,7 @@ public class TestAssetMapper {
 
     @Configuration
     @EnableAutoConfiguration
+    @MapperScans({@MapperScan("com.zetyun.streamtau.manager.db.mapper")})
     static class Config {
     }
 }

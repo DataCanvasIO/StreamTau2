@@ -14,23 +14,31 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea;
+package com.zetyun.streamtau.manager.junit4.pea.file;
 
-import com.zetyun.streamtau.manager.helper.ResourceUtils;
+import com.zetyun.streamtau.manager.pea.PeaParser;
+import com.zetyun.streamtau.manager.pea.file.File;
+import com.zetyun.streamtau.manager.pea.file.TxtFile;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class TestJobDefPod {
+public class TestFile {
     @Test
-    public void testFromJobDefinition() throws IOException {
-        JobDefPod pod = ResourceUtils.readJobDef("/jobdef/cmdline/cmd_ls.json");
-        for (Map.Entry<String, AssetPea> entry : pod.getPeaMap().entrySet()) {
-            assertThat(entry.getValue().getId(), is(entry.getKey()));
-        }
+    public void testTypeFromName() {
+        assertThat(File.typeFromName("a.txt"), is("TxtFile"));
+        assertThat(File.typeFromName("b.jar"), is("JarFile"));
+    }
+
+    @Test
+    public void testSerialize() throws IOException {
+        File file = new TxtFile();
+        file.setName("text");
+        file.setPath("AAA.txt");
+        String json = PeaParser.JSON.stringShowAll(file);
+        assertThat(json, is("{\"type\":\"TxtFile\",\"name\":\"text\",\"path\":\"AAA.txt\"}"));
     }
 }

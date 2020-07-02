@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.file;
+package com.zetyun.streamtau.manager.junit4.pea;
 
+import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.PeaParser;
+import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
+import com.zetyun.streamtau.manager.pea.misc.CmdLine;
+import com.zetyun.streamtau.manager.pea.plat.HostPlat;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class TestFile {
+public class TestPeaParser {
     @Test
-    public void testTypeFromName() {
-        assertThat(File.typeFromName("a.txt"), is("TxtFile"));
-        assertThat(File.typeFromName("b.jar"), is("JarFile"));
-    }
-
-    @Test
-    public void testSerialize() throws IOException {
-        File file = new TxtFile();
-        file.setName("text");
-        file.setPath("AAA.txt");
-        String json = PeaParser.JSON.stringShowAll(file);
-        assertThat(json, is("{\"type\":\"TxtFile\",\"name\":\"text\",\"path\":\"AAA.txt\"}"));
+    public void testGetSubtypeClasses() {
+        Map<String, Class<?>> map = PeaParser.JSON.getSubtypeClasses(AssetPea.class);
+        assertThat(map.get("HostPlat"), is(HostPlat.class));
+        assertThat(map.get("CmdLine"), is(CmdLine.class));
+        assertThat(map.get("CmdLineApp"), is(CmdLineApp.class));
     }
 }

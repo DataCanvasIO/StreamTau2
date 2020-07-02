@@ -22,12 +22,16 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import com.zetyun.streamtau.manager.service.ExecuteService;
+import com.zetyun.streamtau.manager.service.StorageService;
+import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
-public class JavaJarRunner extends CmdLineRunner {
+@Slf4j
+public class JavaJarRunner implements Runner {
     @Override
     public void run(@NotNull Job job, Runnable onFinish) throws IOException {
         JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
@@ -37,7 +41,9 @@ public class JavaJarRunner extends CmdLineRunner {
         if (!hostPlat.isLocalhost()) {
             throw new StreamTauException("10102", javaJarApp.getType());
         }
-        String path = Paths.get(jarFile.getPath()).toAbsolutePath().toString();
-        runCmdOnLocalhost("java -jar \"" + path + "\"", job.getJobName(), onFinish);
+        StorageService storageService = ApplicationContextProvider.getStorageService();
+        String path = storageService.resolve(jarFile.getPath());
+        ExecuteService executeService = ApplicationContextProvider.getExecuteService();
+        executeService.cmdLine(new String[]{"java", "-jar", path}, onFinish);
     }
 }

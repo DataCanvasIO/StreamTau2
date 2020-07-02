@@ -17,6 +17,7 @@
 package com.zetyun.streamtau.manager.service.impl;
 
 import com.zetyun.streamtau.manager.service.StorageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @Service
 @ConditionalOnProperty(name = "file.storage.type", havingValue = "local", matchIfMissing = true)
 @EnableConfigurationProperties(LocalFileStorageProperties.class)
+@Slf4j
 public class LocalFileStorageService implements StorageService {
     private final Path root;
 
@@ -61,5 +63,10 @@ public class LocalFileStorageService implements StorageService {
     @Override
     public void copyFile(String path, String newPath) throws IOException {
         Files.copy(root.resolve(path), root.resolve(newPath));
+    }
+
+    @Override
+    public String resolve(String path) {
+        return root.resolve(path).toAbsolutePath().toString();
     }
 }

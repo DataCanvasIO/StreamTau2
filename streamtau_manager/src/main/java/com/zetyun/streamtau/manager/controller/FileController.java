@@ -48,7 +48,7 @@ public class FileController {
     private StorageService storageService;
 
     @Operation(summary = "Upload or replace the real file of an file asset of a project.")
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public AssetPea upload(
         @Parameter(description = "The id of the project.")
         @PathVariable("projectId") String projectId,

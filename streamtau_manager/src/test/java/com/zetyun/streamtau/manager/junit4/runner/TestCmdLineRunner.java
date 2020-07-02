@@ -14,19 +14,45 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.runner;
+package com.zetyun.streamtau.manager.junit4.runner;
 
 import com.zetyun.streamtau.manager.db.model.Job;
+import com.zetyun.streamtau.manager.runner.RunnerFactory;
+import com.zetyun.streamtau.manager.service.ExecuteService;
+import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJsonCompact;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {
+    ApplicationContextProvider.class,
+})
+@Slf4j
 public class TestCmdLineRunner {
+    @MockBean
+    private ExecuteService executeService;
+
     @BeforeClass
     public static void setupClass() {
+    }
+
+    @Before
+    public void setup() {
     }
 
     @Test
@@ -35,6 +61,7 @@ public class TestCmdLineRunner {
         job.setAppType("CmdLineApp");
         job.setJobName("testSleep");
         job.setJobDefinition(readJsonCompact("/jobdef/cmdline/cmd_sleep.json"));
-        RunnerFactory.run(job, null);
+        RunnerFactory.get().run(job, null);
+        verify(executeService, times(1)).cmdLine(any(String[].class), any(Runnable.class));
     }
 }

@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.db.mapper;
+package com.zetyun.streamtau.manager.junit4.mapper;
 
-import com.zetyun.streamtau.manager.db.model.UserProject;
+import com.zetyun.streamtau.manager.db.mapper.ProjectAssetMapper;
+import com.zetyun.streamtau.manager.db.model.ProjectAsset;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.annotation.MapperScans;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -41,47 +44,48 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class TestUserProjectMapper {
-    private static List<UserProject> userProjects;
+public class TestProjectAssetMapper {
+    private static List<ProjectAsset> projectAssets;
 
     @Autowired
-    private UserProjectMapper userProjectMapper;
+    private ProjectAssetMapper projectAssetMapper;
 
     @BeforeClass
     public static void setupClass() throws IOException {
-        userProjects = readObjectFromCsv("/db/data/user_project.csv", UserProject.class);
+        projectAssets = readObjectFromCsv("/db/data/project_asset.csv", ProjectAsset.class);
     }
 
     @Test
     public void testFindAll() {
-        List<UserProject> modelList = userProjectMapper.findAll();
-        assertThat(modelList.size(), is(userProjects.size()));
-        for (UserProject userProject : userProjects) {
-            assertThat(modelList, hasItem(userProject));
+        List<ProjectAsset> modelList = projectAssetMapper.findAll();
+        assertThat(modelList.size(), is(projectAssets.size()));
+        for (ProjectAsset projectAsset : projectAssets) {
+            assertThat(modelList, hasItem(projectAsset));
         }
     }
 
     @Test
-    public void testAddToUser() {
-        UserProject model = new UserProject("user1", 3L, null);
-        assertThat(userProjectMapper.addToUser(model), is(1));
-        assertThat(model.getUserProjectId(), notNullValue());
+    public void testAddToProject() {
+        ProjectAsset model = new ProjectAsset(2L, 5L, null);
+        assertThat(projectAssetMapper.addToProject(model), is(1));
+        assertThat(model.getProjectAssetId(), notNullValue());
     }
 
     @Test
-    public void testDeleteFromUser() {
-        UserProject model = new UserProject("user1", null, "14b96595-f7f1-4800-a98a-c3d44d9c7e03");
-        assertThat(userProjectMapper.deleteFromUser(model), is(1));
+    public void testDeleteFromProject() {
+        ProjectAsset model = new ProjectAsset(2L, null, "f4e3ddd6-c57c-4fcd-befc-ee7be4157bde");
+        assertThat(projectAssetMapper.deleteFromProject(model), is(1));
     }
 
     @Test
-    public void testDeleteFromUserNotOwn() {
-        UserProject model = new UserProject("user1", null, "62f6fe03-520f-4a57-972f-f3f849aab6b8");
-        assertThat(userProjectMapper.deleteFromUser(model), is(0));
+    public void testDeleteFromProjectNotOwn() {
+        ProjectAsset model = new ProjectAsset(1L, null, "f4e3ddd6-c57c-4fcd-befc-ee7be4157bde");
+        assertThat(projectAssetMapper.deleteFromProject(model), is(0));
     }
 
     @Configuration
     @EnableAutoConfiguration
+    @MapperScans({@MapperScan("com.zetyun.streamtau.manager.db.mapper")})
     static class Config {
     }
 }
