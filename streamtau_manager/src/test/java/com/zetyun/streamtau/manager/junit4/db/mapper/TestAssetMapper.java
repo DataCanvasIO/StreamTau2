@@ -107,6 +107,12 @@ public class TestAssetMapper {
     }
 
     @Test
+    public void testFindByCategoryInProject() {
+        List<Asset> models = assetMapper.findByCategoryInProject(3L, AssetCategory.MISCELLANEOUS);
+        assertThat(models, hasItems(assets.get(0), assets.get(1)));
+    }
+
+    @Test
     public void testUpdateForProject() {
         Asset model = new Asset();
         model.setProjectAssetId("73c3ad25-8de8-4c63-91dd-ac9c69a0243d");

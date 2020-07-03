@@ -80,6 +80,14 @@
         </where>
     </select>
 
+    <select id="findByCategoryInProject" parameterType="map" resultType="Asset">
+        select * from asset a left join project_asset t on a.asset_id = t.asset_id
+        <where>
+            (t.project_id = #{projectId} or t.project_id = 1)
+            and a.asset_category = #{assetCategory}
+        </where>
+    </select>
+
     <update id="updateInProject" parameterType="map">
         update asset
         <set>

@@ -17,6 +17,7 @@
 package com.zetyun.streamtau.manager.db.mapper;
 
 import com.zetyun.streamtau.manager.db.model.Asset;
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,6 +36,11 @@ public interface AssetMapper {
     Asset findByIdInProject(@Param("projectId") Long projectId, @Param("projectAssetId") String projectAssetId);
 
     List<Asset> findByTypeInProject(@Param("projectId") Long projectId, @Param("assetType") String assetType);
+
+    List<Asset> findByCategoryInProject(
+        @Param("projectId") Long projectId,
+        @Param("assetCategory") AssetCategory assetCategory
+    );
 
     int updateInProject(@Param("projectId") Long projectId, @Param("model") Asset model);
 }
