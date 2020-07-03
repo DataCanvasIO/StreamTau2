@@ -20,7 +20,7 @@ import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
-import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import com.zetyun.streamtau.manager.pea.misc.Host;
 import org.junit.Test;
 
 import java.util.Map;
@@ -32,7 +32,7 @@ public class TestPeaParser {
     @Test
     public void testGetSubtypeClasses() {
         Map<String, Class<?>> map = PeaParser.JSON.getSubtypeClasses(AssetPea.class);
-        assertThat(map.get("HostPlat"), is(HostPlat.class));
+        assertThat(map.get("HostPlat"), is(Host.class));
         assertThat(map.get("CmdLine"), is(CmdLine.class));
         assertThat(map.get("CmdLineApp"), is(CmdLineApp.class));
     }

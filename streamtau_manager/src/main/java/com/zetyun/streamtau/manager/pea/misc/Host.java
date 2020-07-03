@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.plat;
+package com.zetyun.streamtau.manager.pea.misc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,10 +29,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
-@JsonTypeName("HostPlat")
+@JsonTypeName("Host")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class HostPlat extends AssetPea {
+public class Host extends AssetPea {
     @Schema(
         description = "The hostname or IP of the host.",
         example = "localhost"

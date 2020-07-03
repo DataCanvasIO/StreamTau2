@@ -16,22 +16,9 @@
 
 package com.zetyun.streamtau.manager.db.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode(exclude = {"projectAssetId"})
-public class Asset {
-    private Long assetId;
-    private String projectAssetId;
-    private String assetName;
-    private String assetDescription;
-    private String assetType;
-    private AssetCategory assetCategory;
-    private ScriptFormat scriptFormat;
-    private String script;
+public enum AssetCategory {
+    FILE,
+    SERVER,
+    APPLICATION,
+    MISCELLANEOUS,
 }

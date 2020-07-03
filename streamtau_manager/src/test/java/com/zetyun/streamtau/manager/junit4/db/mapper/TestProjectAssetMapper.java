@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.junit4.mapper;
+package com.zetyun.streamtau.manager.junit4.db.mapper;
 
 import com.zetyun.streamtau.manager.db.mapper.ProjectAssetMapper;
 import com.zetyun.streamtau.manager.db.model.ProjectAsset;

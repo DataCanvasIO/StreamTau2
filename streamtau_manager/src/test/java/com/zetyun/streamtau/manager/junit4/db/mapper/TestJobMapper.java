@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.junit4.mapper;
+package com.zetyun.streamtau.manager.junit4.db.mapper;
 
-import com.zetyun.streamtau.manager.db.mapper.UserProjectMapper;
-import com.zetyun.streamtau.manager.db.model.UserProject;
+import com.zetyun.streamtau.manager.db.mapper.JobMapper;
+import com.zetyun.streamtau.manager.db.model.Job;
+import com.zetyun.streamtau.manager.db.model.JobStatus;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,52 +36,64 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readObjectFromCsv;
-import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class TestUserProjectMapper {
-    private static List<UserProject> userProjects;
+public class TestJobMapper {
+    private static List<Job> jobs;
 
     @Autowired
-    private UserProjectMapper userProjectMapper;
+    private JobMapper jobMapper;
 
     @BeforeClass
     public static void setupClass() throws IOException {
-        userProjects = readObjectFromCsv("/db/data/user_project.csv", UserProject.class);
+        jobs = readObjectFromCsv("/db/data/job.csv", Job.class);
     }
 
     @Test
-    public void testFindAll() {
-        List<UserProject> modelList = userProjectMapper.findAll();
-        assertThat(modelList.size(), is(userProjects.size()));
-        for (UserProject userProject : userProjects) {
-            assertThat(modelList, hasItem(userProject));
-        }
+    public void testFindById() {
+        Job model = jobMapper.findById(1L);
+        assertThat(model, is(jobs.get(0)));
     }
 
     @Test
-    public void testAddToUser() {
-        UserProject model = new UserProject("user1", 3L, null);
-        assertThat(userProjectMapper.addToUser(model), is(1));
-        assertThat(model.getUserProjectId(), notNullValue());
+    public void testFindJobOfStatus() {
+        List<Job> jobList = jobMapper.findJobOfStatus(JobStatus.READY);
+        assertThat(jobList, hasItems(jobs.get(0)));
     }
 
     @Test
-    public void testDeleteFromUser() {
-        UserProject model = new UserProject("user1", null, "14b96595-f7f1-4800-a98a-c3d44d9c7e03");
-        assertThat(userProjectMapper.deleteFromUser(model), is(1));
+    public void testFindJobOfStatusNone() {
+        List<Job> jobList = jobMapper.findJobOfStatus(JobStatus.WAITING);
+        assertThat(jobList, empty());
     }
 
     @Test
-    public void testDeleteFromUserNotOwn() {
-        UserProject model = new UserProject("user1", null, "62f6fe03-520f-4a57-972f-f3f849aab6b8");
-        assertThat(userProjectMapper.deleteFromUser(model), is(0));
+    public void testInsert() {
+        Job model = new Job();
+        model.setJobName("New Asset");
+        model.setProjectId(2L);
+        model.setAppId("060a01a7-d298-45ac-999e-ab1eb4f921b8");
+        model.setAppType("CmdLine");
+        model.setVersion(1);
+        model.setJobDefinition("{ }");
+        model.setJobStatus(JobStatus.READY);
+        assertThat(jobMapper.insert(model), is(1));
+        assertThat(model.getJobId(), notNullValue());
+    }
+
+    @Test
+    public void testUpdateJobStatus() {
+        assertThat(jobMapper.updateJobStatus(1L, JobStatus.FINISHED), is(1));
+        Job model = jobMapper.findById(1L);
+        assertThat(model.getJobStatus(), is(JobStatus.FINISHED));
     }
 
     @Configuration

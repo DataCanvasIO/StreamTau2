@@ -21,7 +21,7 @@ import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
-import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.ExecuteService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +36,8 @@ public class CmdLineRunner implements Runner {
         JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
         CmdLineApp cmdLineApp = (CmdLineApp) pod.getApp();
         CmdLine cmdLine = (CmdLine) pod.load(cmdLineApp.getCmdLine());
-        HostPlat hostPlat = (HostPlat) pod.load(cmdLineApp.getHost());
-        if (!hostPlat.isLocalhost()) {
+        Host host = (Host) pod.load(cmdLineApp.getHost());
+        if (!host.isLocalhost()) {
             throw new StreamTauException("10102", cmdLineApp.getType());
         }
         ExecuteService executeService = ApplicationContextProvider.getExecuteService();

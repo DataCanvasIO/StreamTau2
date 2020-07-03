@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.junit4.mapper;
+package com.zetyun.streamtau.manager.junit4.db.mapper;
 
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -68,6 +69,7 @@ public class TestAssetMapper {
         Asset model = new Asset();
         model.setAssetName("New Asset");
         model.setAssetType("COMMAND_LINE");
+        model.setAssetCategory(AssetCategory.MISCELLANEOUS);
         model.setScriptFormat(ScriptFormat.TEXT_PLAIN);
         assertThat(assetMapper.insert(model), is(1));
         assertThat(model.getAssetId(), notNullValue());
@@ -100,7 +102,7 @@ public class TestAssetMapper {
 
     @Test
     public void testFindByTypeInProject() {
-        List<Asset> models = assetMapper.findByTypeInProject(3L, "HostPlat");
+        List<Asset> models = assetMapper.findByTypeInProject(3L, "Host");
         assertThat(models, hasItems(assets.get(0), assets.get(1)));
     }
 

@@ -24,6 +24,7 @@ create table asset (
     asset_name char(255) not null,
     asset_description varchar(512),
     asset_type char(63) not null,
+    asset_category char(63) not null,
     script_format char(31) not null,
     script clob
     );

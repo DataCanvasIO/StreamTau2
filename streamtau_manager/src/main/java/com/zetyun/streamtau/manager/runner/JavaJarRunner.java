@@ -21,7 +21,7 @@ import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
-import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.ExecuteService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
@@ -37,8 +37,8 @@ public class JavaJarRunner implements Runner {
         JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
         JavaJarApp javaJarApp = (JavaJarApp) pod.getApp();
         JarFile jarFile = (JarFile) pod.load(javaJarApp.getJarFile());
-        HostPlat hostPlat = (HostPlat) pod.load(javaJarApp.getHost());
-        if (!hostPlat.isLocalhost()) {
+        Host host = (Host) pod.load(javaJarApp.getHost());
+        if (!host.isLocalhost()) {
             throw new StreamTauException("10102", javaJarApp.getType());
         }
         StorageService storageService = ApplicationContextProvider.getStorageService();

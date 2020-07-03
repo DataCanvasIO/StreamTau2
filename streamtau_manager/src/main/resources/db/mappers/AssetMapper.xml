@@ -33,6 +33,7 @@
             asset_name,
             <if test="model.assetDescription != null">asset_description,</if>
             asset_type,
+            asset_category,
             script_format,
             <if test="model.script != null">script</if>
         </trim>
@@ -41,6 +42,7 @@
             #{model.assetName},
             <if test="model.assetDescription != null">#{model.assetDescription},</if>
             #{model.assetType},
+            #{model.assetCategory},
             #{model.scriptFormat},
             <if test="model.script != null">#{model.script}</if>
         </trim>

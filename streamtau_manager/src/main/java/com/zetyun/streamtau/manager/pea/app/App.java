@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.db.model;
+package com.zetyun.streamtau.manager.pea.app;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
+import com.zetyun.streamtau.manager.pea.JsonAssetPea;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode(exclude = {"projectAssetId"})
-public class Asset {
-    private Long assetId;
-    private String projectAssetId;
-    private String assetName;
-    private String assetDescription;
-    private String assetType;
-    private AssetCategory assetCategory;
-    private ScriptFormat scriptFormat;
-    private String script;
+abstract class App extends JsonAssetPea {
+    @Override
+    public AssetCategory getCategory() {
+        return AssetCategory.APPLICATION;
+    }
 }

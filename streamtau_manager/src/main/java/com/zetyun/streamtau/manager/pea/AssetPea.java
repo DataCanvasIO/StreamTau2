@@ -17,18 +17,20 @@
 package com.zetyun.streamtau.manager.pea;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.manager.db.model.Asset;
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.file.TxtFile;
 import com.zetyun.streamtau.manager.pea.generic.Pea;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
-import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import com.zetyun.streamtau.manager.pea.misc.Host;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,7 +43,7 @@ import java.io.IOException;
     type = "object",
     subTypes = {
         CmdLine.class,
-        HostPlat.class,
+        Host.class,
         CmdLineApp.class,
     }
 )
@@ -50,7 +52,7 @@ import java.io.IOException;
     // Misc
     @JsonSubTypes.Type(value = CmdLine.class, name = "CmdLine"),
     // Plat
-    @JsonSubTypes.Type(HostPlat.class),
+    @JsonSubTypes.Type(Host.class),
     // App
     @JsonSubTypes.Type(CmdLineApp.class),
     @JsonSubTypes.Type(JavaJarApp.class),
@@ -89,6 +91,11 @@ public abstract class AssetPea implements Pea<String, String> {
     public String getType() {
         JsonTypeName name = getClass().getAnnotation(JsonTypeName.class);
         return name.value();
+    }
+
+    @JsonProperty("category")
+    public AssetCategory getCategory() {
+        return AssetCategory.MISCELLANEOUS;
     }
 
     public abstract void mapFrom(Asset model) throws IOException;

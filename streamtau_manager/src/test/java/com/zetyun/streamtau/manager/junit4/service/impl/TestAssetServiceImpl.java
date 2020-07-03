@@ -24,7 +24,7 @@ import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
-import com.zetyun.streamtau.manager.pea.plat.HostPlat;
+import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.impl.AssetServiceImpl;
@@ -133,7 +133,7 @@ public class TestAssetServiceImpl {
             model.setProjectAssetId("BBB");
             return 1;
         });
-        AssetPea pea = new HostPlat();
+        AssetPea pea = new Host();
         pea.setName("forCreate");
         pea = assetService.create("ABC", pea);
         assertThat(pea.getId(), is("BBB"));

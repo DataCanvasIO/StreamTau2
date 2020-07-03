@@ -28,6 +28,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: asset_category
+                  type: char(63)
+                  constraints:
+                    nullable: false
+              - column:
                   name: script_format
                   type: char(31)
                   constraints:
