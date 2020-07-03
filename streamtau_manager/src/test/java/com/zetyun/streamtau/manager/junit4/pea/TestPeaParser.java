@@ -32,7 +32,7 @@ public class TestPeaParser {
     @Test
     public void testGetSubtypeClasses() {
         Map<String, Class<?>> map = PeaParser.JSON.getSubtypeClasses(AssetPea.class);
-        assertThat(map.get("HostPlat"), is(Host.class));
+        assertThat(map.get("Host"), is(Host.class));
         assertThat(map.get("CmdLine"), is(CmdLine.class));
         assertThat(map.get("CmdLineApp"), is(CmdLineApp.class));
     }

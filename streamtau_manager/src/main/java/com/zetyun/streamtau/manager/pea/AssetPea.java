@@ -32,6 +32,7 @@ import com.zetyun.streamtau.manager.pea.file.TxtFile;
 import com.zetyun.streamtau.manager.pea.generic.Pea;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
+import com.zetyun.streamtau.manager.pea.server.Executor;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -53,7 +54,6 @@ import java.io.IOException;
 @JsonSubTypes({
     // Misc
     @JsonSubTypes.Type(value = CmdLine.class, name = "CmdLine"),
-    // Plat
     @JsonSubTypes.Type(Host.class),
     // App
     @JsonSubTypes.Type(CmdLineApp.class),
@@ -61,6 +61,8 @@ import java.io.IOException;
     // File
     @JsonSubTypes.Type(JarFile.class),
     @JsonSubTypes.Type(TxtFile.class),
+    // Server
+    @JsonSubTypes.Type(Executor.class)
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ToString

@@ -42,6 +42,7 @@ public class AssetPod implements Pod<String, String, AssetPea> {
         model.setAssetType(pea.getType());
         model.setAssetName(pea.getName());
         model.setAssetDescription(pea.getDescription());
+        model.setAssetCategory(pea.getCategory());
         model.setProjectAssetId(pea.getId());
         pea.mapTo(model);
         return model;

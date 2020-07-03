@@ -93,13 +93,13 @@ public class TestAssetController {
         mvc.perform(
             post("/projects/ABC/assets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"testCreate\", \"type\": \"HostPlat\", \"hostname\": \"localhost\"}")
+                .content("{\"name\": \"testCreate\", \"type\": \"Host\", \"hostname\": \"localhost\"}")
         )
             .andDo(print())
             .andExpect(success())
             .andExpect(jsonPath("$.data.id").value("AAA"))
             .andExpect(jsonPath("$.data.name").value("testCreate"))
-            .andExpect(jsonPath("$.data.type").value("HostPlat"))
+            .andExpect(jsonPath("$.data.type").value("Host"))
             .andExpect(jsonPath("$.data.hostname").value("localhost"));
         verify(assetService, times(1)).create(eq("ABC"), any(AssetPea.class));
     }
@@ -122,13 +122,13 @@ public class TestAssetController {
         mvc.perform(
             put("/projects/ABC/assets/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"testUpdate\", \"type\": \"HostPlat\", \"hostname\": \"localhost\"}")
+                .content("{\"name\": \"testUpdate\", \"type\": \"Host\", \"hostname\": \"localhost\"}")
         )
             .andDo(print())
             .andExpect(success())
             .andExpect(jsonPath("$.data.id").value("AAA"))
             .andExpect(jsonPath("$.data.name").value("testUpdate"))
-            .andExpect(jsonPath("$.data.type").value("HostPlat"))
+            .andExpect(jsonPath("$.data.type").value("Host"))
             .andExpect(jsonPath("$.data.hostname").value("localhost"));
         verify(assetService, times(1)).update(eq("ABC"), any(AssetPea.class));
     }

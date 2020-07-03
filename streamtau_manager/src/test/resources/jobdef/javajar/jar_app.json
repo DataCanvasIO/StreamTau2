@@ -3,19 +3,22 @@
   "map": {
     "APP": {
       "type": "JavaJarApp",
-      "name": "app",
+      "category": "APPLICATION",
+      "host": "LH",
       "jarFile": "JAR",
-      "host": "LH"
+      "name": "app"
     },
     "JAR": {
       "type": "JarFile",
+      "category": "FILE",
       "name": "jarFile",
       "path": "BBB.jar"
     },
     "LH": {
-      "type": "HostPlat",
-      "name": "lh",
-      "hostname": "localhost"
+      "type": "Host",
+      "category": "MISCELLANEOUS",
+      "hostname": "localhost",
+      "name": "lh"
     }
   }
 }
