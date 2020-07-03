@@ -27,6 +27,8 @@ public interface AssetService {
 
     AssetPea findById(String userProjectId, String projectAssetId) throws IOException;
 
+    List<AssetPea> findByType(String userProjectId, String assetType) throws IOException;
+
     AssetPea create(String userProjectId, AssetPea pea) throws IOException;
 
     AssetPea update(String userProjectId, AssetPea pea) throws IOException;

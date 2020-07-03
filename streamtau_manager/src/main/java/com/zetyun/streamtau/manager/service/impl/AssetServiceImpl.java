@@ -26,6 +26,7 @@ import com.zetyun.streamtau.manager.pea.AssetPod;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,10 +43,8 @@ public class AssetServiceImpl implements AssetService {
     @Autowired
     private ProjectService projectService;
 
-    @Override
-    public List<AssetPea> listAll(String userProjectId) throws IOException {
-        Long projectId = projectService.mapProjectId(userProjectId);
-        List<Asset> models = assetMapper.findAllOfProject(projectId);
+    @NotNull
+    private List<AssetPea> getAssetPeas(@NotNull List<Asset> models) throws IOException {
         List<AssetPea> peas = new ArrayList<>(models.size());
         for (Asset model : models) {
             peas.add(AssetPod.fromModel(model));
@@ -54,10 +53,24 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    public List<AssetPea> listAll(String userProjectId) throws IOException {
+        Long projectId = projectService.mapProjectId(userProjectId);
+        List<Asset> models = assetMapper.findAllOfProject(projectId);
+        return getAssetPeas(models);
+    }
+
+    @Override
     public AssetPea findById(String userProjectId, String projectAssetId) throws IOException {
         Long projectId = projectService.mapProjectId(userProjectId);
         Asset model = assetMapper.findByIdInProject(projectId, projectAssetId);
         return AssetPod.fromModel(model);
+    }
+
+    @Override
+    public List<AssetPea> findByType(String userProjectId, String assetType) throws IOException {
+        Long projectId = projectService.mapProjectId(userProjectId);
+        List<Asset> models = assetMapper.findByTypeInProject(projectId, assetType);
+        return getAssetPeas(models);
     }
 
     @Override

@@ -89,13 +89,12 @@ public class TestAssetServiceImpl {
 
     @Before
     public void setup() {
-        when(assetMapper.findAllOfProject(1L)).thenReturn(Collections.singletonList(cmdLineAsset));
-        when(assetMapper.findByIdInProject(1L, "AAA")).thenReturn(cmdLineAsset);
         when(projectService.mapProjectId("ABC")).thenReturn(1L);
     }
 
     @Test
     public void testListAll() throws IOException {
+        when(assetMapper.findAllOfProject(1L)).thenReturn(Collections.singletonList(cmdLineAsset));
         List<AssetPea> peas = assetService.listAll("ABC");
         assertThat(peas.size(), is(1));
         assertThat(peas, hasItem(is(cmdLinePea)));
@@ -105,10 +104,21 @@ public class TestAssetServiceImpl {
 
     @Test
     public void testFindById() throws IOException {
+        when(assetMapper.findByIdInProject(1L, "AAA")).thenReturn(cmdLineAsset);
         AssetPea pea = assetService.findById("ABC", "AAA");
         assertThat(pea, is(cmdLinePea));
         verify(projectService, times(1)).mapProjectId("ABC");
         verify(assetMapper, times(1)).findByIdInProject(1L, "AAA");
+    }
+
+    @Test
+    public void testFindByType() throws IOException {
+        when(assetMapper.findByTypeInProject(1L, "CmdLine"))
+            .thenReturn(Collections.singletonList(cmdLineAsset));
+        List<AssetPea> peas = assetService.findByType("ABC", "CmdLine");
+        assertThat(peas, hasItem(cmdLinePea));
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetMapper, times(1)).findByTypeInProject(1L, "CmdLine");
     }
 
     @Test
