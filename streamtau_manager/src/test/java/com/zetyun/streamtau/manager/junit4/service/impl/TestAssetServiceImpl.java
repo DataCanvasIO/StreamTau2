@@ -19,6 +19,7 @@ package com.zetyun.streamtau.manager.junit4.service.impl;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.mapper.ProjectAssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.db.model.ProjectAsset;
 import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.AssetPea;
@@ -119,6 +120,17 @@ public class TestAssetServiceImpl {
         assertThat(peas, hasItem(cmdLinePea));
         verify(projectService, times(1)).mapProjectId("ABC");
         verify(assetMapper, times(1)).findByTypeInProject(1L, "CmdLine");
+    }
+
+    @Test
+    public void testFindByCategory() throws IOException {
+        when(assetMapper.findByCategoryInProject(1L, AssetCategory.MISCELLANEOUS))
+            .thenReturn(Collections.singletonList(cmdLineAsset));
+        List<AssetPea> peas = assetService.findByCategory("ABC", AssetCategory.MISCELLANEOUS);
+        assertThat(peas, hasItem(cmdLinePea));
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetMapper, times(1))
+            .findByCategoryInProject(1L, AssetCategory.MISCELLANEOUS);
     }
 
     @Test

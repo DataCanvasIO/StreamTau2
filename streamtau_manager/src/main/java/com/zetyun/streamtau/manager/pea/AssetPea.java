@@ -18,6 +18,7 @@ package com.zetyun.streamtau.manager.pea;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -47,6 +48,7 @@ import java.io.IOException;
         CmdLineApp.class,
     }
 )
+@JsonPropertyOrder(alphabetic = true)
 @JsonTypeInfo(property = "type", use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
     // Misc

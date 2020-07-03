@@ -3,19 +3,22 @@
   "map": {
     "APP": {
       "type": "CmdLineApp",
-      "name": "app",
+      "category": "APPLICATION",
       "cmdLine": "CMD",
-      "host": "LH"
+      "host": "LH",
+      "name": "app"
     },
     "CMD": {
       "type": "CmdLine",
-      "name": "cmd",
-      "cmd": "ls -l"
+      "category": "MISCELLANEOUS",
+      "cmd": "ls -l",
+      "name": "cmd"
     },
     "LH": {
-      "type": "HostPlat",
-      "name": "lh",
-      "hostname": "localhost"
+      "type": "Host",
+      "category": "MISCELLANEOUS",
+      "hostname": "localhost",
+      "name": "lh"
     }
   }
 }

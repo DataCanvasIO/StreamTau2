@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.service;
 
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 
@@ -28,6 +29,8 @@ public interface AssetService {
     AssetPea findById(String userProjectId, String projectAssetId) throws IOException;
 
     List<AssetPea> findByType(String userProjectId, String assetType) throws IOException;
+
+    List<AssetPea> findByCategory(String userProjectId, AssetCategory assetCategory) throws IOException;
 
     AssetPea create(String userProjectId, AssetPea pea) throws IOException;
 

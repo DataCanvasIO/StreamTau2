@@ -19,6 +19,7 @@ package com.zetyun.streamtau.manager.service.impl;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.mapper.ProjectAssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.db.model.ProjectAsset;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.AssetPea;
@@ -70,6 +71,13 @@ public class AssetServiceImpl implements AssetService {
     public List<AssetPea> findByType(String userProjectId, String assetType) throws IOException {
         Long projectId = projectService.mapProjectId(userProjectId);
         List<Asset> models = assetMapper.findByTypeInProject(projectId, assetType);
+        return getAssetPeas(models);
+    }
+
+    @Override
+    public List<AssetPea> findByCategory(String userProjectId, AssetCategory assetCategory) throws IOException {
+        Long projectId = projectService.mapProjectId(userProjectId);
+        List<Asset> models = assetMapper.findByCategoryInProject(projectId, assetCategory);
         return getAssetPeas(models);
     }
 
