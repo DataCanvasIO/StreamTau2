@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
+import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
@@ -38,6 +39,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -102,7 +104,14 @@ public abstract class AssetPea implements Pea<String, String> {
         return AssetCategory.MISCELLANEOUS;
     }
 
-    public abstract void mapFrom(Asset model) throws IOException;
+    public void mapFrom(@NotNull Asset model) throws IOException {
+        PeaParser parser = PeaParser.get(model.getScriptFormat());
+        parser.parse(this, model.getScript());
+    }
 
-    public abstract void mapTo(Asset model) throws IOException;
+    public void mapTo(@NotNull Asset model) throws IOException {
+        model.setScriptFormat(ScriptFormat.APPLICATION_JSON);
+        PeaParser parser = PeaParser.get(model.getScriptFormat());
+        model.setScript(parser.stringHideSome(this));
+    }
 }

@@ -16,15 +16,20 @@
 
 package com.zetyun.streamtau.manager.service;
 
-import com.zetyun.streamtau.manager.service.dto.ServerDto;
+import com.zetyun.streamtau.manager.instance.server.ServerInstance;
+import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 public interface ServerService {
-    List<ServerDto> listAll(String userProjectId) throws IOException;
+    ServerInstance getInstance(Long projectId, String projectAssetId) throws IOException;
 
-    void start(String userProjectId, String projectAssetId);
+    Collection<ServerInstance> listAll(Long projectId) throws IOException;
 
-    void stop(String userProjectId, String projectAssetId);
+    void start(Long projectId, String projectAssetId) throws IOException;
+
+    void stop(Long projectId, String projectAssetId) throws IOException;
+
+    ServerStatus getStatus(Long projectId, String projectAssetId) throws IOException;
 }

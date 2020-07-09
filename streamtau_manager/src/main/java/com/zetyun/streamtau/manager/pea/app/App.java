@@ -17,9 +17,9 @@
 package com.zetyun.streamtau.manager.pea.app;
 
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
-import com.zetyun.streamtau.manager.pea.JsonAssetPea;
+import com.zetyun.streamtau.manager.pea.AssetPea;
 
-abstract class App extends JsonAssetPea {
+abstract class App extends AssetPea {
     @Override
     public AssetCategory getCategory() {
         return AssetCategory.APPLICATION;

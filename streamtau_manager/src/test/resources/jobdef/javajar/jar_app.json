@@ -4,21 +4,20 @@
     "APP": {
       "type": "JavaJarApp",
       "category": "APPLICATION",
-      "host": "LH",
       "jarFile": "JAR",
-      "name": "app"
+      "name": "app",
+      "server": "EXECUTOR"
+    },
+    "EXECUTOR": {
+      "type": "Executor",
+      "category": "SERVER",
+      "name": "executor"
     },
     "JAR": {
       "type": "JarFile",
       "category": "FILE",
       "name": "jarFile",
       "path": "BBB.jar"
-    },
-    "LH": {
-      "type": "Host",
-      "category": "MISCELLANEOUS",
-      "hostname": "localhost",
-      "name": "lh"
     }
   }
 }

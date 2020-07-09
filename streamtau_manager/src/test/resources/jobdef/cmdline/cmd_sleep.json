@@ -5,8 +5,8 @@
       "type": "CmdLineApp",
       "category": "APPLICATION",
       "cmdLine": "CMD",
-      "host": "LH",
-      "name": "app"
+      "name": "app",
+      "server": "EXECUTOR"
     },
     "CMD": {
       "type": "CmdLine",
@@ -14,11 +14,10 @@
       "cmd": "sleep 5",
       "name": "cmd"
     },
-    "LH": {
-      "type": "Host",
-      "category": "MISCELLANEOUS",
-      "hostname": "localhost",
-      "name": "lh"
+    "EXECUTOR": {
+      "type": "Executor",
+      "category": "SERVER",
+      "name": "executor"
     }
   }
 }

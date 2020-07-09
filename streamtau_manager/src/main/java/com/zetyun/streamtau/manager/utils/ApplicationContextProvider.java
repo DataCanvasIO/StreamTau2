@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.manager.utils;
 
-import com.zetyun.streamtau.manager.service.ExecuteService;
+import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
@@ -41,7 +41,7 @@ public class ApplicationContextProvider implements ApplicationContextAware {
         return context.getBean(StorageService.class);
     }
 
-    public static ExecuteService getExecuteService() {
-        return context.getBean(ExecuteService.class);
+    public static ServerService getServerService() {
+        return context.getBean(ServerService.class);
     }
 }

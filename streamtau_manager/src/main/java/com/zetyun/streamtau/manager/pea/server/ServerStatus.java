@@ -14,25 +14,10 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.starter;
+package com.zetyun.streamtau.manager.pea.server;
 
-import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.server.Executor;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-public class ExecutorStarter implements Starter {
-    @Override
-    public void start(AssetPea pea) throws IOException {
-        Executor executor = (Executor) pea;
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-
-    }
-
-    @Override
-    public void stop(AssetPea pea) {
-
-    }
+public enum ServerStatus {
+    ACTIVE,
+    INACTIVE,
+    UNKNOWN,
 }

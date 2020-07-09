@@ -42,9 +42,9 @@ public class CmdLineApp extends App {
         description = "The id of the host to run on.",
         example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
     )
-    @JsonProperty("host")
+    @JsonProperty("server")
     @Getter
     @Setter
     @PeaId
-    private String host;
+    private String server;
 }

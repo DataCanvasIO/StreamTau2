@@ -19,8 +19,9 @@ package com.zetyun.streamtau.manager.junit4.service.impl;
 import com.zetyun.streamtau.manager.db.mapper.JobMapper;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
-import com.zetyun.streamtau.manager.service.ExecuteService;
+import com.zetyun.streamtau.manager.instance.server.ExecutorInstance;
 import com.zetyun.streamtau.manager.service.ScheduleService;
+import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.impl.ScheduleServiceImpl;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +57,9 @@ public class TestScheduleServiceImpl {
     @MockBean
     private JobMapper jobMapper;
     @MockBean
-    private ExecuteService executeService;
+    private ServerService serverService;
+    @MockBean
+    private ExecutorInstance executorInstance;
 
     @Before
     public void setup() {
@@ -74,9 +77,11 @@ public class TestScheduleServiceImpl {
         job.setJobStatus(JobStatus.READY);
         job.setJobDefinition(readJsonCompact("/jobdef/cmdline/cmd_ls.json"));
         when(jobMapper.findJobOfStatus(JobStatus.READY)).thenReturn(Collections.singletonList(job));
+        when(serverService.getInstance(2L, "EXECUTOR")).thenReturn(executorInstance);
         scheduleService.schedule();
         verify(jobMapper, times(1)).findJobOfStatus(JobStatus.READY);
         verify(jobMapper, times(1)).updateJobStatus(1L, JobStatus.SUBMITTED);
-        verify(executeService, times(1)).cmdLine(any(String[].class), any(Runnable.class));
+        verify(serverService, times(1)).getInstance(2L, "EXECUTOR");
+        verify(executorInstance, times(1)).cmdLine(any(String[].class), any(Runnable.class));
     }
 }

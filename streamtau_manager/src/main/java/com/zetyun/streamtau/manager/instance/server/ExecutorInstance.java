@@ -14,27 +14,64 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service.impl;
+package com.zetyun.streamtau.manager.instance.server;
 
 import com.google.common.base.Charsets;
-import com.zetyun.streamtau.manager.service.ExecuteService;
+import com.zetyun.streamtau.manager.pea.server.ServerStatus;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.PreDestroy;
 
-@Service
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
-public class ExecuteServiceImpl implements ExecuteService {
-    public static final ExecutorService executorService = Executors.newFixedThreadPool(10);
+public class ExecutorInstance extends ServerInstance {
+    private static ExecutorService executorService = null;
 
     @Override
+    public synchronized void start() {
+        if (executorService == null) {
+            executorService = Executors.newCachedThreadPool();
+            checkStatus();
+            if (log.isInfoEnabled()) {
+                log.info("Executor service started.");
+            }
+        }
+    }
+
+    @Override
+    public synchronized void stop() {
+        if (executorService == null) {
+            return;
+        }
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(1000, TimeUnit.MILLISECONDS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+        }
+        executorService = null;
+        checkStatus();
+        if (log.isInfoEnabled()) {
+            log.info("Executor service has been shut down.");
+        }
+    }
+
+    @Override
+    public void checkStatus() {
+        getServer().setStatus(executorService == null ? ServerStatus.INACTIVE : ServerStatus.ACTIVE);
+    }
+
     public void cmdLine(String[] cmd, Runnable onFinish) {
+        start();
         if (log.isInfoEnabled()) {
             log.info("The command is: `{}`", String.join(" ", cmd));
         }
@@ -54,18 +91,5 @@ public class ExecuteServiceImpl implements ExecuteService {
                 e.printStackTrace();
             }
         });
-    }
-
-    @PreDestroy
-    public void onExit() {
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(1000, TimeUnit.MILLISECONDS)) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executorService.shutdownNow();
-        }
-        log.info("Executor service has been shut down.");
     }
 }

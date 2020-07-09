@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.starter;
+package com.zetyun.streamtau.manager.instance.server;
 
-import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.zetyun.streamtau.manager.pea.server.Server;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.io.IOException;
+@ToString
+@EqualsAndHashCode
+public abstract class ServerInstance {
+    @JsonValue
+    @Setter
+    @Getter
+    private Server server;
 
-public interface Starter {
-    void start(AssetPea pea) throws IOException;
+    public abstract void start();
 
-    void stop(AssetPea pea);
+    public abstract void stop();
+
+    public abstract void checkStatus();
 }

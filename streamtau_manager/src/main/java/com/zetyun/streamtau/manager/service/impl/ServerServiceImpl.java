@@ -19,53 +19,90 @@ package com.zetyun.streamtau.manager.service.impl;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
+import com.zetyun.streamtau.manager.instance.server.ServerInstance;
+import com.zetyun.streamtau.manager.instance.server.ServerInstanceFactory;
+import com.zetyun.streamtau.manager.pea.AssetPod;
+import com.zetyun.streamtau.manager.pea.server.Server;
+import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.ServerService;
-import com.zetyun.streamtau.manager.service.dto.ServerDto;
-import com.zetyun.streamtau.manager.service.dto.ServerStatus;
-import com.zetyun.streamtau.manager.service.mapper.ServerDtoMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PreDestroy;
 
 @Service
+@Slf4j
 public class ServerServiceImpl implements ServerService {
-    private final Map<Long, ServerDto> embeddedServers = new LinkedHashMap<>();
+    private final Map<Long, ServerInstance> serverInstanceMap = new LinkedHashMap<>();
 
     @Autowired
     private AssetMapper assetMapper;
     @Autowired
     private ProjectService projectService;
 
+    private void updateServerInstanceMap(@NotNull Asset model) throws IOException {
+        Long serverId = model.getAssetId();
+        serverInstanceMap.putIfAbsent(
+            serverId,
+            ServerInstanceFactory.get().getServerInstance((Server) AssetPod.fromModel(model))
+        );
+    }
+
     @Override
-    public List<ServerDto> listAll(String userProjectId) throws IOException {
-        Long projectId = projectService.mapProjectId(userProjectId);
-        List<Asset> models = assetMapper.findByCategoryInProject(projectId, AssetCategory.SERVER);
-        List<ServerDto> servers = new LinkedList<>();
-        for (Asset model : models) {
-            ServerDto server = ServerDtoMapper.MAPPER.toDto(model);
-            Long serverId = model.getAssetId();
-            if (embeddedServers.get(serverId) == null) {
-                server.setStatus(ServerStatus.INACTIVE);
-                embeddedServers.put(serverId, server);
-            }
-            servers.add(server);
+    public ServerInstance getInstance(Long projectId, String projectAssetId) throws IOException {
+        Asset model = assetMapper.findByIdInProject(projectId, projectAssetId);
+        if (model != null) {
+            updateServerInstanceMap(model);
+            return serverInstanceMap.get(model.getAssetId());
         }
-        return servers;
+        return null;
     }
 
     @Override
-    public void start(String userProjectId, String projectAssetId) {
-        // TODO
+    public Collection<ServerInstance> listAll(Long projectId) throws IOException {
+        List<Asset> models = assetMapper.findByCategoryInProject(projectId, AssetCategory.SERVER);
+        for (Asset model : models) {
+            updateServerInstanceMap(model);
+        }
+        return serverInstanceMap.values();
     }
 
     @Override
-    public void stop(String userProjectId, String projectAssetId) {
-        // TODO
+    public void start(Long projectId, String projectAssetId) throws IOException {
+        ServerInstance serverInstance = getInstance(projectId, projectAssetId);
+        if (log.isInfoEnabled()) {
+            log.info("Start server \"{}\"...", serverInstance.getServer().getName());
+        }
+        serverInstance.start();
+    }
+
+    @Override
+    public void stop(Long projectId, String projectAssetId) throws IOException {
+        ServerInstance serverInstance = getInstance(projectId, projectAssetId);
+        serverInstance.stop();
+        if (log.isInfoEnabled()) {
+            log.info("Stopped server \"{}\"...", serverInstance.getServer().getName());
+        }
+    }
+
+    @Override
+    public ServerStatus getStatus(Long projectId, String projectAssetId) throws IOException {
+        ServerInstance serverInstance = getInstance(projectId, projectAssetId);
+        return serverInstance.getServer().getStatus();
+    }
+
+    @PreDestroy
+    public void onExit() {
+        for (ServerInstance instance : serverInstanceMap.values()) {
+            instance.stop();
+        }
     }
 }

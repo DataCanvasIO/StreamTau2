@@ -103,13 +103,13 @@ public class TestAssetMapper {
     @Test
     public void testFindByTypeInProject() {
         List<Asset> models = assetMapper.findByTypeInProject(3L, "Host");
-        assertThat(models, hasItems(assets.get(0), assets.get(1)));
+        assertThat(models, hasItems(assets.get(1)));
     }
 
     @Test
     public void testFindByCategoryInProject() {
         List<Asset> models = assetMapper.findByCategoryInProject(3L, AssetCategory.MISCELLANEOUS);
-        assertThat(models, hasItems(assets.get(0), assets.get(1)));
+        assertThat(models, hasItems(assets.get(1)));
     }
 
     @Test

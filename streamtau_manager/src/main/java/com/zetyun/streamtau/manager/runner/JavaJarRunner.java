@@ -18,11 +18,13 @@ package com.zetyun.streamtau.manager.runner;
 
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
+import com.zetyun.streamtau.manager.instance.server.ExecutorInstance;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
-import com.zetyun.streamtau.manager.pea.misc.Host;
-import com.zetyun.streamtau.manager.service.ExecuteService;
+import com.zetyun.streamtau.manager.pea.server.Executor;
+import com.zetyun.streamtau.manager.pea.server.Server;
+import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -37,13 +39,17 @@ public class JavaJarRunner implements Runner {
         JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
         JavaJarApp javaJarApp = (JavaJarApp) pod.getApp();
         JarFile jarFile = (JarFile) pod.load(javaJarApp.getJarFile());
-        Host host = (Host) pod.load(javaJarApp.getHost());
-        if (!host.isLocalhost()) {
+        Server server = (Server) pod.load(javaJarApp.getServer());
+        if (!(server instanceof Executor)) {
             throw new StreamTauException("10102", javaJarApp.getType());
         }
         StorageService storageService = ApplicationContextProvider.getStorageService();
         String path = storageService.resolve(jarFile.getPath());
-        ExecuteService executeService = ApplicationContextProvider.getExecuteService();
-        executeService.cmdLine(new String[]{"java", "-jar", path}, onFinish);
+        ServerService serverService = ApplicationContextProvider.getServerService();
+        ExecutorInstance executorInstance = (ExecutorInstance) serverService.getInstance(
+            job.getProjectId(),
+            server.getId()
+        );
+        executorInstance.cmdLine(new String[]{"java", "-jar", path}, onFinish);
     }
 }

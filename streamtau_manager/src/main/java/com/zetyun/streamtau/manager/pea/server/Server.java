@@ -16,10 +16,25 @@
 
 package com.zetyun.streamtau.manager.pea.server;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
-import com.zetyun.streamtau.manager.pea.JsonAssetPea;
+import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.PeaParser;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-public abstract class Server extends JsonAssetPea {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public abstract class Server extends AssetPea {
+    @JsonView(PeaParser.Public.class)
+    @JsonProperty(value = "status")
+    @Getter
+    @Setter
+    private ServerStatus status;
+
     @Override
     public AssetCategory getCategory() {
         return AssetCategory.SERVER;
