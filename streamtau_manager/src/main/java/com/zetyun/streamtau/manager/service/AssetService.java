@@ -24,19 +24,19 @@ import java.io.IOException;
 import java.util.List;
 
 public interface AssetService {
-    List<AssetPea> listAll(String userProjectId) throws IOException;
+    List<AssetPea> listAll(Long projectId) throws IOException;
 
-    AssetPea findById(String userProjectId, String projectAssetId) throws IOException;
+    AssetPea findById(Long projectId, String projectAssetId) throws IOException;
 
-    List<AssetPea> findByType(String userProjectId, String assetType) throws IOException;
+    List<AssetPea> findByType(Long projectId, String assetType) throws IOException;
 
-    List<AssetPea> findByCategory(String userProjectId, AssetCategory assetCategory) throws IOException;
+    List<AssetPea> findByCategory(Long projectId, AssetCategory assetCategory) throws IOException;
 
-    AssetPea create(String userProjectId, AssetPea pea) throws IOException;
+    AssetPea create(Long projectId, AssetPea pea) throws IOException;
 
-    AssetPea update(String userProjectId, AssetPea pea) throws IOException;
+    AssetPea update(Long projectId, AssetPea pea) throws IOException;
 
-    void delete(String userProjectId, String projectAssetId);
+    void delete(Long projectId, String projectAssetId);
 
     JobDefPod synthesizeJobDef(Long projectId, String projectAssetId) throws IOException;
 }

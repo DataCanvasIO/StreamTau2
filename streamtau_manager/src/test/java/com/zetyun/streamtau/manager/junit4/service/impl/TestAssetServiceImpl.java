@@ -27,7 +27,6 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.AssetService;
-import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.impl.AssetServiceImpl;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -68,8 +67,6 @@ public class TestAssetServiceImpl {
     private AssetMapper assetMapper;
     @MockBean
     private ProjectAssetMapper projectAssetMapper;
-    @MockBean
-    private ProjectService projectService;
 
     @BeforeClass
     public static void setupClass() {
@@ -90,47 +87,42 @@ public class TestAssetServiceImpl {
 
     @Before
     public void setup() {
-        when(projectService.mapProjectId("ABC")).thenReturn(1L);
     }
 
     @Test
     public void testListAll() throws IOException {
-        when(assetMapper.findAllOfProject(1L)).thenReturn(Collections.singletonList(cmdLineAsset));
-        List<AssetPea> peas = assetService.listAll("ABC");
+        when(assetMapper.findAllOfProject(2L)).thenReturn(Collections.singletonList(cmdLineAsset));
+        List<AssetPea> peas = assetService.listAll(2L);
         assertThat(peas.size(), is(1));
         assertThat(peas, hasItem(is(cmdLinePea)));
-        verify(projectService, times(1)).mapProjectId("ABC");
-        verify(assetMapper, times(1)).findAllOfProject(1L);
+        verify(assetMapper, times(1)).findAllOfProject(2L);
     }
 
     @Test
     public void testFindById() throws IOException {
-        when(assetMapper.findByIdInProject(1L, "AAA")).thenReturn(cmdLineAsset);
-        AssetPea pea = assetService.findById("ABC", "AAA");
+        when(assetMapper.findByIdInProject(2L, "AAA")).thenReturn(cmdLineAsset);
+        AssetPea pea = assetService.findById(2L, "AAA");
         assertThat(pea, is(cmdLinePea));
-        verify(projectService, times(1)).mapProjectId("ABC");
-        verify(assetMapper, times(1)).findByIdInProject(1L, "AAA");
+        verify(assetMapper, times(1)).findByIdInProject(2L, "AAA");
     }
 
     @Test
     public void testFindByType() throws IOException {
-        when(assetMapper.findByTypeInProject(1L, "CmdLine"))
+        when(assetMapper.findByTypeInProject(2L, "CmdLine"))
             .thenReturn(Collections.singletonList(cmdLineAsset));
-        List<AssetPea> peas = assetService.findByType("ABC", "CmdLine");
+        List<AssetPea> peas = assetService.findByType(2L, "CmdLine");
         assertThat(peas, hasItem(cmdLinePea));
-        verify(projectService, times(1)).mapProjectId("ABC");
-        verify(assetMapper, times(1)).findByTypeInProject(1L, "CmdLine");
+        verify(assetMapper, times(1)).findByTypeInProject(2L, "CmdLine");
     }
 
     @Test
     public void testFindByCategory() throws IOException {
-        when(assetMapper.findByCategoryInProject(1L, AssetCategory.MISCELLANEOUS))
+        when(assetMapper.findByCategoryInProject(2L, AssetCategory.MISCELLANEOUS))
             .thenReturn(Collections.singletonList(cmdLineAsset));
-        List<AssetPea> peas = assetService.findByCategory("ABC", AssetCategory.MISCELLANEOUS);
+        List<AssetPea> peas = assetService.findByCategory(2L, AssetCategory.MISCELLANEOUS);
         assertThat(peas, hasItem(cmdLinePea));
-        verify(projectService, times(1)).mapProjectId("ABC");
         verify(assetMapper, times(1))
-            .findByCategoryInProject(1L, AssetCategory.MISCELLANEOUS);
+            .findByCategoryInProject(2L, AssetCategory.MISCELLANEOUS);
     }
 
     @Test
@@ -147,34 +139,31 @@ public class TestAssetServiceImpl {
         });
         AssetPea pea = new Host();
         pea.setName("forCreate");
-        pea = assetService.create("ABC", pea);
+        pea = assetService.create(2L, pea);
         assertThat(pea.getId(), is("BBB"));
         assertThat(pea.getName(), is("forCreate"));
         assertThat(pea.getDescription(), nullValue());
-        verify(projectService, times(1)).mapProjectId("ABC");
         verify(assetMapper, times(1)).insert(any(Asset.class));
         verify(projectAssetMapper, times(1)).addToProject(any(ProjectAsset.class));
     }
 
     @Test
     public void testUpdate() throws IOException {
-        when(assetMapper.updateInProject(eq(1L), any(Asset.class))).thenReturn(1);
+        when(assetMapper.updateInProject(eq(2L), any(Asset.class))).thenReturn(1);
         AssetPea pea = new CmdLine();
         pea.setId("AAA");
         pea.setName("forUpdate");
-        pea = assetService.update("ABC", pea);
+        pea = assetService.update(2L, pea);
         assertThat(pea.getId(), is("AAA"));
         assertThat(pea.getName(), is("forUpdate"));
         assertThat(pea.getDescription(), nullValue());
-        verify(projectService, times(1)).mapProjectId("ABC");
-        verify(assetMapper, times(1)).updateInProject(eq(1L), any(Asset.class));
+        verify(assetMapper, times(1)).updateInProject(eq(2L), any(Asset.class));
     }
 
     @Test
     public void testDelete() {
         when(projectAssetMapper.deleteFromProject(any(ProjectAsset.class))).thenReturn(1);
-        assetService.delete("ABC", "AAA");
-        verify(projectService, times(1)).mapProjectId("ABC");
+        assetService.delete(2L, "AAA");
         verify(projectAssetMapper, times(1)).deleteFromProject(any(ProjectAsset.class));
     }
 

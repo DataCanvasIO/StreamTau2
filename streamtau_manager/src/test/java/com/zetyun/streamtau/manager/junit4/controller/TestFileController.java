@@ -21,6 +21,7 @@ import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.service.AssetService;
+import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,11 +57,14 @@ public class TestFileController {
     @MockBean
     private AssetService assetService;
     @MockBean
+    private ProjectService projectService;
+    @MockBean
     private StorageService storageService;
 
     @Test
     public void testUpload() throws Exception {
-        when(assetService.findById(eq("ABC"), eq("AAA"))).then(args -> {
+        when(projectService.mapProjectId("ABC")).thenReturn(2L);
+        when(assetService.findById(2L, "AAA")).then(args -> {
             JarFile pea = new JarFile();
             pea.setId("AAA");
             pea.setName("testJar");
@@ -84,8 +88,8 @@ public class TestFileController {
             .andExpect(jsonPath("$.data.name").value("testJar"))
             .andExpect(jsonPath("$.data.description").value("A jar file."))
             .andExpect(jsonPath("$.data.type").value("JarFile"));
-        verify(assetService, times(1)).findById(eq("ABC"), eq("AAA"));
-        verify(assetService, times(1)).update(eq("ABC"), any(JarFile.class));
+        verify(assetService, times(1)).findById(eq(2L), eq("AAA"));
+        verify(assetService, times(1)).update(eq(2L), any(JarFile.class));
         verify(storageService, times(1)).createFile("jar");
         verify(storageService, times(1)).saveFile(eq("file://abc"), any(MultipartFile.class));
     }

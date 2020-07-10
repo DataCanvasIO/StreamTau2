@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.service.AssetService;
+import com.zetyun.streamtau.manager.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,6 +44,8 @@ import java.util.List;
 public class AssetController {
     @Autowired
     private AssetService assetService;
+    @Autowired
+    private ProjectService projectService;
 
     @Operation(summary = "List all assets of a project.")
     @GetMapping("")
@@ -50,7 +53,8 @@ public class AssetController {
         @Parameter(description = "The id of the project.")
         @PathVariable("projectId") String projectId
     ) throws IOException {
-        return assetService.listAll(projectId);
+        Long pid = projectService.mapProjectId(projectId);
+        return assetService.listAll(pid);
     }
 
     @Operation(summary = "Create a new asset for a project.")
@@ -59,7 +63,8 @@ public class AssetController {
         @Parameter(description = "The id of the project.")
         @PathVariable("projectId") String projectId,
         @RequestBody AssetPea pea) throws IOException {
-        return assetService.create(projectId, pea);
+        Long pid = projectService.mapProjectId(projectId);
+        return assetService.create(pid, pea);
     }
 
     @Operation(summary = "Update an asset of a project.")
@@ -71,7 +76,8 @@ public class AssetController {
         @PathVariable("id") String id,
         @RequestBody AssetPea pea) throws IOException {
         pea.setId(id);
-        return assetService.update(projectId, pea);
+        Long pid = projectService.mapProjectId(projectId);
+        return assetService.update(pid, pea);
     }
 
     @Operation(summary = "Delete an asset from a project.")
@@ -81,6 +87,7 @@ public class AssetController {
         @PathVariable("projectId") String projectId,
         @Parameter(description = "The id of the asset.")
         @PathVariable("id") String id) {
-        assetService.delete(projectId, id);
+        Long pid = projectService.mapProjectId(projectId);
+        assetService.delete(pid, id);
     }
 }

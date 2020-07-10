@@ -22,6 +22,8 @@ import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.service.AssetService;
+import com.zetyun.streamtau.manager.service.ProjectService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,13 @@ public class TestAssetController {
     private MockMvc mvc;
     @MockBean
     private AssetService assetService;
+    @MockBean
+    private ProjectService projectService;
+
+    @Before
+    public void setup() {
+        when(projectService.mapProjectId("ABC")).thenReturn(2L);
+    }
 
     @Test
     public void testListAll() throws Exception {
@@ -68,7 +77,7 @@ public class TestAssetController {
         pea.setId("AAA");
         pea.setName("testListAll");
         pea.setCmd("ls");
-        when(assetService.listAll("ABC")).thenReturn(Collections.singletonList(pea));
+        when(assetService.listAll(2L)).thenReturn(Collections.singletonList(pea));
         mvc.perform(
             get("/projects/ABC/assets")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -80,12 +89,13 @@ public class TestAssetController {
             .andExpect(jsonPath("$.data[0].name").value("testListAll"))
             .andExpect(jsonPath("$.data[0].type").value("CmdLine"))
             .andExpect(jsonPath("$.data[0].cmd").value("ls"));
-        verify(assetService, times(1)).listAll("ABC");
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetService, times(1)).listAll(2L);
     }
 
     @Test
     public void testCreate() throws Exception {
-        when(assetService.create(eq("ABC"), any(AssetPea.class))).then(args -> {
+        when(assetService.create(eq(2L), any(AssetPea.class))).then(args -> {
             AssetPea pea = args.getArgument(1);
             pea.setId("AAA");
             return pea;
@@ -101,7 +111,8 @@ public class TestAssetController {
             .andExpect(jsonPath("$.data.name").value("testCreate"))
             .andExpect(jsonPath("$.data.type").value("Host"))
             .andExpect(jsonPath("$.data.hostname").value("localhost"));
-        verify(assetService, times(1)).create(eq("ABC"), any(AssetPea.class));
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetService, times(1)).create(eq(2L), any(AssetPea.class));
     }
 
     @Test
@@ -118,7 +129,7 @@ public class TestAssetController {
 
     @Test
     public void testUpdate() throws Exception {
-        when(assetService.update(eq("ABC"), any(AssetPea.class))).then(returnsSecondArg());
+        when(assetService.update(eq(2L), any(AssetPea.class))).then(returnsSecondArg());
         mvc.perform(
             put("/projects/ABC/assets/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -130,7 +141,8 @@ public class TestAssetController {
             .andExpect(jsonPath("$.data.name").value("testUpdate"))
             .andExpect(jsonPath("$.data.type").value("Host"))
             .andExpect(jsonPath("$.data.hostname").value("localhost"));
-        verify(assetService, times(1)).update(eq("ABC"), any(AssetPea.class));
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetService, times(1)).update(eq(2L), any(AssetPea.class));
     }
 
     @Test
@@ -141,7 +153,8 @@ public class TestAssetController {
         )
             .andDo(print())
             .andExpect(success());
-        verify(assetService, times(1)).delete("ABC", "AAA");
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetService, times(1)).delete(2L, "AAA");
     }
 
     // Mock application

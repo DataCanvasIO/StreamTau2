@@ -26,7 +26,6 @@ import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.AssetPod;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.service.AssetService;
-import com.zetyun.streamtau.manager.service.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,8 +40,6 @@ public class AssetServiceImpl implements AssetService {
     private AssetMapper assetMapper;
     @Autowired
     private ProjectAssetMapper projectAssetMapper;
-    @Autowired
-    private ProjectService projectService;
 
     @NotNull
     private List<AssetPea> getAssetPeas(@NotNull List<Asset> models) throws IOException {
@@ -54,38 +51,33 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public List<AssetPea> listAll(String userProjectId) throws IOException {
-        Long projectId = projectService.mapProjectId(userProjectId);
+    public List<AssetPea> listAll(Long projectId) throws IOException {
         List<Asset> models = assetMapper.findAllOfProject(projectId);
         return getAssetPeas(models);
     }
 
     @Override
-    public AssetPea findById(String userProjectId, String projectAssetId) throws IOException {
-        Long projectId = projectService.mapProjectId(userProjectId);
+    public AssetPea findById(Long projectId, String projectAssetId) throws IOException {
         Asset model = assetMapper.findByIdInProject(projectId, projectAssetId);
         return AssetPod.fromModel(model);
     }
 
     @Override
-    public List<AssetPea> findByType(String userProjectId, String assetType) throws IOException {
-        Long projectId = projectService.mapProjectId(userProjectId);
+    public List<AssetPea> findByType(Long projectId, String assetType) throws IOException {
         List<Asset> models = assetMapper.findByTypeInProject(projectId, assetType);
         return getAssetPeas(models);
     }
 
     @Override
-    public List<AssetPea> findByCategory(String userProjectId, AssetCategory assetCategory) throws IOException {
-        Long projectId = projectService.mapProjectId(userProjectId);
+    public List<AssetPea> findByCategory(Long projectId, AssetCategory assetCategory) throws IOException {
         List<Asset> models = assetMapper.findByCategoryInProject(projectId, assetCategory);
         return getAssetPeas(models);
     }
 
     @Override
-    public AssetPea create(String userProjectId, AssetPea pea) throws IOException {
+    public AssetPea create(Long projectId, AssetPea pea) throws IOException {
         Asset model = AssetPod.toModel(pea);
         assetMapper.insert(model);
-        Long projectId = projectService.mapProjectId(userProjectId);
         ProjectAsset projectAsset = new ProjectAsset(projectId, model.getAssetId(), null);
         projectAssetMapper.addToProject(projectAsset);
         model.setProjectAssetId(projectAsset.getProjectAssetId());
@@ -93,9 +85,8 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public AssetPea update(String userProjectId, AssetPea pea) throws IOException {
+    public AssetPea update(Long projectId, AssetPea pea) throws IOException {
         Asset model = AssetPod.toModel(pea);
-        Long projectId = projectService.mapProjectId(userProjectId);
         if (assetMapper.updateInProject(projectId, model) == 0) {
             throw new StreamTauException("10002", pea.getId());
         }
@@ -103,8 +94,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public void delete(String userProjectId, String projectAssetId) {
-        Long projectId = projectService.mapProjectId(userProjectId);
+    public void delete(Long projectId, String projectAssetId) {
         ProjectAsset projectAsset = new ProjectAsset(projectId, null, projectAssetId);
         if (projectAssetMapper.deleteFromProject(projectAsset) == 0) {
             throw new StreamTauException("10002", projectAssetId);

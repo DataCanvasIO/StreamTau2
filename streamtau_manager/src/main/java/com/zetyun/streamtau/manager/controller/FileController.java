@@ -22,6 +22,7 @@ import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.file.File;
 import com.zetyun.streamtau.manager.service.AssetService;
+import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,6 +46,8 @@ public class FileController {
     @Autowired
     private AssetService assetService;
     @Autowired
+    private ProjectService projectService;
+    @Autowired
     private StorageService storageService;
 
     @Operation(summary = "Upload or replace the real file of an file asset of a project.")
@@ -57,7 +60,8 @@ public class FileController {
         @Parameter(description = "The file to upload.")
         @RequestPart("file") MultipartFile file
     ) throws IOException {
-        File pea = (File) assetService.findById(projectId, assetId);
+        Long pid = projectService.mapProjectId(projectId);
+        File pea = (File) assetService.findById(pid, assetId);
         String fileName = file.getOriginalFilename();
         if (fileName == null) {
             throw new StreamTauException("10202");
@@ -70,7 +74,7 @@ public class FileController {
         if (path == null || path.isEmpty()) {
             path = storageService.createFile(pea.getExtension());
             pea.setPath(path);
-            assetService.update(projectId, pea);
+            assetService.update(pid, pea);
         }
         storageService.saveFile(path, file);
         return pea;
