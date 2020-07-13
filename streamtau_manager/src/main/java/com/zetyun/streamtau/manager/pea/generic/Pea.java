@@ -16,10 +16,11 @@
 
 package com.zetyun.streamtau.manager.pea.generic;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.searchPeaIds;
 
 public interface Pea<I, T> {
     I getId();
@@ -31,37 +32,27 @@ public interface Pea<I, T> {
     default void transferAnnex() {
     }
 
-    @SuppressWarnings("unchecked")
     default Collection<I> children() {
         Set<I> set = new HashSet<>();
-        Field[] fields = getClass().getDeclaredFields();
-        try {
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(PeaId.class)) {
-                    field.setAccessible(true);
-                    set.add((I) field.get(this));
-                }
+        searchPeaIds(
+            this,
+            (I o) -> {
+                set.add(o);
+                return true;
+            },
+            (Collection<I> o) -> {
+                set.addAll(o);
+                return true;
             }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("This cannot happen.");
-        }
+        );
         return set;
     }
 
     default boolean reference(I id) {
-        Field[] fields = getClass().getDeclaredFields();
-        try {
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(PeaId.class)) {
-                    field.setAccessible(true);
-                    if (id.equals(field.get(this))) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("This cannot happen.");
-        }
+        return searchPeaIds(
+            this,
+            (I o) -> !id.equals(o),
+            (Collection<I> o) -> !o.contains(id)
+        );
     }
 }

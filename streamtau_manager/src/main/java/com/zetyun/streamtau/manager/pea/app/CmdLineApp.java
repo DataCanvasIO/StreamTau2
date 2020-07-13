@@ -39,7 +39,7 @@ public class CmdLineApp extends App {
     @PeaId
     private String cmdLine;
     @Schema(
-        description = "The id of the host to run on.",
+        description = "The id of the server to run on.",
         example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
     )
     @JsonProperty("server")

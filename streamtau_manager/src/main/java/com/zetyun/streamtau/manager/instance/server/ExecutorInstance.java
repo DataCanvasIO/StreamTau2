@@ -38,9 +38,9 @@ public class ExecutorInstance extends ServerInstance {
     public synchronized void start() {
         if (executorService == null) {
             executorService = Executors.newCachedThreadPool();
-            checkStatus();
+            checkAndSetStatus();
             if (log.isInfoEnabled()) {
-                log.info("Executor service started.");
+                log.info("Executor \"{}\" started.", getServer().getName());
             }
         }
     }
@@ -59,15 +59,15 @@ public class ExecutorInstance extends ServerInstance {
             executorService.shutdownNow();
         }
         executorService = null;
-        checkStatus();
+        checkAndSetStatus();
         if (log.isInfoEnabled()) {
-            log.info("Executor service has been shut down.");
+            log.info("Executor \"{}\" stopped.", getServer().getName());
         }
     }
 
     @Override
-    public void checkStatus() {
-        getServer().setStatus(executorService == null ? ServerStatus.INACTIVE : ServerStatus.ACTIVE);
+    public ServerStatus checkStatus() {
+        return executorService != null ? ServerStatus.ACTIVE : ServerStatus.INACTIVE;
     }
 
     public void cmdLine(String[] cmd, Runnable onFinish) {

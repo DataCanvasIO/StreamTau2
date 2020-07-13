@@ -27,6 +27,7 @@ import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
+import com.zetyun.streamtau.manager.pea.app.FlinkJarApp;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.file.TxtFile;
@@ -34,6 +35,7 @@ import com.zetyun.streamtau.manager.pea.generic.Pea;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.pea.server.Executor;
+import com.zetyun.streamtau.manager.pea.server.FlinkMiniCluster;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -54,17 +56,19 @@ import java.io.IOException;
 @JsonPropertyOrder(alphabetic = true)
 @JsonTypeInfo(property = "type", use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
-    // Misc
-    @JsonSubTypes.Type(value = CmdLine.class, name = "CmdLine"),
-    @JsonSubTypes.Type(Host.class),
     // App
     @JsonSubTypes.Type(CmdLineApp.class),
     @JsonSubTypes.Type(JavaJarApp.class),
+    @JsonSubTypes.Type(FlinkJarApp.class),
+    // Misc
+    @JsonSubTypes.Type(value = CmdLine.class, name = "CmdLine"),
+    @JsonSubTypes.Type(Host.class),
     // File
     @JsonSubTypes.Type(JarFile.class),
     @JsonSubTypes.Type(TxtFile.class),
     // Server
-    @JsonSubTypes.Type(Executor.class)
+    @JsonSubTypes.Type(Executor.class),
+    @JsonSubTypes.Type(FlinkMiniCluster.class),
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ToString

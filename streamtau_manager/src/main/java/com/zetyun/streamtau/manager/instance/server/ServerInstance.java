@@ -18,6 +18,7 @@ package com.zetyun.streamtau.manager.instance.server;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.zetyun.streamtau.manager.pea.server.Server;
+import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,5 +36,13 @@ public abstract class ServerInstance {
 
     public abstract void stop();
 
-    public abstract void checkStatus();
+    public ServerStatus status() {
+        return server.getStatus();
+    }
+
+    protected abstract ServerStatus checkStatus();
+
+    protected void checkAndSetStatus() {
+        server.setStatus(checkStatus());
+    }
 }

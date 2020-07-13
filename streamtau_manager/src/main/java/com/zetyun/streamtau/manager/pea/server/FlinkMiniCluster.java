@@ -14,37 +14,14 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.app;
+package com.zetyun.streamtau.manager.pea.server;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.zetyun.streamtau.manager.pea.generic.PeaId;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
-@JsonTypeName("JavaJarApp")
+@JsonTypeName("FlinkMiniCluster")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class JavaJarApp extends App {
-    @Schema(
-        description = "The id of the JarFile asset to run.",
-        example = "01B2752D-28D6-4B1C-80BD-4B7A0531539C"
-    )
-    @JsonProperty("jarFile")
-    @Getter
-    @Setter
-    @PeaId
-    private String jarFile;
-    @Schema(
-        description = "The id of the server to run on.",
-        example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
-    )
-    @JsonProperty("server")
-    @Getter
-    @Setter
-    @PeaId
-    private String server;
+public class FlinkMiniCluster extends Server {
 }

@@ -25,10 +25,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@JsonTypeName("JavaJarApp")
+@JsonTypeName("FlinkJarApp")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class JavaJarApp extends App {
+public class FlinkJarApp extends App {
     @Schema(
         description = "The id of the JarFile asset to run.",
         example = "01B2752D-28D6-4B1C-80BD-4B7A0531539C"
