@@ -53,14 +53,6 @@ public class RunnerFactory {
         if (runner == null) {
             throw new StreamTauException("10101", job.getAppType());
         }
-        if (log.isInfoEnabled()) {
-            log.info("Job \"{}\" starts to run on localhost.", job.getJobName());
-        }
-        runner.run(job, () -> {
-            onFinish.run();
-            if (log.isInfoEnabled()) {
-                log.info("Job \"{}\" finished.", job.getJobName());
-            }
-        });
+        runner.run(job, onFinish);
     }
 }

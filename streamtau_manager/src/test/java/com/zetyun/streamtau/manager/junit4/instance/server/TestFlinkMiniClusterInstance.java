@@ -33,8 +33,7 @@ public class TestFlinkMiniClusterInstance {
         FlinkMiniCluster flinkMiniCluster = new FlinkMiniCluster();
         flinkMiniCluster.setId("TEST");
         flinkMiniCluster.setName("FLINK_MINI_CLUSTER");
-        flinkMiniClusterInstance = new FlinkMiniClusterInstance();
-        flinkMiniClusterInstance.setServer(flinkMiniCluster);
+        flinkMiniClusterInstance = new FlinkMiniClusterInstance(flinkMiniCluster);
     }
 
     @Test

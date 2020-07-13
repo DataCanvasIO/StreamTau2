@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.instance.server;
 
+import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -31,6 +32,10 @@ import org.apache.flink.runtime.minicluster.MiniClusterConfiguration;
 @Slf4j
 public class FlinkMiniClusterInstance extends ServerInstance {
     private MiniCluster miniCluster = null;
+
+    public FlinkMiniClusterInstance(Server server) {
+        super(server);
+    }
 
     @Override
     public void start() {

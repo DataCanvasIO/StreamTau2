@@ -17,7 +17,6 @@
 package com.zetyun.streamtau.manager.pea.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.manager.pea.generic.PeaId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
@@ -25,17 +24,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@JsonTypeName("JavaJarApp")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class JavaJarApp extends SingleServerApp {
+public abstract class SingleServerApp extends App {
     @Schema(
-        description = "The id of the JarFile asset to run.",
-        example = "01B2752D-28D6-4B1C-80BD-4B7A0531539C"
+        description = "The id of the server to run on.",
+        example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
     )
-    @JsonProperty("jarFile")
+    @JsonProperty("server")
     @Getter
     @Setter
     @PeaId
-    private String jarFile;
+    private String server;
 }

@@ -18,6 +18,7 @@ package com.zetyun.streamtau.manager.junit4.runner;
 
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.instance.server.ExecutorInstance;
+import com.zetyun.streamtau.manager.pea.server.Executor;
 import com.zetyun.streamtau.manager.runner.RunnerFactory;
 import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
@@ -34,7 +35,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJsonCompact;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,8 +48,6 @@ import static org.mockito.Mockito.when;
 public class TestCmdLineRunner {
     @MockBean
     private ServerService serverService;
-    @MockBean
-    private ExecutorInstance executorInstance;
 
     @BeforeClass
     public static void setupClass() {
@@ -66,9 +64,9 @@ public class TestCmdLineRunner {
         job.setJobName("testSleep");
         job.setProjectId(2L);
         job.setJobDefinition(readJsonCompact("/jobdef/cmdline/cmd_sleep.json"));
+        ExecutorInstance executorInstance = new ExecutorInstance(new Executor());
         when(serverService.getInstance(2L, "EXECUTOR")).thenReturn(executorInstance);
         RunnerFactory.get().run(job, null);
         verify(serverService, times(1)).getInstance(2L, "EXECUTOR");
-        verify(executorInstance, times(1)).cmdLine(any(String[].class), any(Runnable.class));
     }
 }

@@ -22,13 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 @Slf4j
 public class ServerInstanceFactory {
     private static ServerInstanceFactory INS;
 
-    private final Map<String, Supplier<? extends ServerInstance>> instanceSupplierMap;
+    private final Map<String, Function<Server, ServerInstance>> instanceSupplierMap;
 
     private ServerInstanceFactory() {
         instanceSupplierMap = new LinkedHashMap<>(10);
@@ -42,19 +42,18 @@ public class ServerInstanceFactory {
         return INS;
     }
 
-    private void registerStarter(String type, Supplier<ServerInstance> supplier) {
+    private void registerStarter(String type, Function<Server, ServerInstance> supplier) {
         instanceSupplierMap.put(type, supplier);
     }
 
     @SuppressWarnings("unchecked")
     public <S extends ServerInstance> S getServerInstance(Server server) {
         String type = server.getType();
-        Supplier<? extends ServerInstance> supplier = instanceSupplierMap.get(type);
+        Function<Server, ServerInstance> supplier = instanceSupplierMap.get(type);
         if (supplier == null) {
             throw new StreamTauException("10103", type);
         }
-        S serverInstance = (S) supplier.get();
-        serverInstance.setServer(server);
+        S serverInstance = (S) supplier.apply(server);
         serverInstance.checkStatus();
         return serverInstance;
     }

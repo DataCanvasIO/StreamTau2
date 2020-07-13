@@ -17,10 +17,6 @@
 package com.zetyun.streamtau.manager.pea.generic;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.searchPeaIds;
 
 public interface Pea<I, T> {
     I getId();
@@ -29,30 +25,12 @@ public interface Pea<I, T> {
 
     T getType();
 
-    default void transferAnnex() {
-    }
-
-    default Collection<I> children() {
-        Set<I> set = new HashSet<>();
-        searchPeaIds(
-            this,
-            (I o) -> {
-                set.add(o);
-                return true;
-            },
-            (Collection<I> o) -> {
-                set.addAll(o);
-                return true;
-            }
-        );
-        return set;
-    }
+    Collection<I> children();
 
     default boolean reference(I id) {
-        return searchPeaIds(
-            this,
-            (I o) -> !id.equals(o),
-            (Collection<I> o) -> !o.contains(id)
-        );
+        return children().contains(id);
+    }
+
+    default void transferAnnex() {
     }
 }

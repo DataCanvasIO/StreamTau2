@@ -21,16 +21,16 @@ import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+@RequiredArgsConstructor
 @ToString
 @EqualsAndHashCode
 public abstract class ServerInstance {
     @JsonValue
-    @Setter
     @Getter
-    private Server server;
+    private final Server server;
 
     public abstract void start();
 

@@ -28,7 +28,7 @@ import lombok.ToString;
 @JsonTypeName("FlinkJarApp")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class FlinkJarApp extends App {
+public class FlinkJarApp extends SingleServerApp {
     @Schema(
         description = "The id of the JarFile asset to run.",
         example = "01B2752D-28D6-4B1C-80BD-4B7A0531539C"
@@ -38,13 +38,4 @@ public class FlinkJarApp extends App {
     @Setter
     @PeaId
     private String jarFile;
-    @Schema(
-        description = "The id of the server to run on.",
-        example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
-    )
-    @JsonProperty("server")
-    @Getter
-    @Setter
-    @PeaId
-    private String server;
 }

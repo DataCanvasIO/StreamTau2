@@ -18,12 +18,12 @@ package com.zetyun.streamtau.manager.citrus;
 
 import com.zetyun.streamtau.manager.citrus.behavior.Assets;
 import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.generic.PeaId;
 
-import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.replacePeaIds;
 
 public class CitrusCommon {
     public static final String SERVER_ID = "streamtau-manager";
@@ -33,18 +33,7 @@ public class CitrusCommon {
     }
 
     public static void updateChildrenId(AssetPea pea) {
-        Field[] fields = pea.getClass().getDeclaredFields();
-        try {
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(PeaId.class)) {
-                    field.setAccessible(true);
-                    String oldValue = (String) field.get(pea);
-                    field.set(pea, varRef(Assets.idVarName(oldValue)));
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("This cannot happen.");
-        }
+        replacePeaIds(pea, (String x) -> varRef(Assets.idVarName(x)));
     }
 
     public static List<AssetPea> getSortedAssetList(Map<String, AssetPea> peaMap) {

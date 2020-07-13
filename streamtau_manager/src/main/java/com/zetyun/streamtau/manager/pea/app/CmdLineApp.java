@@ -28,7 +28,7 @@ import lombok.ToString;
 @JsonTypeName("CmdLineApp")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class CmdLineApp extends App {
+public class CmdLineApp extends SingleServerApp {
     @Schema(
         description = "The id of the CmdLine asset to run.",
         example = "01B2752D-28D6-4B1C-80BD-4B7A0531539C"
@@ -38,13 +38,4 @@ public class CmdLineApp extends App {
     @Setter
     @PeaId
     private String cmdLine;
-    @Schema(
-        description = "The id of the server to run on.",
-        example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
-    )
-    @JsonProperty("server")
-    @Getter
-    @Setter
-    @PeaId
-    private String server;
 }

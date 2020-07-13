@@ -86,8 +86,7 @@ public class TestServerService {
         executor.setId("ABC");
         executor.setName("Exec Server");
         executor.setStatus(ServerStatus.INACTIVE);
-        ServerInstance serverInstance = new ExecutorInstance();
-        serverInstance.setServer(executor);
+        ServerInstance serverInstance = new ExecutorInstance(executor);
         when(assetMapper.findByCategoryInProject(2L, AssetCategory.SERVER))
             .thenReturn(Collections.singletonList(asset));
         Collection<ServerInstance> serverInstances = serverService.listAll(2L);

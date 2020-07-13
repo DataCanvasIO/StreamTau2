@@ -17,7 +17,6 @@
 package com.zetyun.streamtau.manager.junit4.pea.generic;
 
 import com.google.common.collect.ImmutableMap;
-import com.zetyun.streamtau.manager.pea.generic.Pea;
 import com.zetyun.streamtau.manager.pea.generic.PeaId;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,114 +24,129 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.collectPeaIds;
+import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.replacePeaIds;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class TestPea {
+public class TestPeaUtils {
     @Before
     public void setup() {
     }
 
     @Test
-    public void testChildrenSimple() {
+    public void testCollectPeaIdsSimple() {
         ClassA objA = new ClassA();
         objA.setPea1(1);
         objA.setPea2(2);
-        assertThat(objA.children(), hasItems(1, 2));
+        Set<Integer> set = new HashSet<>();
+        collectPeaIds(set, objA);
+        assertThat(set, hasItems(1, 2));
     }
 
     @Test
-    public void testChildrenInherit() {
+    public void testCollectPeaIdsInherit() {
         ClassB objB = new ClassB();
         objB.setPea1(1);
         objB.setPea2(2);
         objB.setPea3(3);
-        assertThat(objB.children(), hasItems(1, 2, 3));
+        Set<Integer> set = new HashSet<>();
+        collectPeaIds(set, objB);
+        assertThat(set, hasItems(1, 2, 3));
     }
 
     @Test
-    public void testChildrenArray() {
+    public void testCollectPeaIdsArray() {
         ClassC objC = new ClassC();
-        objC.setPea1(1);
-        objC.setPea2(2);
         objC.setPeaArray(new int[]{3, 4, 5, 6});
-        assertThat(objC.children(), hasItems(1, 2, 3, 4, 5, 6));
+        Set<Integer> set = new HashSet<>();
+        collectPeaIds(set, objC);
+        assertThat(set, hasItems(3, 4, 5, 6));
     }
 
     @Test
-    public void testChildrenCollection() {
+    public void testCollectPeaIdsCollection() {
         ClassD objD = new ClassD();
-        objD.setPea1(1);
-        objD.setPea2(2);
         objD.setPeaList(Arrays.asList(3, 4, 5, 6));
-        assertThat(objD.children(), hasItems(1, 2, 3, 4, 5, 6));
+        Set<Integer> set = new HashSet<>();
+        collectPeaIds(set, objD);
+        assertThat(set, hasItems(3, 4, 5, 6));
     }
 
     @Test
-    public void testChildrenMap() {
+    public void testCollectPeaIdsMap() {
         ClassE objE = new ClassE();
-        objE.setPea1(1);
-        objE.setPea2(2);
         objE.setPeaMap(ImmutableMap.<String, Integer>builder()
             .put("a", 3)
             .put("b", 4)
             .put("c", 5)
             .put("d", 6)
             .build());
-        assertThat(objE.children(), hasItems(1, 2, 3, 4, 5, 6));
-
+        Set<Integer> set = new HashSet<>();
+        collectPeaIds(set, objE);
+        assertThat(set, hasItems(3, 4, 5, 6));
     }
 
     @Test
-    public void testChildrenIndirect() {
+    public void testCollectPeaIdsIndirect() {
         ClassF objF = new ClassF();
-        objF.setPea1(1);
-        objF.setPea2(2);
         Media media = new Media();
         media.setPea3(3);
         objF.setMedia(media);
-        assertThat(objF.children(), hasItems(1, 2, 3));
+        Set<Integer> set = new HashSet<>();
+        collectPeaIds(set, objF);
+        assertThat(set, hasItems(3));
     }
 
-    static class ClassA implements Pea<Integer, String> {
+    @Test
+    public void testReplacePeaIdsInherit() {
+        ClassB objB = new ClassB();
+        objB.setPea1(1);
+        objB.setPea2(2);
+        objB.setPea3(3);
+        replacePeaIds(objB, (Integer x) -> x + 3);
+        assertThat(objB.getPea1(), is(4));
+        assertThat(objB.getPea2(), is(5));
+        assertThat(objB.getPea3(), is(6));
+    }
+
+    static class ClassA {
+        @Getter
         @Setter
         @PeaId
         protected int pea1;
+        @Getter
         @Setter
         @PeaId
         protected int pea2;
-        @Getter
-        @Setter
-        private Integer id;
-
-        @Override
-        public String getType() {
-            return getClass().getSimpleName();
-        }
     }
 
     static class ClassB extends ClassA {
+        @Getter
         @Setter
         @PeaId
         private int pea3;
     }
 
-    static class ClassC extends ClassA {
+    static class ClassC {
         @Setter
         @PeaId
         private int[] peaArray;
     }
 
-    static class ClassD extends ClassA {
+    static class ClassD {
         @Setter
         @PeaId
         private List<Integer> peaList;
     }
 
-    static class ClassE extends ClassA {
+    static class ClassE {
         @Setter
         @PeaId
         private Map<String, Integer> peaMap;
@@ -144,8 +158,9 @@ public class TestPea {
         private int pea3;
     }
 
-    static class ClassF extends ClassA {
+    static class ClassF {
         @Setter
+        @PeaId.InIt
         private Media media;
     }
 }

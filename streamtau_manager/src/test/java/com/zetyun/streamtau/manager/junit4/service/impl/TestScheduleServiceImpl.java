@@ -20,6 +20,7 @@ import com.zetyun.streamtau.manager.db.mapper.JobMapper;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
 import com.zetyun.streamtau.manager.instance.server.ExecutorInstance;
+import com.zetyun.streamtau.manager.pea.server.Executor;
 import com.zetyun.streamtau.manager.service.ScheduleService;
 import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.impl.ScheduleServiceImpl;
@@ -38,7 +39,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJsonCompact;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,8 +58,6 @@ public class TestScheduleServiceImpl {
     private JobMapper jobMapper;
     @MockBean
     private ServerService serverService;
-    @MockBean
-    private ExecutorInstance executorInstance;
 
     @Before
     public void setup() {
@@ -77,11 +75,11 @@ public class TestScheduleServiceImpl {
         job.setJobStatus(JobStatus.READY);
         job.setJobDefinition(readJsonCompact("/jobdef/cmdline/cmd_ls.json"));
         when(jobMapper.findJobOfStatus(JobStatus.READY)).thenReturn(Collections.singletonList(job));
+        ExecutorInstance executorInstance = new ExecutorInstance(new Executor());
         when(serverService.getInstance(2L, "EXECUTOR")).thenReturn(executorInstance);
         scheduleService.schedule();
         verify(jobMapper, times(1)).findJobOfStatus(JobStatus.READY);
         verify(jobMapper, times(1)).updateJobStatus(1L, JobStatus.SUBMITTED);
         verify(serverService, times(1)).getInstance(2L, "EXECUTOR");
-        verify(executorInstance, times(1)).cmdLine(any(String[].class), any(Runnable.class));
     }
 }

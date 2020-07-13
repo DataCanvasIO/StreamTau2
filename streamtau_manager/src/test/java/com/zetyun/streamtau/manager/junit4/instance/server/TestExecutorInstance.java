@@ -33,8 +33,7 @@ public class TestExecutorInstance {
         Executor executor = new Executor();
         executor.setId("TEST");
         executor.setName("EXECUTOR");
-        executorInstance = new ExecutorInstance();
-        executorInstance.setServer(executor);
+        executorInstance = new ExecutorInstance(executor);
     }
 
     @Test

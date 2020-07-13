@@ -17,6 +17,7 @@
 package com.zetyun.streamtau.manager.instance.server;
 
 import com.google.common.base.Charsets;
+import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -34,15 +35,19 @@ import java.util.concurrent.TimeUnit;
 public class ExecutorInstance extends ServerInstance {
     private static ExecutorService executorService = null;
 
+    public ExecutorInstance(Server server) {
+        super(server);
+    }
+
     @Override
     public synchronized void start() {
         if (executorService == null) {
             executorService = Executors.newCachedThreadPool();
-            checkAndSetStatus();
             if (log.isInfoEnabled()) {
                 log.info("Executor \"{}\" started.", getServer().getName());
             }
         }
+        checkAndSetStatus();
     }
 
     @Override

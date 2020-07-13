@@ -20,35 +20,14 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.Set;
+import java.util.function.Function;
 
 public class PeaUtils {
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private static <O> boolean doCollection(
-        Collection<O> collection,
-        Predicate<O> doOne,
-        Predicate<Collection<O>> doAll
-    ) {
-        if (doAll == null) {
-            for (O o : collection) {
-                if (!doOne.test(o)) {
-                    return false;
-                }
-            }
-        } else {
-            return doAll.test(collection);
-        }
-        return true;
-    }
-
     @SuppressWarnings("unchecked")
-    public static <I> boolean searchPeaIds(
-        Object obj,
-        Predicate<I> doOne,
-        Predicate<Collection<I>> doAll
-    ) {
+    public static <I> void replacePeaIds(Object obj, Function<I, I> replaceFun) {
         if (obj == null) {
-            return true;
+            return;
         }
         try {
             for (Class<?> clazz = obj.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
@@ -60,51 +39,105 @@ public class PeaUtils {
                     if (field.isAnnotationPresent(PeaId.class)) {
                         if (fieldType.isArray()) {
                             for (int i = 0; i < Array.getLength(value); i++) {
-                                if (!doOne.test((I) Array.get(value, i))) {
-                                    return false;
+                                I oldValue = (I) Array.get(value, i);
+                                I newValue = replaceFun.apply(oldValue);
+                                if (newValue != oldValue) {
+                                    Array.set(value, i, newValue);
                                 }
                             }
                         } else if (Collection.class.isAssignableFrom(fieldType)) {
-                            if (!doCollection((Collection<I>) value, doOne, doAll)) {
-                                return false;
+                            Collection<I> collection = (Collection<I>) value;
+                            for (I o : collection) {
+                                I newValue = replaceFun.apply(o);
+                                if (newValue != o) {
+                                    collection.remove(o);
+                                    collection.add(newValue);
+                                }
                             }
                         } else if (Map.class.isAssignableFrom(fieldType)) {
-                            if (!doCollection(((Map<?, I>) value).values(), doOne, doAll)) {
-                                return false;
+                            Map<Object, I> map = (Map<Object, I>) value;
+                            for (Map.Entry<Object, I> entry : map.entrySet()) {
+                                I oldValue = entry.getValue();
+                                I newValue = replaceFun.apply(oldValue);
+                                if (newValue != oldValue) {
+                                    map.put(entry.getKey(), newValue);
+                                }
                             }
                         } else {
-                            if (!doOne.test((I) value)) {
-                                return false;
+                            I newValue = replaceFun.apply((I) value);
+                            if (newValue != value) {
+                                field.set(obj, newValue);
                             }
                         }
-                    } else {
+                    } else if (field.isAnnotationPresent(PeaId.InIt.class)) {
                         if (fieldType.isArray()) {
                             for (int i = 0; i < Array.getLength(value); i++) {
-                                if (!searchPeaIds(Array.get(value, i), doOne, doAll)) {
-                                    return false;
-                                }
+                                replacePeaIds(Array.get(value, i), replaceFun);
                             }
                         } else if (Collection.class.isAssignableFrom(fieldType)) {
-                            if (!doCollection((Collection<?>) value,
-                                o -> searchPeaIds(o, doOne, doAll), null)) {
-                                return false;
+                            for (Object o : (Collection<Object>) value) {
+                                replacePeaIds(o, replaceFun);
                             }
                         } else if (Map.class.isAssignableFrom(fieldType)) {
-                            if (!doCollection(((Map<?, ?>) value).values(),
-                                o -> searchPeaIds(o, doOne, doAll), null)) {
-                                return false;
+                            for (Object o : ((Map<?, Object>) value).values()) {
+                                replacePeaIds(o, replaceFun);
                             }
                         } else {
-                            if (!searchPeaIds(value, doOne, doAll)) {
-                                return false;
-                            }
+                            replacePeaIds(value, replaceFun);
                         }
                     }
                 }
             }
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("PANIC in searchPeaId().");
+            throw new RuntimeException("PANIC in PeaUtils::replacePeaIds.");
         }
-        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <I> void collectPeaIds(Set<I> set, Object obj) {
+        if (obj == null) {
+            return;
+        }
+        try {
+            for (Class<?> clazz = obj.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
+                Field[] fields = clazz.getDeclaredFields();
+                for (Field field : fields) {
+                    Class<?> fieldType = field.getType();
+                    field.setAccessible(true);
+                    Object value = field.get(obj);
+                    if (field.isAnnotationPresent(PeaId.class)) {
+                        if (fieldType.isArray()) {
+                            for (int i = 0; i < Array.getLength(value); i++) {
+                                set.add((I) Array.get(value, i));
+                            }
+                        } else if (Collection.class.isAssignableFrom(fieldType)) {
+                            set.addAll((Collection<I>) value);
+                        } else if (Map.class.isAssignableFrom(fieldType)) {
+                            set.addAll(((Map<?, I>) value).values());
+                        } else {
+                            set.add((I) value);
+                        }
+                    } else if (field.isAnnotationPresent(PeaId.InIt.class)) {
+                        if (fieldType.isArray()) {
+                            for (int i = 0; i < Array.getLength(value); i++) {
+                                collectPeaIds(set, Array.get(value, i));
+                            }
+                        } else if (Collection.class.isAssignableFrom(fieldType)) {
+                            for (Object o : (Collection<Object>) value) {
+                                collectPeaIds(set, o);
+                            }
+                        } else if (Map.class.isAssignableFrom(fieldType)) {
+                            for (Object o : ((Map<?, Object>) value).values()) {
+                                collectPeaIds(set, o);
+                            }
+                        } else {
+                            collectPeaIds(set, value);
+                        }
+                    }
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("PANIC in PeaUtils::collectPeaIds.");
+        }
     }
 }
