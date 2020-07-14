@@ -62,8 +62,10 @@ public class SingleServerRunner implements Runner {
                     log.info("Job \"{}\" finished.", job.getJobName());
                 }
             });
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+        } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new StreamTauException("10102", app.getType(), server.getType());
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 }

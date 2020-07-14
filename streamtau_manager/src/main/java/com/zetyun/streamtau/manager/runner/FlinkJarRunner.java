@@ -16,40 +16,43 @@
 
 package com.zetyun.streamtau.manager.runner;
 
-import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
-import com.zetyun.streamtau.manager.instance.server.ExecutorInstance;
+import com.zetyun.streamtau.manager.instance.server.FlinkMiniClusterInstance;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
-import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
+import com.zetyun.streamtau.manager.pea.app.FlinkJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
-import com.zetyun.streamtau.manager.pea.server.Executor;
-import com.zetyun.streamtau.manager.pea.server.Server;
-import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.client.program.PackagedProgram;
+import org.apache.flink.client.program.PackagedProgramUtils;
+import org.apache.flink.client.program.ProgramInvocationException;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import java.io.File;
 
 @Slf4j
-public class FlinkJarRunner implements Runner {
-    @Override
-    public void run(@NotNull Job job, Runnable onFinish) throws IOException {
-        JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
-        JavaJarApp javaJarApp = (JavaJarApp) pod.getApp();
-        JarFile jarFile = (JarFile) pod.load(javaJarApp.getJarFile());
-        Server server = (Server) pod.load(javaJarApp.getServer());
-        if (!(server instanceof Executor)) {
-            throw new StreamTauException("10102", javaJarApp.getType());
-        }
+public class FlinkJarRunner extends SingleServerRunner {
+    public void run(@NotNull JobDefPod pod, FlinkMiniClusterInstance flinkMiniClusterInstance, Runnable onFinish) {
+        FlinkJarApp flinkJarApp = (FlinkJarApp) pod.getApp();
+        JarFile jarFile = (JarFile) pod.load(flinkJarApp.getJarFile());
         StorageService storageService = ApplicationContextProvider.getStorageService();
         String path = storageService.resolve(jarFile.getPath());
-        ServerService serverService = ApplicationContextProvider.getServerService();
-        ExecutorInstance executorInstance = (ExecutorInstance) serverService.getInstance(
-            job.getProjectId(),
-            server.getId()
-        );
-        executorInstance.cmdLine(new String[]{"java", "-jar", path}, onFinish);
+        try {
+            PackagedProgram program = PackagedProgram.newBuilder()
+                .setJarFile(new File(path))
+                .build();
+            JobGraph jobGraph = PackagedProgramUtils.createJobGraph(
+                program,
+                new Configuration(),
+                1,
+                false
+            );
+            flinkMiniClusterInstance.submitJobGraph(jobGraph);
+        } catch (ProgramInvocationException e) {
+            throw new StreamTauException("10301", flinkJarApp.getName());
+        }
     }
 }

@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="dist" />
         <module name="streamtau-manager" />
+        <module name="streamtau-test-flink-streaming" />
         <module name="streamtau-test-hello-world" />
       </profile>
     </annotationProcessing>

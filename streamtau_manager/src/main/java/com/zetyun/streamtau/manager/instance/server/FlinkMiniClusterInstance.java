@@ -21,9 +21,12 @@ import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.JobID;
+import org.apache.flink.client.program.MiniClusterClient;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.CoreOptions;
 import org.apache.flink.configuration.RestOptions;
+import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.apache.flink.runtime.minicluster.MiniCluster;
 import org.apache.flink.runtime.minicluster.MiniClusterConfiguration;
 
@@ -65,19 +68,25 @@ public class FlinkMiniClusterInstance extends ServerInstance {
         if (miniCluster == null) {
             return;
         }
-        try {
-            miniCluster.close();
-            checkAndSetStatus();
-        } catch (Exception e) {
-            if (log.isInfoEnabled()) {
-                log.info("Flink mini cluster \"{}\" stopped.", getServer().getName());
-            }
-            e.printStackTrace();
+        // The configuration seems to be no use.
+        MiniClusterClient client = new MiniClusterClient(new Configuration(), miniCluster);
+        client.shutDownCluster();
+        if (log.isInfoEnabled()) {
+            log.info("Flink mini cluster \"{}\" stopped.", getServer().getName());
         }
     }
 
     @Override
     public ServerStatus checkStatus() {
         return miniCluster != null && miniCluster.isRunning() ? ServerStatus.ACTIVE : ServerStatus.INACTIVE;
+    }
+
+    public void submitJobGraph(JobGraph jobGraph) {
+        start();
+        MiniClusterClient client = new MiniClusterClient(new Configuration(), miniCluster);
+        JobID jobID = client.submitJob(jobGraph).join();
+        if (log.isInfoEnabled()) {
+            log.info("Submitted job {} successfully. JobID = {}.", jobGraph.getName(), jobID);
+        }
     }
 }

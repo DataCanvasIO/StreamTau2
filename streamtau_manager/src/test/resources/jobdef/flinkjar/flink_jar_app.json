@@ -2,22 +2,22 @@
   "appId": "APP",
   "map": {
     "APP": {
-      "type": "JavaJarApp",
+      "type": "FlinkJarApp",
       "category": "APPLICATION",
       "jarFile": "JAR",
       "name": "app",
-      "server": "EXECUTOR"
+      "server": "FLINK_MINI_CLUSTER"
     },
-    "EXECUTOR": {
-      "type": "Executor",
+    "FLINK_MINI_CLUSTER": {
+      "type": "FlinkMiniCluster",
       "category": "SERVER",
-      "name": "executor"
+      "name": "Flink mini cluster"
     },
     "JAR": {
       "type": "JarFile",
       "category": "FILE",
       "name": "jarFile",
-      "path": "JAVA_JAR_APP.jar"
+      "path": "FLINK_JAR_APP.jar"
     }
   }
 }

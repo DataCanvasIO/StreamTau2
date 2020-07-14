@@ -34,6 +34,7 @@
 
     <modules>
         <module>hello_world</module>
+        <module>flink_streaming</module>
     </modules>
 
 </project>

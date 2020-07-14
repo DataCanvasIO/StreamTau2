@@ -21,10 +21,11 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class CmdLineRunner extends SingleServerRunner {
-    public void run(JobDefPod pod, ExecutorInstance executorInstance, Runnable onFinish) {
+    public void run(@NotNull JobDefPod pod, ExecutorInstance executorInstance, Runnable onFinish) {
         CmdLineApp cmdLineApp = (CmdLineApp) pod.getApp();
         CmdLine cmdLine = (CmdLine) pod.load(cmdLineApp.getCmdLine());
         executorInstance.cmdLine(new String[]{"sh", "-c", cmdLine.getCmd()}, onFinish);

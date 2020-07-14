@@ -32,7 +32,8 @@ public class ServerInstanceFactory {
 
     private ServerInstanceFactory() {
         instanceSupplierMap = new LinkedHashMap<>(10);
-        registerStarter("Executor", ExecutorInstance::new);
+        registerServerInstance("Executor", ExecutorInstance::new);
+        registerServerInstance("FlinkMiniCluster", FlinkMiniClusterInstance::new);
     }
 
     public static ServerInstanceFactory get() {
@@ -42,7 +43,7 @@ public class ServerInstanceFactory {
         return INS;
     }
 
-    private void registerStarter(String type, Function<Server, ServerInstance> supplier) {
+    private void registerServerInstance(String type, Function<Server, ServerInstance> supplier) {
         instanceSupplierMap.put(type, supplier);
     }
 

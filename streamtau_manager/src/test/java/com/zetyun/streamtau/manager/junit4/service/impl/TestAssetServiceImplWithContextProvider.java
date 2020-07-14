@@ -67,7 +67,7 @@ public class TestAssetServiceImplWithContextProvider {
 
     @Test
     public void testSynthesizeJobDefWithFile() throws IOException {
-        when(storageService.createFile("jar")).thenReturn("BBB.jar");
+        when(storageService.createFile("jar")).thenReturn("JAVA_JAR_APP.jar");
         List<Asset> assets = readObjectFromCsv("/jobdef/javajar/jar_app.csv", Asset.class);
         for (Asset asset : assets) {
             when(assetMapper.findByIdInProject(3L, asset.getProjectAssetId())).thenReturn(asset);

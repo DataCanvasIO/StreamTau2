@@ -35,6 +35,7 @@ public class RunnerFactory {
         runnerMap = new LinkedHashMap<>(10);
         registerRunner("CmdLineApp", new CmdLineRunner());
         registerRunner("JavaJarApp", new JavaJarRunner());
+        registerRunner("FlinkJarApp", new FlinkJarRunner());
     }
 
     public static RunnerFactory get() {
