@@ -52,6 +52,9 @@
         <!-- jackson -->
         <jackson.version>2.10.3</jackson.version>
 
+        <!-- antlr4 -->
+        <antlr4.version>4.8-1</antlr4.version>
+
         <!-- facilities -->
         <auto-service.version>1.0-rc6</auto-service.version>
         <guava.version>29.0-jre</guava.version>
@@ -94,6 +97,7 @@
         <module>streamtau_test</module>
         <module>streamtau_manager</module>
         <module>dist</module>
+        <module>streamtau_expr</module>
     </modules>
 
     <dependencyManagement>
@@ -193,6 +197,13 @@
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-csv</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- antlr4 -->
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr4.version}</version>
             </dependency>
 
             <!-- facilities -->
@@ -429,6 +440,11 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>native2ascii-maven-plugin</artifactId>
                     <version>${native2ascii-maven.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-maven-plugin</artifactId>
+                    <version>${antlr4.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
