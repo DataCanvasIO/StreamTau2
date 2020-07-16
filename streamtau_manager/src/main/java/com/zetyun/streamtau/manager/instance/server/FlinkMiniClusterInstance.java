@@ -71,6 +71,7 @@ public class FlinkMiniClusterInstance extends ServerInstance {
         // The configuration seems to be no use.
         MiniClusterClient client = new MiniClusterClient(new Configuration(), miniCluster);
         client.shutDownCluster();
+        checkAndSetStatus();
         if (log.isInfoEnabled()) {
             log.info("Flink mini cluster \"{}\" stopped.", getServer().getName());
         }

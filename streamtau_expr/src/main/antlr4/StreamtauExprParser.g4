@@ -11,7 +11,7 @@ expr : INT                                      # Int
      | STR                                      # Str
      | BOOL                                     # Bool
      | ID                                       # Var
-     | '(' expr ')'                             # Parens
+     | '(' expr ')'                             # Pars
      | fun=ID '(' (expr (',' expr) *) ? ')'     # Fun
      | expr '.' ID                              # StrIndex
      | expr '[' expr ']'                        # Index

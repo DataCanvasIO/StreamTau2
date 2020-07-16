@@ -61,7 +61,12 @@
         <lombok.version>1.18.12</lombok.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
         <javapoet.version>1.12.1</javapoet.version>
+
+        <!-- apache commons -->
         <commons-io.version>2.6</commons-io.version>
+        <commons-text.version>1.8</commons-text.version>
+        <configuration2.version>2.7</configuration2.version>
+        <commons-lang3.version>3.10</commons-lang3.version>
 
         <!-- testing -->
         <junit.version>4.12</junit.version>
@@ -98,6 +103,8 @@
         <module>streamtau_manager</module>
         <module>dist</module>
         <module>streamtau_expr</module>
+        <module>streamtau_expr_runtime</module>
+        <module>streamtau_expr_annotation</module>
     </modules>
 
     <dependencyManagement>
@@ -237,10 +244,27 @@
                 <artifactId>javapoet</artifactId>
                 <version>${javapoet.version}</version>
             </dependency>
+
+            <!-- apache commons -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-configuration2</artifactId>
+                <version>${configuration2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
 
             <!-- testing -->
@@ -327,6 +351,21 @@
             </dependency>
 
             <!-- this project -->
+            <dependency>
+                <groupId>com.zetyun.streamtau</groupId>
+                <artifactId>streamtau-expr-annotation</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zetyun.streamtau</groupId>
+                <artifactId>streamtau-expr-runtime</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zetyun.streamtau</groupId>
+                <artifactId>streamtau-expr</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -477,6 +516,13 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <showWarnings>true</showWarnings>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
