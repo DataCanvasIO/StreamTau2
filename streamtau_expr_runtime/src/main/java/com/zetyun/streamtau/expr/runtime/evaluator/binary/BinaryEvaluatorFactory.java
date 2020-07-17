@@ -27,7 +27,7 @@ public class BinaryEvaluatorFactory extends EvaluatorFactory<BinaryEvaluator> {
 
     private static @NotNull String id(Class<?> paraType0, Class<?> paraType1) {
         if (paraType0 != null && paraType1 != null) {
-            return paraType0.getSimpleName() + paraType1.getSimpleName();
+            return paraId(paraType0) + paraId(paraType1);
         }
         return "Universal";
     }

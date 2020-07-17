@@ -66,7 +66,9 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     private static final String INSTANCE_VAR_NAME = "INS";
 
     private static @NotNull String getSimpleName(@NotNull TypeName type) {
-        String name = type.toString();
+        String name = type.toString()
+            .replaceAll("<.*>", "")
+            .replace("[]", "Array");
         return name.substring(name.lastIndexOf('.') + 1);
     }
 

@@ -18,6 +18,7 @@ package com.zetyun.streamtau.expr.runtime.evaluator;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class EvaluatorFactory<EvaluatorT> implements Serializable {
@@ -29,5 +30,15 @@ public abstract class EvaluatorFactory<EvaluatorT> implements Serializable {
     protected EvaluatorFactory() {
         lookup = new HashMap<>();
         types = new HashMap<>();
+    }
+
+    protected static String paraId(Class<?> paraType) {
+        if (List.class.isAssignableFrom(paraType)) {
+            return "List";
+        }
+        if (Map.class.isAssignableFrom(paraType)) {
+            return "Map";
+        }
+        return paraType.getSimpleName().replace("[]", "Array");
     }
 }

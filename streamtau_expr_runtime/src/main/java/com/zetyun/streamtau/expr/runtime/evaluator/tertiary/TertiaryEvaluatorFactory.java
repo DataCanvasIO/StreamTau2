@@ -26,7 +26,7 @@ public class TertiaryEvaluatorFactory extends EvaluatorFactory<TertiaryEvaluator
 
     private static String id(Class<?> paraType0, Class<?> paraType1, Class<?> paraType2) {
         if (paraType0 != null && paraType1 != null && paraType2 != null) {
-            return paraType0.getSimpleName() + paraType1.getSimpleName() + paraType2.getSimpleName();
+            return paraId(paraType0) + paraId(paraType1) + paraId(paraType2);
         }
         return "Universal";
     }

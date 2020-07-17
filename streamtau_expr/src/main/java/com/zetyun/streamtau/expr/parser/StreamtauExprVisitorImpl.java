@@ -20,6 +20,7 @@ import com.zetyun.streamtau.expr.antlr4.StreamtauExprParser;
 import com.zetyun.streamtau.expr.antlr4.StreamtauExprParserBaseVisitor;
 import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.op.BinaryOp;
+import com.zetyun.streamtau.expr.op.IndexOp;
 import com.zetyun.streamtau.expr.op.OpFactory;
 import com.zetyun.streamtau.expr.op.UnaryOp;
 import com.zetyun.streamtau.expr.value.Bool;
@@ -33,19 +34,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Expr> {
-    private @NotNull Expr internalVisitBinaryOp(int type, @NotNull List<StreamtauExprParser.ExprContext> exprs) {
-        Expr operand0 = visit(exprs.get(0));
-        Expr operand1 = visit(exprs.get(1));
+    private @NotNull Expr internalVisitBinaryOp(
+        int type,
+        @NotNull List<StreamtauExprParser.ExprContext> exprList
+    ) {
         BinaryOp op = OpFactory.getBinary(type);
-        op.setExpr0(operand0);
-        op.setExpr1(operand1);
+        op.setExpr0(visit(exprList.get(0)));
+        op.setExpr1(visit(exprList.get(1)));
         return op;
     }
 
-    private @NotNull Expr internalVisitUnaryOp(int type, StreamtauExprParser.ExprContext expr) {
-        Expr operand = visit(expr);
+    private @NotNull Expr internalVisitUnaryOp(
+        int type,
+        StreamtauExprParser.ExprContext expr
+    ) {
         UnaryOp op = OpFactory.getUnary(type);
-        op.setExpr(operand);
+        op.setExpr(visit(expr));
         return op;
     }
 
@@ -117,14 +121,18 @@ public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Exp
 
     @Override
     public Expr visitIndex(@NotNull StreamtauExprParser.IndexContext ctx) {
-        // TODO
-        return null;
+        BinaryOp op = new IndexOp();
+        op.setExpr0(visit(ctx.expr().get(0)));
+        op.setExpr1(visit(ctx.expr().get(1)));
+        return op;
     }
 
     @Override
     public Expr visitStrIndex(@NotNull StreamtauExprParser.StrIndexContext ctx) {
-        // TODO
-        return null;
+        BinaryOp op = new IndexOp();
+        op.setExpr0(visit(ctx.expr()));
+        op.setExpr1(new Str(ctx.ID().getText()));
+        return op;
     }
 
     @Override

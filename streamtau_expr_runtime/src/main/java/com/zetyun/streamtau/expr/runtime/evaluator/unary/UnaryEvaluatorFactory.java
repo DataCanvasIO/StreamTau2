@@ -29,7 +29,7 @@ public abstract class UnaryEvaluatorFactory extends EvaluatorFactory<UnaryEvalua
     @Contract(pure = true)
     private static @NotNull String id(Class<?> paraType) {
         if (paraType != null) {
-            return paraType.getSimpleName();
+            return paraId(paraType);
         }
         return "Universal";
     }
