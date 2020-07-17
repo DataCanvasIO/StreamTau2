@@ -21,8 +21,6 @@ import com.zetyun.streamtau.expr.runtime.evaluator.binary.arithmetic.AddEvaluato
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.arithmetic.DivEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.arithmetic.MulEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.arithmetic.SubEvaluatorFactory;
-import com.zetyun.streamtau.expr.runtime.evaluator.binary.logical.AndEvaluatorFactory;
-import com.zetyun.streamtau.expr.runtime.evaluator.binary.logical.OrEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.relational.EqEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.relational.GeEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.relational.GtEvaluatorFactory;
@@ -33,52 +31,55 @@ import com.zetyun.streamtau.expr.runtime.evaluator.binary.string.EndsWithEvaluat
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.string.StartsWithEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.arithmetic.NegEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.arithmetic.PosEvaluatorFactory;
-import com.zetyun.streamtau.expr.runtime.evaluator.unary.logical.NotEvaluatorFactory;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public class OpFactory {
-    public static UnaryOp getUnary(int type) {
+    @Contract("_ -> new")
+    public static @NotNull UnaryOp getUnary(int type) {
         switch (type) {
             case StreamtauExprParser.ADD:
-                return new UnaryOp(PosEvaluatorFactory.get());
+                return new UnaryOp(PosEvaluatorFactory.INS);
             case StreamtauExprParser.SUB:
-                return new UnaryOp(NegEvaluatorFactory.get());
+                return new UnaryOp(NegEvaluatorFactory.INS);
             case StreamtauExprParser.NOT:
-                return new UnaryOp(NotEvaluatorFactory.get());
+                return new NotOp();
             default:
                 throw new IllegalArgumentException("Invalid operator type: " + type);
         }
     }
 
-    public static BinaryOp getBinary(int type) {
+    @Contract("_ -> new")
+    public static @NotNull BinaryOp getBinary(int type) {
         switch (type) {
             case StreamtauExprParser.ADD:
-                return new BinaryOp(AddEvaluatorFactory.get());
+                return new BinaryOp(AddEvaluatorFactory.INS);
             case StreamtauExprParser.SUB:
-                return new BinaryOp(SubEvaluatorFactory.get());
+                return new BinaryOp(SubEvaluatorFactory.INS);
             case StreamtauExprParser.MUL:
-                return new BinaryOp(MulEvaluatorFactory.get());
+                return new BinaryOp(MulEvaluatorFactory.INS);
             case StreamtauExprParser.DIV:
-                return new BinaryOp(DivEvaluatorFactory.get());
+                return new BinaryOp(DivEvaluatorFactory.INS);
             case StreamtauExprParser.LT:
-                return new BinaryOp(LtEvaluatorFactory.get());
+                return new BinaryOp(LtEvaluatorFactory.INS);
             case StreamtauExprParser.LE:
-                return new BinaryOp(LeEvaluatorFactory.get());
+                return new BinaryOp(LeEvaluatorFactory.INS);
             case StreamtauExprParser.EQ:
-                return new BinaryOp(EqEvaluatorFactory.get());
+                return new BinaryOp(EqEvaluatorFactory.INS);
             case StreamtauExprParser.GT:
-                return new BinaryOp(GtEvaluatorFactory.get());
+                return new BinaryOp(GtEvaluatorFactory.INS);
             case StreamtauExprParser.GE:
-                return new BinaryOp(GeEvaluatorFactory.get());
+                return new BinaryOp(GeEvaluatorFactory.INS);
             case StreamtauExprParser.NE:
-                return new BinaryOp(NeEvaluatorFactory.get());
+                return new BinaryOp(NeEvaluatorFactory.INS);
             case StreamtauExprParser.AND:
-                return new BinaryOp(AndEvaluatorFactory.get());
+                return new AndOp();
             case StreamtauExprParser.OR:
-                return new BinaryOp(OrEvaluatorFactory.get());
+                return new OrOp();
             case StreamtauExprParser.STARTSWITH:
-                return new BinaryOp(StartsWithEvaluatorFactory.get());
+                return new BinaryOp(StartsWithEvaluatorFactory.INS);
             case StreamtauExprParser.ENDSWITH:
-                return new BinaryOp(EndsWithEvaluatorFactory.get());
+                return new BinaryOp(EndsWithEvaluatorFactory.INS);
             default:
                 throw new IllegalArgumentException("Invalid operator type: " + type);
         }

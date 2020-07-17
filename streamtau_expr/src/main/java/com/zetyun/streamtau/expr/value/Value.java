@@ -16,11 +16,11 @@
 
 package com.zetyun.streamtau.expr.value;
 
+import com.zetyun.streamtau.expr.core.AbstractExpr;
 import com.zetyun.streamtau.expr.core.CompileContext;
-import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.runtime.RtConst;
 
-public abstract class Value implements Expr {
+public abstract class Value extends AbstractExpr {
     @Override
     public RtConst compileIn(CompileContext ctx) {
         return new RtConst(this.getValue());

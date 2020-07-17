@@ -45,6 +45,11 @@ public class ArithmeticEvaluators {
         return value0.add(value1);
     }
 
+    // This is not arithmetic op, but put here to share the same evaluator factory.
+    public static String add(String s0, String s1) {
+        return s0 + s1;
+    }
+
     public static int sub(int value0, int value1) {
         return value0 - value1;
     }

@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class RtConst implements HasValue {
+public class RtConst implements RtExpr {
     private static final long serialVersionUID = 8495898422593228511L;
 
     private final Object value;

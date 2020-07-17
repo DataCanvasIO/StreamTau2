@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.value;
+package com.zetyun.streamtau.expr.runtime.var;
 
-import com.zetyun.streamtau.expr.core.CompileContext;
-import lombok.Getter;
+import com.zetyun.streamtau.expr.runtime.context.ExecContext;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class Real extends Value {
-    @Getter
-    private final Double value;
+public class RtNamedVar extends RtVar {
+    private static final long serialVersionUID = -3022297703503518040L;
 
-    public static Real fromString(String text) {
-        return new Real(Double.parseDouble(text));
+    private final String name;
+
+    @Override
+    public Object eval(ExecContext etx) {
+        return etx.getNamed(name);
     }
 
     @Override
-    public Class<?> calcType(CompileContext ctx) {
-        return Double.class;
+    public void set(ExecContext etx, Object value) {
+        etx.setNamed(name, value);
     }
 }

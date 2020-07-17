@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.evaluator.unary;
+package com.zetyun.streamtau.expr.runtime.op;
 
-import com.zetyun.streamtau.expr.annotation.Evaluators;
+import com.zetyun.streamtau.expr.runtime.RtExpr;
+import com.zetyun.streamtau.expr.runtime.context.ExecContext;
 
-@Evaluators(
-    evaluatorInterface = UnaryEvaluator.class,
-    evaluatorFactory = UnaryEvaluatorFactory.class,
-    universalEvaluator = UnaryUniversalEvaluator.class
-)
-public class LogicalEvaluators {
-    public static boolean not(boolean value) {
-        return !value;
+public class RtAndOp extends RtBinaryOp {
+    private static final long serialVersionUID = -709513497487133841L;
+
+    public RtAndOp(RtExpr para0, RtExpr para1) {
+        super(null, para0, para1);
+    }
+
+    @Override
+    public Object eval(ExecContext etx) {
+        return (boolean) para0.eval(etx) && (boolean) para1.eval(etx);
     }
 }

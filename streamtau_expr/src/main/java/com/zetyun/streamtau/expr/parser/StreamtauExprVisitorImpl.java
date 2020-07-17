@@ -26,6 +26,7 @@ import com.zetyun.streamtau.expr.value.Bool;
 import com.zetyun.streamtau.expr.value.Int;
 import com.zetyun.streamtau.expr.value.Real;
 import com.zetyun.streamtau.expr.value.Str;
+import com.zetyun.streamtau.expr.var.Var;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -71,8 +72,7 @@ public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Exp
 
     @Override
     public Expr visitVar(@NotNull StreamtauExprParser.VarContext ctx) {
-        // TODO
-        return null;
+        return new Var(ctx.ID().getText());
     }
 
     @Override

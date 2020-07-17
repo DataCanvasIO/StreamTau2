@@ -18,7 +18,11 @@ package com.zetyun.streamtau.expr;
 
 import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
+import com.zetyun.streamtau.expr.runtime.RtConst;
+import com.zetyun.streamtau.expr.runtime.RtExpr;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -26,6 +30,7 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -35,12 +40,17 @@ public class TestWithoutVar {
     private final String exprString;
     private final Object value;
 
+    @Contract(pure = true)
     @Parameterized.Parameters(name = "{index}: {0} ==> {1}")
-    public static Collection<Object[]> getParameters() {
+    public static @NotNull Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
+            // value
             {"2", 2L},
             {"3.0", 3.0},
             {"'foo'", "foo"},
+            {"true", true},
+            {"false", false},
+            // arithmetic op
             {"1 + 2", 3L},
             {"1 + 2*3", 7L},
             {"(1 + 2)*3", 9L},
@@ -48,18 +58,28 @@ public class TestWithoutVar {
             {"3*1.5 + 2.34", 6.84},
             {"2*-3.14e2", -6.28e2},
             {"5e4+3e3", 53e3},
+            // relational & logical op
             {"3 < 4", true},
             {"4.0 == 4", true},
             {"5 != 6", true},
             {"1 <= 2 && 3 > 2", true},
             {"1 > 0.1 and 2 - 2 = 0", true},
             {"not (0.0*2 < 0 || 1*4 > 3 and 6/6 == 1)", false},
+            // string op
+            {"'abc' startsWith 'a'", true},
+            {"'abc' endsWith 'c'", true},
+            {"\"abc\" + 'def'", "abcdef"},
+            {"'\\\\-\\/-\\b-\\n-\\r-\\t-\\u0020'", "\\-/-\b-\n-\r-\t- "},
+            {"\"a\\\"b\"", "a\"b"},
+            {"'a\"b'", "a\"b"},
         });
     }
 
     @Test
     public void test() {
         Expr expr = StreamtauExprCompiler.INS.parse(exprString);
-        assertThat(expr.compileIn(null).eval(null), is(value));
+        RtExpr rtExpr = expr.compileIn(null);
+        assertThat(rtExpr, instanceOf(RtConst.class));
+        assertThat(rtExpr.eval(null), is(value));
     }
 }

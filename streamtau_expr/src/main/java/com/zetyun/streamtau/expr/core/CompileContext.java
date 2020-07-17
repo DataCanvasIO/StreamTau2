@@ -17,9 +17,15 @@
 package com.zetyun.streamtau.expr.core;
 
 
-import com.zetyun.streamtau.expr.runtime.context.Context;
+import com.zetyun.streamtau.expr.runtime.context.ExecContext;
 import org.apache.commons.configuration2.Configuration;
 
-public interface CompileContext extends Context<Class<?>> {
+public interface CompileContext {
+    int getIndex(String name);
+
+    Class<?> get(String name);
+
     Configuration getConf();
+
+    ExecContext createExecContext();
 }

@@ -16,18 +16,22 @@
 
 package com.zetyun.streamtau.expr.runtime.op;
 
-import com.zetyun.streamtau.expr.runtime.HasValue;
+import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.expr.runtime.context.ExecContext;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.BinaryEvaluator;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class RtBinaryOp implements HasValue {
+public class RtBinaryOp implements RtExpr {
     private static final long serialVersionUID = -8130035605710130085L;
 
+    protected final RtExpr para0;
+    protected final RtExpr para1;
     private final BinaryEvaluator evaluator;
-    private final HasValue para0;
-    private final HasValue para1;
+
+    public RtBinaryOp(BinaryEvaluator evaluator, RtExpr para0, RtExpr para1) {
+        this.evaluator = evaluator;
+        this.para0 = para0;
+        this.para1 = para1;
+    }
 
     @Override
     public Object eval(ExecContext etx) {

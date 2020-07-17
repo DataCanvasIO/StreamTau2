@@ -14,23 +14,31 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.value;
+package com.zetyun.streamtau.expr.var;
 
+import com.zetyun.streamtau.expr.core.AbstractExpr;
 import com.zetyun.streamtau.expr.core.CompileContext;
-import lombok.Getter;
+import com.zetyun.streamtau.expr.runtime.RtExpr;
+import com.zetyun.streamtau.expr.runtime.var.RtIndexedVar;
+import com.zetyun.streamtau.expr.runtime.var.RtNamedVar;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
-public class Real extends Value {
-    @Getter
-    private final Double value;
+public class Var extends AbstractExpr {
+    private final String name;
 
-    public static Real fromString(String text) {
-        return new Real(Double.parseDouble(text));
+    @Override
+    public Class<?> calcType(@NotNull CompileContext ctx) {
+        return ctx.get(name);
     }
 
     @Override
-    public Class<?> calcType(CompileContext ctx) {
-        return Double.class;
+    public RtExpr compileIn(@NotNull CompileContext ctx) {
+        int index = ctx.getIndex(name);
+        if (index >= 0) {
+            return new RtIndexedVar(index);
+        }
+        return new RtNamedVar(name);
     }
 }

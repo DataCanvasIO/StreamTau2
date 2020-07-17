@@ -16,8 +16,8 @@
 
 package com.zetyun.streamtau.expr.core;
 
-import com.zetyun.streamtau.expr.runtime.HasValue;
+import com.zetyun.streamtau.expr.runtime.RtExpr;
 
-public interface Expr extends Compilable<HasValue> {
+public interface Expr extends Compilable<RtExpr> {
     Class<?> typeIn(CompileContext ctx);
 }

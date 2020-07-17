@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.evaluator.binary;
+package com.zetyun.streamtau.expr.runtime.var;
 
-import com.zetyun.streamtau.expr.annotation.Evaluators;
+import com.zetyun.streamtau.expr.runtime.context.ExecContext;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
-@Evaluators(
-    evaluatorInterface = BinaryEvaluator.class,
-    evaluatorFactory = BinaryEvaluatorFactory.class,
-    universalEvaluator = BinaryUniversalEvaluator.class
-)
-public class LogicalEvaluators {
-    public static boolean and(boolean left, boolean right) {
-        return left && right;
+@RequiredArgsConstructor
+public class RtIndexedVar extends RtVar {
+    private static final long serialVersionUID = -1139156670924180115L;
+
+    private final int index;
+
+    @Override
+    public Object eval(@NotNull ExecContext etx) {
+        return etx.getIndexed(index);
     }
 
-    public static boolean or(boolean left, boolean right) {
-        return left || right;
+    @Override
+    public void set(@NotNull ExecContext etx, Object value) {
+        etx.setIndexed(index, value);
     }
 }

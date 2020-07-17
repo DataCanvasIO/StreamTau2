@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.value;
+package com.zetyun.streamtau.expr.core;
 
-import com.zetyun.streamtau.expr.core.CompileContext;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-public class Real extends Value {
-    @Getter
-    private final Double value;
-
-    public static Real fromString(String text) {
-        return new Real(Double.parseDouble(text));
-    }
+public abstract class AbstractExpr implements Expr {
+    private Class<?> typeCache = null;
 
     @Override
-    public Class<?> calcType(CompileContext ctx) {
-        return Double.class;
+    public Class<?> typeIn(CompileContext ctx) {
+        if (typeCache == null) {
+            typeCache = calcType(ctx);
+        }
+        return typeCache;
     }
+
+    protected abstract Class<?> calcType(CompileContext ctx);
 }

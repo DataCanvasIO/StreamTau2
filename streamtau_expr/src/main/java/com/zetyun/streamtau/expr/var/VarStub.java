@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime;
+package com.zetyun.streamtau.expr.var;
 
+import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.expr.runtime.context.ExecContext;
 
-import java.io.Serializable;
+public class VarStub implements RtExpr {
+    private static final long serialVersionUID = 5088685130019153601L;
 
-public interface HasValue extends Serializable {
-    Object eval(ExecContext etx);
+    @Override
+    public Object eval(ExecContext etx) {
+        throw new RuntimeException("VarStub is not a real var, so cannot be evaluated.");
+    }
 }

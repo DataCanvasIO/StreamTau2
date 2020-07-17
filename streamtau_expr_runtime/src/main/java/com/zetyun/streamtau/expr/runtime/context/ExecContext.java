@@ -16,5 +16,14 @@
 
 package com.zetyun.streamtau.expr.runtime.context;
 
-public interface ExecContext extends Context<Object> {
+import java.io.Serializable;
+
+public interface ExecContext extends Serializable {
+    Object getIndexed(int index);
+
+    void setIndexed(int index, Object value);
+
+    Object getNamed(String name);
+
+    void setNamed(String name, Object value);
 }

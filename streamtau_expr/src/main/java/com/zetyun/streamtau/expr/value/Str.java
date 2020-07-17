@@ -30,7 +30,7 @@ public class Str extends Value {
     }
 
     @Override
-    public Class<?> typeIn(CompileContext ctx) {
+    public Class<?> calcType(CompileContext ctx) {
         return String.class;
     }
 }

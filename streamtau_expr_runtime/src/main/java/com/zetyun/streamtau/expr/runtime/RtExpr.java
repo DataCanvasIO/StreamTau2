@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.context;
+package com.zetyun.streamtau.expr.runtime;
+
+import com.zetyun.streamtau.expr.runtime.context.ExecContext;
 
 import java.io.Serializable;
 
-public interface Context<V> extends Serializable {
-    V get(String name);
-
-    void put(String name, V value);
+public interface RtExpr extends Serializable {
+    Object eval(ExecContext etx);
 }

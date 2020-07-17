@@ -64,7 +64,6 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     private static final String LOOKUP_VAR_NAME = "lookup";
     private static final String TYPES_VAR_NAME = "types";
     private static final String INSTANCE_VAR_NAME = "INS";
-    private static final String GET_METHOD_NAME = "get";
 
     private static @NotNull String getSimpleName(@NotNull TypeName type) {
         String name = type.toString();
@@ -430,7 +429,7 @@ public class EvaluatorsProcessor extends AbstractProcessor {
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addField(serialVersionUid())
                 .addField(
-                    FieldSpec.builder(className, INSTANCE_VAR_NAME, Modifier.PRIVATE, Modifier.STATIC)
+                    FieldSpec.builder(className, INSTANCE_VAR_NAME, Modifier.PUBLIC, Modifier.STATIC)
                         .initializer("new $T()", className)
                         .build()
                 )
@@ -438,13 +437,6 @@ public class EvaluatorsProcessor extends AbstractProcessor {
                     MethodSpec.constructorBuilder()
                         .addModifiers(Modifier.PRIVATE)
                         .addCode(initBuilder.build())
-                        .build()
-                )
-                .addMethod(
-                    MethodSpec.methodBuilder(GET_METHOD_NAME)
-                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                        .returns(className)
-                        .addStatement("return $L", INSTANCE_VAR_NAME)
                         .build()
                 )
                 .build();

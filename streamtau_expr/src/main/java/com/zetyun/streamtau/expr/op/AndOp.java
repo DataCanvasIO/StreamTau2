@@ -16,31 +16,22 @@
 
 package com.zetyun.streamtau.expr.op;
 
-import com.zetyun.streamtau.expr.core.AbstractExpr;
 import com.zetyun.streamtau.expr.core.CompileContext;
-import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.runtime.RtConst;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.evaluator.binary.BinaryEvaluator;
-import com.zetyun.streamtau.expr.runtime.evaluator.binary.BinaryEvaluatorFactory;
+import com.zetyun.streamtau.expr.runtime.op.RtAndOp;
 import com.zetyun.streamtau.expr.runtime.op.RtBinaryOp;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@RequiredArgsConstructor
-public class BinaryOp extends AbstractExpr {
-    private final BinaryEvaluatorFactory factory;
-    @Setter
-    protected Expr expr0;
-    @Setter
-    protected Expr expr1;
+public class AndOp extends BinaryOp {
+    public AndOp() {
+        super(null);
+    }
 
     @Override
     public RtExpr compileIn(CompileContext ctx) {
         RtExpr rtExpr0 = expr0.compileIn(ctx);
         RtExpr rtExpr1 = expr1.compileIn(ctx);
-        BinaryEvaluator evaluator = factory.getEvaluator(expr0.typeIn(ctx), expr1.typeIn(ctx));
-        RtBinaryOp rt = new RtBinaryOp(evaluator, rtExpr0, rtExpr1);
+        RtBinaryOp rt = new RtAndOp(rtExpr0, rtExpr1);
         if (rtExpr0 instanceof RtConst && rtExpr1 instanceof RtConst) {
             return new RtConst(rt.eval(null));
         }
@@ -49,6 +40,6 @@ public class BinaryOp extends AbstractExpr {
 
     @Override
     public Class<?> calcType(CompileContext ctx) {
-        return factory.getType(expr0.typeIn(ctx), expr1.typeIn(ctx));
+        return Boolean.class;
     }
 }
