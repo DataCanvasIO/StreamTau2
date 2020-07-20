@@ -16,8 +16,8 @@
 
 package com.zetyun.streamtau.manager.junit4.pea;
 
+import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;

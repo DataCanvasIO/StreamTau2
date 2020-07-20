@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.manager.db.handler;
 
-import com.zetyun.streamtau.manager.db.model.ScriptFormat;
+import com.zetyun.streamtau.core.pea.ScriptFormat;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 

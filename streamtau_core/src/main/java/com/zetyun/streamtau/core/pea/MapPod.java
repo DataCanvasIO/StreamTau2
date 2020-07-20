@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.generic;
+package com.zetyun.streamtau.core.pea;
 
 import java.io.IOException;
 import java.util.HashMap;

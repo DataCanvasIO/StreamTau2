@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.manager.junit4.pea.file;
 
-import com.zetyun.streamtau.manager.pea.PeaParser;
+import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.file.File;
 import com.zetyun.streamtau.manager.pea.file.TxtFile;
 import org.junit.Test;

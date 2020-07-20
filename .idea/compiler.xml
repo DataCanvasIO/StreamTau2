@@ -14,6 +14,7 @@
         <module name="streamtau-test-flink-streaming" />
         <module name="dist" />
         <module name="streamtau-expr-runtime" />
+        <module name="streamtau-core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

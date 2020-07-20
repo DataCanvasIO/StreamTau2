@@ -24,15 +24,16 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.zetyun.streamtau.core.pea.Pea;
+import com.zetyun.streamtau.core.pea.PeaParser;
+import com.zetyun.streamtau.core.pea.ScriptFormat;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
-import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.app.FlinkJarApp;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.file.TxtFile;
-import com.zetyun.streamtau.manager.pea.generic.Pea;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.pea.server.Executor;
@@ -49,7 +50,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.collectPeaIds;
+import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
 
 @Schema(
     type = "object",

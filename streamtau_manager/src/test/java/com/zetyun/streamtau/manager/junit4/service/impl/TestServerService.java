@@ -16,10 +16,10 @@
 
 package com.zetyun.streamtau.manager.junit4.service.impl;
 
+import com.zetyun.streamtau.core.pea.ScriptFormat;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
-import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import com.zetyun.streamtau.manager.instance.server.ExecutorInstance;
 import com.zetyun.streamtau.manager.instance.server.ServerInstance;
 import com.zetyun.streamtau.manager.pea.server.Executor;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.db.model;
+package com.zetyun.streamtau.core.pea;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;

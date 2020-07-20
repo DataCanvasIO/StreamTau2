@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.generic;
+package com.zetyun.streamtau.core.pea;
 
-import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface Pod<I, T, P extends Pea<I, T>> {
-    P load(I id) throws IOException;
-
-    void save(P pea) throws IOException;
-
-    default void transfer(I id, Pod<I, T, P> pod) throws IOException {
-        P pea = load(id);
-        pea.transferAnnex();
-        pod.save(pea);
-        for (I cid : pea.children()) {
-            transfer(cid, pod);
-        }
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PeaId {
+    @Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface InIt {
     }
 }

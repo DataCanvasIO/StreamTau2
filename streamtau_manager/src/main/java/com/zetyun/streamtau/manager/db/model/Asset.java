@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.db.model;
 
+import com.zetyun.streamtau.core.pea.ScriptFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

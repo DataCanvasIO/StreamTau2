@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea;
+package com.zetyun.streamtau.core.pea;
 
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.DeserializationConfig;
@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 

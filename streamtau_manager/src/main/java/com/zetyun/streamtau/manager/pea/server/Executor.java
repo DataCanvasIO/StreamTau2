@@ -17,8 +17,8 @@
 package com.zetyun.streamtau.manager.pea.server;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.core.pea.ScriptFormat;
 import com.zetyun.streamtau.manager.db.model.Asset;
-import com.zetyun.streamtau.manager.db.model.ScriptFormat;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;

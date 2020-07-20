@@ -19,6 +19,7 @@ package com.zetyun.streamtau.manager.pea;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.generic.MapPod;
 import lombok.Getter;
 

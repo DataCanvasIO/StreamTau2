@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.junit4.pea.generic;
+package com.zetyun.streamtau.core.pea;
 
 import com.google.common.collect.ImmutableMap;
-import com.zetyun.streamtau.manager.pea.generic.PeaId;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.Before;
@@ -29,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.collectPeaIds;
-import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.replacePeaIds;
+import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
+import static com.zetyun.streamtau.core.pea.PeaUtils.replacePeaIds;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
