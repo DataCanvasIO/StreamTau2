@@ -31,6 +31,7 @@ import com.zetyun.streamtau.expr.runtime.evaluator.binary.string.EndsWithEvaluat
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.string.StartsWithEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.arithmetic.NegEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.arithmetic.PosEvaluatorFactory;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +46,7 @@ public class OpFactory {
             case StreamtauExprParser.NOT:
                 return new NotOp();
             default:
-                throw new IllegalArgumentException("Invalid operator type: " + type);
+                throw new ParseCancellationException("Invalid operator type: " + type);
         }
     }
 
@@ -81,7 +82,7 @@ public class OpFactory {
             case StreamtauExprParser.ENDSWITH:
                 return new BinaryOp(EndsWithEvaluatorFactory.INS);
             default:
-                throw new IllegalArgumentException("Invalid operator type: " + type);
+                throw new ParseCancellationException("Invalid operator type: " + type);
         }
     }
 }

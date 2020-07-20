@@ -87,7 +87,7 @@ public class TestIndexOp {
     }
 
     @Contract(pure = true)
-    @Parameterized.Parameters(name = "{index}: {0} ==> {1}")
+    @Parameterized.Parameters(name = "{index}: {0} ==> {1}, {2}")
     public static @NotNull Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
             {"anIntArray[0]", 1L, 4L},

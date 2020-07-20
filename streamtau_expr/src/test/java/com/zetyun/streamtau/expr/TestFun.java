@@ -38,7 +38,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 @RequiredArgsConstructor
-public class TestWithVar {
+public class TestFun {
     private static CompileContext ctx;
     private static ExecContext etx1;
     private static ExecContext etx2;
@@ -66,7 +66,7 @@ public class TestWithVar {
         etx1.setIndexed(0, "foo");
         etx1.setIndexed(1, true);
         etx2 = ctx.createExecContext();
-        etx2.setNamed("anInt", 3L);
+        etx2.setNamed("anInt", -3L);
         etx2.setNamed("aReal", 4.0);
         etx2.setIndexed(0, "bar");
         etx2.setIndexed(1, false);
@@ -76,15 +76,7 @@ public class TestWithVar {
     @Parameterized.Parameters(name = "{index}: {0} ==> {1}, {2}")
     public static @NotNull Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
-            {"anInt", 2L, 3L},
-            {"aReal", 3.0, 4.0},
-            {"aStr", "foo", "bar"},
-            {"aBool", true, false},
-            {"1 + anInt", 3L, 4L},
-            {"1 + 2*aReal", 7.0, 9.0},
-            // short-circuit, there must be a var to prevent const optimization
-            {"false and anInt/0", false, false},
-            {"true or anInt/0", true, true},
+            {"abs(anInt)", 2L, 3L},
         });
     }
 

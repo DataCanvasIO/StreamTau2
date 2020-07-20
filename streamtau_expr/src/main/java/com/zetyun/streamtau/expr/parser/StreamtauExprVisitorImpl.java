@@ -20,6 +20,7 @@ import com.zetyun.streamtau.expr.antlr4.StreamtauExprParser;
 import com.zetyun.streamtau.expr.antlr4.StreamtauExprParserBaseVisitor;
 import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.op.BinaryOp;
+import com.zetyun.streamtau.expr.op.FunFactory;
 import com.zetyun.streamtau.expr.op.IndexOp;
 import com.zetyun.streamtau.expr.op.OpFactory;
 import com.zetyun.streamtau.expr.op.UnaryOp;
@@ -28,6 +29,7 @@ import com.zetyun.streamtau.expr.value.Int;
 import com.zetyun.streamtau.expr.value.Real;
 import com.zetyun.streamtau.expr.value.Str;
 import com.zetyun.streamtau.expr.var.Var;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -142,7 +144,13 @@ public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Exp
 
     @Override
     public Expr visitFun(@NotNull StreamtauExprParser.FunContext ctx) {
-        // TODO
-        return null;
+        int paraNum = ctx.expr().size();
+        String funName = ctx.ID().getText();
+        if (paraNum == 1) {
+            UnaryOp op = FunFactory.getUnary(funName);
+            op.setExpr(visit(ctx.expr().get(0)));
+            return op;
+        }
+        throw new ParseCancellationException("No function \"" + funName + "\" with " + paraNum + " parameters.");
     }
 }
