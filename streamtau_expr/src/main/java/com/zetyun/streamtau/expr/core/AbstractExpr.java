@@ -16,6 +16,8 @@
 
 package com.zetyun.streamtau.expr.core;
 
+import com.zetyun.streamtau.runtime.context.CompileContext;
+
 public abstract class AbstractExpr implements Expr {
     private Class<?> typeCache = null;
 

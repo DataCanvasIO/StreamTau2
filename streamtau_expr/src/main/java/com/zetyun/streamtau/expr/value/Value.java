@@ -17,8 +17,8 @@
 package com.zetyun.streamtau.expr.value;
 
 import com.zetyun.streamtau.expr.core.AbstractExpr;
-import com.zetyun.streamtau.expr.core.CompileContext;
 import com.zetyun.streamtau.expr.runtime.RtConst;
+import com.zetyun.streamtau.runtime.context.CompileContext;
 
 public abstract class Value extends AbstractExpr {
     @Override

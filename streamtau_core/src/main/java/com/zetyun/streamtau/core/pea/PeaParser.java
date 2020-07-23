@@ -27,8 +27,11 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +45,8 @@ public class PeaParser {
     public static final PeaParser YAML = createYamlPeaParser();
     private final ObjectMapper mapper;
 
-    public static PeaParser get(ScriptFormat format) {
+    @Contract(pure = true)
+    public static PeaParser get(@NotNull ScriptFormat format) {
         switch (format) {
             case APPLICATION_JSON:
                 return JSON;
@@ -53,12 +57,13 @@ public class PeaParser {
         }
     }
 
-    private static PeaParser createJsonPeaParser() {
+    private static @NotNull PeaParser createJsonPeaParser() {
         JsonMapper mapper = new JsonMapper();
         return new PeaParser(mapperWithCommonProperties(mapper));
     }
 
-    private static PeaParser createYamlPeaParser() {
+    @Contract(" -> new")
+    private static @NotNull PeaParser createYamlPeaParser() {
         ObjectMapper mapper;
         YAMLFactory yamlFactory = new YAMLFactory()
             .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
@@ -66,7 +71,7 @@ public class PeaParser {
         return new PeaParser(mapperWithCommonProperties(mapper));
     }
 
-    private static ObjectMapper mapperWithCommonProperties(ObjectMapper mapper) {
+    private static ObjectMapper mapperWithCommonProperties(@NotNull ObjectMapper mapper) {
         return mapper
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);

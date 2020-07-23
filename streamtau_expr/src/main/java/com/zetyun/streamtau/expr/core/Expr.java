@@ -16,7 +16,9 @@
 
 package com.zetyun.streamtau.expr.core;
 
+import com.zetyun.streamtau.core.Compilable;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
+import com.zetyun.streamtau.runtime.context.CompileContext;
 
 public interface Expr extends Compilable<RtExpr> {
     Class<?> typeIn(CompileContext ctx);

@@ -16,12 +16,14 @@
 
 package com.zetyun.streamtau.expr;
 
-import com.zetyun.streamtau.expr.core.CompileContext;
+import com.zetyun.streamtau.core.pea.PeaParser;
+import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.expr.core.Expr;
-import com.zetyun.streamtau.expr.core.SimpleCompileContext;
 import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.context.ExecContext;
+import com.zetyun.streamtau.runtime.context.ExecContext;
+import com.zetyun.streamtau.runtime.schema.RtSchema;
+import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -30,12 +32,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -43,7 +42,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(Parameterized.class)
 @RequiredArgsConstructor
 public class TestIndexOp {
-    private static CompileContext ctx;
+    private static RtSchema ctx;
     private static ExecContext etx1;
     private static ExecContext etx2;
 
@@ -52,38 +51,29 @@ public class TestIndexOp {
     private final Object value2;
 
     @BeforeClass
-    public static void setupClass() {
-        ctx = new SimpleCompileContext() {
-            @Override
-            protected void init() {
-                typeMap.put("anIntArray", Long[].class);
-                typeMap.put("aStrArray", String[].class);
-                typeMap.put("aList", List.class);
-                typeMap.put("aMap", Map.class);
-            }
-        };
-        etx1 = ctx.createExecContext();
-        etx1.setNamed("anIntArray", new Long[]{1L, 2L, 3L});
-        etx1.setNamed("aStrArray", new String[]{"foo", "bar", "foobar"});
-        List<Object> list1 = new LinkedList<>();
-        list1.add(1L);
-        list1.add("abc");
-        etx1.setNamed("aList", list1);
-        Map<String, Object> map1 = new HashMap<>();
-        map1.put("a", 1L);
-        map1.put("b", "abc");
-        etx1.setNamed("aMap", map1);
-        etx2 = ctx.createExecContext();
-        etx2.setNamed("anIntArray", new Long[]{4L, 5L});
-        etx2.setNamed("aStrArray", new String[]{"a", "b"});
-        List<Object> list2 = new LinkedList<>();
-        list2.add("def");
-        list2.add(3L);
-        etx2.setNamed("aList", list2);
-        Map<String, Object> map2 = new HashMap<>();
-        map2.put("a", "def");
-        map2.put("b", 3L);
-        etx2.setNamed("aMap", map2);
+    public static void setupClass() throws IOException {
+        SchemaSpec spec = PeaParser.YAML.parse(
+            TestIndexOp.class.getResourceAsStream("/schema/composite_vars.yml"),
+            SchemaSpec.class
+        );
+        ctx = new RtSchema(spec.createRtNode());
+        RtSchemaParser parser = RtSchemaParser.createYamlEventParser(ctx);
+        etx1 = parser.parse(
+            "{"
+                + "anIntArray: [1, 2, 3], "
+                + "aStrArray: [foo, bar], "
+                + "aList: [1, abc], "
+                + "aMap: {a: 1, b: abc}"
+                + "}"
+        );
+        etx2 = parser.parse(
+            "{"
+                + "anIntArray: [4, 5, 6], "
+                + "aStrArray: [a, b], "
+                + "aList: [def, 1], "
+                + "aMap: {a: def, b: 1}"
+                + "}"
+        );
     }
 
     @Contract(pure = true)

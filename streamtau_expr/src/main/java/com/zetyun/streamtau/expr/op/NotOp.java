@@ -16,11 +16,11 @@
 
 package com.zetyun.streamtau.expr.op;
 
-import com.zetyun.streamtau.expr.core.CompileContext;
 import com.zetyun.streamtau.expr.runtime.RtConst;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.expr.runtime.op.RtNotOp;
 import com.zetyun.streamtau.expr.runtime.op.RtUnaryOp;
+import com.zetyun.streamtau.runtime.context.CompileContext;
 
 public class NotOp extends UnaryOp {
     public NotOp() {

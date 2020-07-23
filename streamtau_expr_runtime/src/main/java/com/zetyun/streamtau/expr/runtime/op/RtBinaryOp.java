@@ -17,8 +17,8 @@
 package com.zetyun.streamtau.expr.runtime.op;
 
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.context.ExecContext;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.BinaryEvaluator;
+import com.zetyun.streamtau.runtime.context.ExecContext;
 
 public class RtBinaryOp implements RtExpr {
     private static final long serialVersionUID = -8130035605710130085L;

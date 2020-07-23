@@ -18,9 +18,9 @@ package com.zetyun.streamtau.manager.pea.misc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.zetyun.streamtau.core.pea.ScriptFormat;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.runtime.ScriptFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

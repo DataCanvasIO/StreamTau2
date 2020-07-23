@@ -19,9 +19,10 @@ package com.zetyun.streamtau.manager.pea;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zetyun.streamtau.core.pea.MapPod;
 import com.zetyun.streamtau.core.pea.PeaParser;
-import com.zetyun.streamtau.manager.pea.generic.MapPod;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,13 +47,13 @@ public class JobDefPod extends MapPod<String, String, AssetPea> {
         this.appId = appId;
     }
 
-    public static JobDefPod fromJobDefinition(String json) throws IOException {
+    public static @NotNull JobDefPod fromJobDefinition(String json) throws IOException {
         JobDefPod pod = PeaParser.JSON.parse(json, JobDefPod.class);
         pod.setPeaIdsFromKey();
         return pod;
     }
 
-    public static JobDefPod fromJobDefinition(InputStream json) throws IOException {
+    public static @NotNull JobDefPod fromJobDefinition(InputStream json) throws IOException {
         JobDefPod pod = PeaParser.JSON.parse(json, JobDefPod.class);
         pod.setPeaIdsFromKey();
         return pod;

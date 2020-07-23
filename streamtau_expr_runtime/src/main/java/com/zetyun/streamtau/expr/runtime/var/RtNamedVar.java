@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.expr.runtime.var;
 
-import com.zetyun.streamtau.expr.runtime.context.ExecContext;
+import com.zetyun.streamtau.runtime.context.ExecContext;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -27,11 +27,11 @@ public class RtNamedVar extends RtVar {
 
     @Override
     public Object eval(ExecContext etx) {
-        return etx.getNamed(name);
+        // TODO
+        return null;
     }
 
     @Override
     public void set(ExecContext etx, Object value) {
-        etx.setNamed(name, value);
     }
 }

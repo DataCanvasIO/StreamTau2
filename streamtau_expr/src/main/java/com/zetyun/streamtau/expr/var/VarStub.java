@@ -17,7 +17,7 @@
 package com.zetyun.streamtau.expr.var;
 
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.context.ExecContext;
+import com.zetyun.streamtau.runtime.context.ExecContext;
 
 public class VarStub implements RtExpr {
     private static final long serialVersionUID = 5088685130019153601L;

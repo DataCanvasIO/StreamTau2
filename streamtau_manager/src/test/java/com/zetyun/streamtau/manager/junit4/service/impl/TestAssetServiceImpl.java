@@ -16,7 +16,6 @@
 
 package com.zetyun.streamtau.manager.junit4.service.impl;
 
-import com.zetyun.streamtau.core.pea.ScriptFormat;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.mapper.ProjectAssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
@@ -28,6 +27,7 @@ import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.impl.AssetServiceImpl;
+import com.zetyun.streamtau.runtime.ScriptFormat;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

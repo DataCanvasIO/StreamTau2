@@ -31,7 +31,8 @@
     </typeAliases>
 
     <typeHandlers>
-        <typeHandler javaType="ScriptFormat" handler="com.zetyun.streamtau.manager.db.handler.ScriptFormatHandler"/>
+        <typeHandler javaType="com.zetyun.streamtau.runtime.ScriptFormat"
+                     handler="com.zetyun.streamtau.manager.db.handler.ScriptFormatHandler"/>
     </typeHandlers>
 
     <mappers>

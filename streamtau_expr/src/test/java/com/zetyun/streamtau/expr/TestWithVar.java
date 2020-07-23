@@ -16,12 +16,14 @@
 
 package com.zetyun.streamtau.expr;
 
-import com.zetyun.streamtau.expr.core.CompileContext;
+import com.zetyun.streamtau.core.pea.PeaParser;
+import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.expr.core.Expr;
-import com.zetyun.streamtau.expr.core.SimpleCompileContext;
 import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.context.ExecContext;
+import com.zetyun.streamtau.runtime.context.ExecContext;
+import com.zetyun.streamtau.runtime.schema.RtSchema;
+import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -39,7 +42,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(Parameterized.class)
 @RequiredArgsConstructor
 public class TestWithVar {
-    private static CompileContext ctx;
+    private static RtSchema ctx;
     private static ExecContext etx1;
     private static ExecContext etx2;
 
@@ -48,28 +51,15 @@ public class TestWithVar {
     private final Object value2;
 
     @BeforeClass
-    public static void setupClass() {
-        ctx = new SimpleCompileContext() {
-            @Override
-            protected void init() {
-                typeMap.put("anInt", Long.class);
-                typeMap.put("aReal", Double.class);
-                typeMap.put("aStr", String.class);
-                typeMap.put("aBool", Boolean.class);
-                indexMap.put("aStr", 0);
-                indexMap.put("aBool", 1);
-            }
-        };
-        etx1 = ctx.createExecContext();
-        etx1.setNamed("anInt", 2L);
-        etx1.setNamed("aReal", 3.0);
-        etx1.setIndexed(0, "foo");
-        etx1.setIndexed(1, true);
-        etx2 = ctx.createExecContext();
-        etx2.setNamed("anInt", 3L);
-        etx2.setNamed("aReal", 4.0);
-        etx2.setIndexed(0, "bar");
-        etx2.setIndexed(1, false);
+    public static void setupClass() throws IOException {
+        SchemaSpec spec = PeaParser.YAML.parse(
+            TestWithVar.class.getResourceAsStream("/schema/simple_vars.yml"),
+            SchemaSpec.class
+        );
+        ctx = new RtSchema(spec.createRtNode());
+        RtSchemaParser parser = RtSchemaParser.createYamlEventParser(ctx);
+        etx1 = parser.parse("{anInt: 2, aReal: 3.0, aStr: foo, aBool: true}");
+        etx2 = parser.parse("{anInt: 3, aReal: 4.0, aStr: bar, aBool: false}");
     }
 
     @Contract(pure = true)

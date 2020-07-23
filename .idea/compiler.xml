@@ -12,8 +12,9 @@
         <module name="streamtau-expr-annotation" />
         <module name="streamtau-test-hello-world" />
         <module name="streamtau-test-flink-streaming" />
-        <module name="dist" />
+        <module name="streamtau-runtime" />
         <module name="streamtau-expr-runtime" />
+        <module name="dist" />
         <module name="streamtau-core" />
       </profile>
     </annotationProcessing>

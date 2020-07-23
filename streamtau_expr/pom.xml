@@ -62,6 +62,10 @@
         <!-- this project -->
         <dependency>
             <groupId>com.zetyun.streamtau</groupId>
+            <artifactId>streamtau-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zetyun.streamtau</groupId>
             <artifactId>streamtau-expr-runtime</artifactId>
         </dependency>
     </dependencies>

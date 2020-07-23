@@ -18,17 +18,20 @@ package com.zetyun.streamtau.manager.citrus;
 
 import com.zetyun.streamtau.manager.citrus.behavior.Assets;
 import com.zetyun.streamtau.manager.pea.AssetPea;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.zetyun.streamtau.manager.pea.generic.PeaUtils.replacePeaIds;
+import static com.zetyun.streamtau.core.pea.PeaUtils.replacePeaIds;
 
 public class CitrusCommon {
     public static final String SERVER_ID = "streamtau-manager";
 
-    public static String varRef(String varName) {
+    @Contract(pure = true)
+    public static @NotNull String varRef(String varName) {
         return "${" + varName + "}";
     }
 
@@ -36,7 +39,9 @@ public class CitrusCommon {
         replacePeaIds(pea, (String x) -> varRef(Assets.idVarName(x)));
     }
 
-    public static List<AssetPea> getSortedAssetList(Map<String, AssetPea> peaMap) {
+    public static @NotNull List<AssetPea> getSortedAssetList(
+        @NotNull Map<String, AssetPea> peaMap
+    ) {
         List<AssetPea> peaList = new LinkedList<>(peaMap.values());
         peaList.sort((o1, o2) -> {
             if (o1.reference(o2.getId())) {

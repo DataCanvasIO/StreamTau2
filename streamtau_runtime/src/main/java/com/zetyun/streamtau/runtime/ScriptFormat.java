@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.core.pea;
+package com.zetyun.streamtau.runtime;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 public enum ScriptFormat {
@@ -32,7 +33,7 @@ public enum ScriptFormat {
         this.value = value;
     }
 
-    public static ScriptFormat fromString(String str) {
+    public static @NotNull ScriptFormat fromString(String str) {
         for (ScriptFormat scriptFormat : ScriptFormat.values()) {
             if (str.equals(scriptFormat.getValue())) {
                 return scriptFormat;

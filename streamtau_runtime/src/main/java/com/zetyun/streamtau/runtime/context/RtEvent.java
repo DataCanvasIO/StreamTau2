@@ -14,39 +14,24 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.context;
+package com.zetyun.streamtau.runtime.context;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class SimpleExecContext implements ExecContext {
+public class RtEvent implements ExecContext {
     private static final long serialVersionUID = 4296554739886078865L;
 
     private final Object[] indexedVars;
-    private final Map<String, Object> namedVars;
 
-    public SimpleExecContext(int numIndexedVars) {
+    public RtEvent(int numIndexedVars) {
         indexedVars = new Object[numIndexedVars];
-        namedVars = new HashMap<>();
     }
 
     @Override
-    public Object getIndexed(int index) {
+    public Object get(int index) {
         return indexedVars[index];
     }
 
     @Override
-    public void setIndexed(int index, Object value) {
+    public void set(int index, Object value) {
         indexedVars[index] = value;
-    }
-
-    @Override
-    public Object getNamed(String name) {
-        return namedVars.get(name);
-    }
-
-    @Override
-    public void setNamed(String name, Object value) {
-        namedVars.put(name, value);
     }
 }

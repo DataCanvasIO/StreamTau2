@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.expr.runtime.var;
 
-import com.zetyun.streamtau.expr.runtime.context.ExecContext;
+import com.zetyun.streamtau.runtime.context.ExecContext;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,11 +28,11 @@ public class RtIndexedVar extends RtVar {
 
     @Override
     public Object eval(@NotNull ExecContext etx) {
-        return etx.getIndexed(index);
+        return etx.get(index);
     }
 
     @Override
     public void set(@NotNull ExecContext etx, Object value) {
-        etx.setIndexed(index, value);
+        etx.set(index, value);
     }
 }

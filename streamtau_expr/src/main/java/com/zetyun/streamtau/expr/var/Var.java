@@ -17,10 +17,10 @@
 package com.zetyun.streamtau.expr.var;
 
 import com.zetyun.streamtau.expr.core.AbstractExpr;
-import com.zetyun.streamtau.expr.core.CompileContext;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.expr.runtime.var.RtIndexedVar;
 import com.zetyun.streamtau.expr.runtime.var.RtNamedVar;
+import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 

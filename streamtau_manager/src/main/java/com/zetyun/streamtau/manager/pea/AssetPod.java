@@ -16,10 +16,11 @@
 
 package com.zetyun.streamtau.manager.pea;
 
+import com.zetyun.streamtau.core.pea.Pod;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
-import com.zetyun.streamtau.manager.pea.generic.Pod;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -28,7 +29,7 @@ public class AssetPod implements Pod<String, String, AssetPea> {
     private final AssetMapper assetMapper;
     private final Long projectId;
 
-    public static AssetPea fromModel(Asset model) throws IOException {
+    public static @NotNull AssetPea fromModel(@NotNull Asset model) throws IOException {
         AssetPea pea = AssetPeaFactory.INS.make(model.getAssetType());
         pea.setId(model.getProjectAssetId());
         pea.setName(model.getAssetName());
@@ -37,7 +38,7 @@ public class AssetPod implements Pod<String, String, AssetPea> {
         return pea;
     }
 
-    public static Asset toModel(AssetPea pea) throws IOException {
+    public static @NotNull Asset toModel(@NotNull AssetPea pea) throws IOException {
         Asset model = new Asset();
         model.setAssetType(pea.getType());
         model.setAssetName(pea.getName());

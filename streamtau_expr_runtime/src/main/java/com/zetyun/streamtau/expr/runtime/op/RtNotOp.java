@@ -17,7 +17,7 @@
 package com.zetyun.streamtau.expr.runtime.op;
 
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.context.ExecContext;
+import com.zetyun.streamtau.runtime.context.ExecContext;
 
 public class RtNotOp extends RtUnaryOp {
     private static final long serialVersionUID = -5868771663756862179L;

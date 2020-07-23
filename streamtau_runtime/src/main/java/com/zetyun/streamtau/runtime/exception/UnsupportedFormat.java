@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.context;
+package com.zetyun.streamtau.runtime.exception;
 
-import java.io.Serializable;
+import com.zetyun.streamtau.runtime.ScriptFormat;
+import lombok.Getter;
 
-public interface ExecContext extends Serializable {
-    Object getIndexed(int index);
+public class UnsupportedFormat extends RuntimeException {
+    private static final long serialVersionUID = -8904768756586083565L;
 
-    void setIndexed(int index, Object value);
+    @Getter
+    private final ScriptFormat format;
 
-    Object getNamed(String name);
-
-    void setNamed(String name, Object value);
+    public UnsupportedFormat(ScriptFormat format) {
+        super(
+            "Unsupported format \"" + format + "\"."
+        );
+        this.format = format;
+    }
 }

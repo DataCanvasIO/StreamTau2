@@ -11,6 +11,8 @@
     <file url="file://$PROJECT_DIR$/streamtau_expr_runtime/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/streamtau_manager/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/streamtau_manager/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/streamtau_runtime/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/streamtau_runtime/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/streamtau_test/flink_streaming/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/streamtau_test/flink_streaming/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/streamtau_test/hello_world/src/main/java" charset="UTF-8" />

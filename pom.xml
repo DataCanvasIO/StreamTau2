@@ -106,6 +106,7 @@
         <module>streamtau_expr_runtime</module>
         <module>streamtau_expr_annotation</module>
         <module>streamtau_core</module>
+        <module>streamtau_runtime</module>
     </modules>
 
     <dependencyManagement>
@@ -370,6 +371,11 @@
             <dependency>
                 <groupId>com.zetyun.streamtau</groupId>
                 <artifactId>streamtau-expr-runtime</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zetyun.streamtau</groupId>
+                <artifactId>streamtau-runtime</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

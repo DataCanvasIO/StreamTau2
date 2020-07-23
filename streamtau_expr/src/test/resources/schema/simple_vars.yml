@@ -1,0 +1,11 @@
+type: object
+properties:
+  anInt:
+    type: integer
+  aReal:
+    type: number
+  aBool:
+    type: boolean
+  aStr:
+    type: string
+additionalProperties: false

@@ -16,8 +16,8 @@
 
 package com.zetyun.streamtau.manager.pea;
 
+import com.zetyun.streamtau.core.pea.PeaFactory;
 import com.zetyun.streamtau.core.pea.PeaParser;
-import com.zetyun.streamtau.manager.pea.generic.PeaFactory;
 
 import java.util.Map;
 

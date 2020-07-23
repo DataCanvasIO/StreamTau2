@@ -1,0 +1,15 @@
+type: object
+properties:
+  anIntArray:
+    type: array
+    items:
+      type: integer
+  aStrArray:
+    type: array
+    items:
+      type: string
+  aList:
+    type: array
+  aMap:
+    type: object
+additionalProperties: false

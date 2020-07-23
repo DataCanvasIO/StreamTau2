@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.core;
+package com.zetyun.streamtau.runtime.schema;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-import com.zetyun.streamtau.expr.runtime.context.ExecContext;
-import org.apache.commons.configuration2.Configuration;
+import java.io.Serializable;
 
-public interface CompileContext {
-    int getIndex(String name);
+@RequiredArgsConstructor
+public class RtSchemaNode implements Serializable {
+    private static final long serialVersionUID = -3071467129758460657L;
 
-    Class<?> get(String name);
+    @Getter
+    private final RtSchemaTypes type;
 
-    Configuration getConf();
+    @Getter
+    @Setter
+    private int index;
 
-    ExecContext createExecContext();
+    public Class<?> getJavaClass() {
+        return type.getJavaClass();
+    }
 }

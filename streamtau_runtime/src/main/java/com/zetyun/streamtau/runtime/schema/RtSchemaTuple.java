@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.core;
+package com.zetyun.streamtau.runtime.schema;
 
-public interface Compilable<T> {
-    T compileIn(CompileContext ctx);
+import lombok.Getter;
+import lombok.Setter;
+
+public class RtSchemaTuple extends RtSchemaNode {
+    private static final long serialVersionUID = -2100318134202177165L;
+
+    @Getter
+    @Setter
+    private RtSchemaNode[] children;
+
+    public RtSchemaTuple() {
+        super(RtSchemaTypes.TUPLE);
+    }
 }

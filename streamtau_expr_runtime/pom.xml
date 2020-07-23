@@ -44,6 +44,10 @@
             <groupId>com.zetyun.streamtau</groupId>
             <artifactId>streamtau-expr-annotation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.zetyun.streamtau</groupId>
+            <artifactId>streamtau-runtime</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

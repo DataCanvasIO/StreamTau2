@@ -1,0 +1,15 @@
+{
+  type: object,
+  properties: {
+    a: {type: integer},
+    b: {
+      type: array,
+      items: [
+      {type: string},
+      {type: boolean}
+      ],
+      additionalItems: false
+    }
+  },
+  additionalProperties: false
+}
