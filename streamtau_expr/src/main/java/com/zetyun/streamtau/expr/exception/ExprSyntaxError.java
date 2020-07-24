@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.var;
+package com.zetyun.streamtau.expr.exception;
 
-import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.runtime.context.ExecContext;
-import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
+import lombok.Getter;
 
-@RequiredArgsConstructor
-public class RtVar implements RtExpr {
-    private static final long serialVersionUID = -1139156670924180115L;
+import java.util.List;
 
-    private final int index;
+public class ExprSyntaxError extends RuntimeException {
+    private static final long serialVersionUID = -5395869481764512615L;
 
-    @Override
-    public Object eval(@NotNull ExecContext etx) {
-        return etx.get(index);
-    }
+    @Getter
+    private final List<String> errorMessages;
 
-    public void set(@NotNull ExecContext etx, Object value) {
-        etx.set(index, value);
+    public ExprSyntaxError(List<String> errorMessages) {
+        super(
+            "RT expression syntax error:\n" + String.join("", errorMessages)
+        );
+        this.errorMessages = errorMessages;
     }
 }

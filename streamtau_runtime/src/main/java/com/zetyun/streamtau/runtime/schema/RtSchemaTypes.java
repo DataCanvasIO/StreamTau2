@@ -34,8 +34,8 @@ public enum RtSchemaTypes {
     LIST(List.class, "an array"),
     MAP(Map.class, "an object"),
     // index into multiple vars
-    TUPLE(null, null),
-    DICT(null, null);
+    TUPLE(Void.class, "an array with fixed length"),
+    DICT(Void.class, "an object containing fixed properties");
 
     @Getter
     private final Class<?> javaClass;

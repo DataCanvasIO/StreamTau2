@@ -16,17 +16,37 @@
 
 package com.zetyun.streamtau.runtime.schema;
 
+import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.Getter;
 import lombok.Setter;
 
-public class RtSchemaTuple extends RtSchemaNode {
+public class RtSchemaTuple extends RtSchema {
     private static final long serialVersionUID = -2100318134202177165L;
 
     @Getter
     @Setter
-    private RtSchemaNode[] children;
+    private RtSchema[] children;
 
     public RtSchemaTuple() {
         super(RtSchemaTypes.TUPLE);
+    }
+
+    @Override
+    public CompileContext getChild(String name) {
+        return null;
+    }
+
+    @Override
+    public CompileContext getChild(int index) {
+        return children[index];
+    }
+
+    @Override
+    public int createIndex(int start) {
+        setIndex(-1);
+        for (RtSchema s : children) {
+            start = s.createIndex(start);
+        }
+        return start;
     }
 }

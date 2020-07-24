@@ -99,14 +99,14 @@
     </properties>
 
     <modules>
+        <module>streamtau_runtime</module>
+        <module>streamtau_expr_runtime</module>
+        <module>streamtau_core</module>
+        <module>streamtau_expr_annotation</module>
+        <module>streamtau_expr</module>
         <module>streamtau_test</module>
         <module>streamtau_manager</module>
         <module>dist</module>
-        <module>streamtau_expr</module>
-        <module>streamtau_expr_runtime</module>
-        <module>streamtau_expr_annotation</module>
-        <module>streamtau_core</module>
-        <module>streamtau_runtime</module>
     </modules>
 
     <dependencyManagement>

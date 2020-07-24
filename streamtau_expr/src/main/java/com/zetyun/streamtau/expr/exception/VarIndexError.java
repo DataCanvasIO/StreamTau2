@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.var;
+package com.zetyun.streamtau.expr.exception;
 
-import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.runtime.context.ExecContext;
-import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
+import com.zetyun.streamtau.runtime.context.CompileContext;
+import lombok.Getter;
 
-@RequiredArgsConstructor
-public class RtVar implements RtExpr {
-    private static final long serialVersionUID = -1139156670924180115L;
+public class VarIndexError extends RuntimeException {
+    private static final long serialVersionUID = -1203529209280571584L;
 
-    private final int index;
+    @Getter
+    private final CompileContext ctx;
 
-    @Override
-    public Object eval(@NotNull ExecContext etx) {
-        return etx.get(index);
-    }
-
-    public void set(@NotNull ExecContext etx, Object value) {
-        etx.set(index, value);
+    public VarIndexError(CompileContext ctx) {
+        super(
+            "The index is not set for context:\n" + ctx
+        );
+        this.ctx = ctx;
     }
 }

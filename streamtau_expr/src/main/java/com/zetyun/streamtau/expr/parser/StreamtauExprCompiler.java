@@ -19,6 +19,7 @@ package com.zetyun.streamtau.expr.parser;
 import com.zetyun.streamtau.expr.antlr4.StreamtauExprLexer;
 import com.zetyun.streamtau.expr.antlr4.StreamtauExprParser;
 import com.zetyun.streamtau.expr.core.Expr;
+import com.zetyun.streamtau.expr.exception.ExprSyntaxError;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -50,8 +51,7 @@ public class StreamtauExprCompiler {
     private void collectParseError() {
         List<String> errorMessages = errorListener.getErrorMessages();
         if (!errorMessages.isEmpty()) {
-            String errorDetails = String.join("", errorMessages);
-            throw new IllegalArgumentException("RT expression syntax error:\n" + errorDetails);
+            throw new ExprSyntaxError(errorMessages);
         }
     }
 

@@ -17,28 +17,46 @@
 package com.zetyun.streamtau.expr.var;
 
 import com.zetyun.streamtau.expr.core.AbstractExpr;
+import com.zetyun.streamtau.expr.exception.ElementNotExist;
+import com.zetyun.streamtau.expr.exception.VarIndexError;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.var.RtIndexedVar;
-import com.zetyun.streamtau.expr.runtime.var.RtNamedVar;
+import com.zetyun.streamtau.expr.runtime.var.RtVar;
 import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 public class Var extends AbstractExpr {
     private final String name;
 
+    @Contract("_ -> new")
+    public static @NotNull RtExpr createVar(@NotNull CompileContext ctx) {
+        int index = ctx.getIndex();
+        if (index >= 0) {
+            return new RtVar(index);
+        }
+        if (ctx.getJavaClass() == Void.class) {
+            return new VarStub(ctx);
+        }
+        throw new VarIndexError(ctx);
+    }
+
     @Override
     public Class<?> calcType(@NotNull CompileContext ctx) {
-        return ctx.get(name);
+        CompileContext child = ctx.getChild(name);
+        if (child != null) {
+            return ctx.getChild(name).getJavaClass();
+        }
+        throw new ElementNotExist(name, ctx);
     }
 
     @Override
     public RtExpr compileIn(@NotNull CompileContext ctx) {
-        int index = ctx.getIndex(name);
-        if (index >= 0) {
-            return new RtIndexedVar(index);
+        CompileContext child = ctx.getChild(name);
+        if (child != null) {
+            return createVar(child);
         }
-        return new RtNamedVar(name);
+        throw new ElementNotExist(name, ctx);
     }
 }

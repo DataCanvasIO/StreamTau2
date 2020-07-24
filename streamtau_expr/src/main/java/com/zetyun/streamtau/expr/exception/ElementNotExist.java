@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.var;
+package com.zetyun.streamtau.expr.exception;
 
-import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.runtime.context.ExecContext;
-import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
+import com.zetyun.streamtau.runtime.context.CompileContext;
+import lombok.Getter;
 
-@RequiredArgsConstructor
-public class RtVar implements RtExpr {
-    private static final long serialVersionUID = -1139156670924180115L;
+public class ElementNotExist extends RuntimeException {
+    private static final long serialVersionUID = 6960341455575100238L;
 
-    private final int index;
+    @Getter
+    private final Object index;
+    @Getter
+    private final CompileContext ctx;
 
-    @Override
-    public Object eval(@NotNull ExecContext etx) {
-        return etx.get(index);
-    }
-
-    public void set(@NotNull ExecContext etx, Object value) {
-        etx.set(index, value);
+    public ElementNotExist(Object index, CompileContext ctx) {
+        super(
+            "Element \"" + index + "\" not exist in the following context:\n" + ctx
+        );
+        this.index = index;
+        this.ctx = ctx;
     }
 }

@@ -18,66 +18,36 @@ package com.zetyun.streamtau.runtime.schema;
 
 import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-import static com.zetyun.streamtau.runtime.Constants.ROOT_VAR_NAME;
-
+@RequiredArgsConstructor
 public class RtSchema implements CompileContext {
-    private static final long serialVersionUID = 4363200842331592676L;
+    private static final long serialVersionUID = -3071467129758460657L;
 
     @Getter
-    private final RtSchemaNode schema;
+    private final RtSchemaTypes type;
     @Getter
-    private final int maxIndex;
+    @Setter
+    private int index;
 
-    public RtSchema(RtSchemaNode schema) {
-        this.schema = schema;
-        maxIndex = createIndex(schema, 0);
-    }
-
-    private int createIndex(@NotNull RtSchemaNode schema, int start) {
-        switch (schema.getType()) {
-            case DICT:
-                RtSchemaDict obj = (RtSchemaDict) schema;
-                obj.setIndex(-1);
-                for (RtSchemaNode s : obj.getChildren().values()) {
-                    start = createIndex(s, start);
-                }
-                break;
-            case TUPLE:
-                RtSchemaTuple tuple = (RtSchemaTuple) schema;
-                tuple.setIndex(-1);
-                for (RtSchemaNode s : tuple.getChildren()) {
-                    start = createIndex(s, start);
-                }
-                break;
-            default:
-                schema.setIndex(start++);
-        }
-        return start;
+    @Override
+    public Class<?> getJavaClass() {
+        return type.getJavaClass();
     }
 
     @Override
-    public int getIndex(@NotNull String name) {
-        if (name.equals(ROOT_VAR_NAME)) {
-            return schema.getIndex();
-        }
-        if (schema instanceof RtSchemaDict) {
-            RtSchemaDict dict = (RtSchemaDict) schema;
-            return dict.getChild(name).getIndex();
-        }
-        return -1;
-    }
-
-    @Override
-    public Class<?> get(@NotNull String name) {
-        if (name.equals(ROOT_VAR_NAME)) {
-            return schema.getJavaClass();
-        }
-        if (schema instanceof RtSchemaDict) {
-            RtSchemaDict dict = (RtSchemaDict) schema;
-            return dict.getChild(name).getJavaClass();
-        }
+    public CompileContext getChild(String name) {
         return null;
+    }
+
+    @Override
+    public CompileContext getChild(int index) {
+        return null;
+    }
+
+    public int createIndex(int start) {
+        index = start++;
+        return start;
     }
 }

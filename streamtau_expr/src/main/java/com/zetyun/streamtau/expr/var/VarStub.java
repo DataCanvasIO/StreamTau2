@@ -16,14 +16,37 @@
 
 package com.zetyun.streamtau.expr.var;
 
+import com.zetyun.streamtau.expr.exception.ElementNotExist;
+import com.zetyun.streamtau.expr.exception.NotRtVar;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
+import com.zetyun.streamtau.runtime.context.CompileContext;
 import com.zetyun.streamtau.runtime.context.ExecContext;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class VarStub implements RtExpr {
     private static final long serialVersionUID = 5088685130019153601L;
 
+    private final CompileContext ctx;
+
     @Override
     public Object eval(ExecContext etx) {
-        throw new RuntimeException("VarStub is not a real var, so cannot be evaluated.");
+        throw new NotRtVar(ctx);
+    }
+
+    public RtExpr getChild(String name) {
+        CompileContext child = ctx.getChild(name);
+        if (child != null) {
+            return Var.createVar(child);
+        }
+        throw new ElementNotExist(name, ctx);
+    }
+
+    public RtExpr getChild(int index) {
+        CompileContext child = ctx.getChild(index);
+        if (child != null) {
+            return Var.createVar(child);
+        }
+        throw new ElementNotExist(index, ctx);
     }
 }

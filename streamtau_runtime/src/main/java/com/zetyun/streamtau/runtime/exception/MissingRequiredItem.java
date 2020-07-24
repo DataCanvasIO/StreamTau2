@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.runtime.var;
+package com.zetyun.streamtau.runtime.exception;
 
-import com.zetyun.streamtau.runtime.context.ExecContext;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Getter;
 
-@RequiredArgsConstructor
-public class RtNamedVar extends RtVar {
-    private static final long serialVersionUID = -3022297703503518040L;
+public class MissingRequiredItem extends RuntimeException {
+    private static final long serialVersionUID = 903768026611818763L;
 
-    private final String name;
+    @Getter
+    private final JsonNode jsonNode;
+    @Getter
+    private final int index;
 
-    @Override
-    public Object eval(ExecContext etx) {
-        // TODO
-        return null;
-    }
-
-    @Override
-    public void set(ExecContext etx, Object value) {
+    public MissingRequiredItem(JsonNode jsonNode, int index) {
+        super(
+            "Missing required item at index \"" + index + "\" in json node: " + jsonNode
+        );
+        this.jsonNode = jsonNode;
+        this.index = index;
     }
 }

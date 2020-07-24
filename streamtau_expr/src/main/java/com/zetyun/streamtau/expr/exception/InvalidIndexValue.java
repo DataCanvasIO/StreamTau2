@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.runtime.schema;
+package com.zetyun.streamtau.expr.exception;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+public class InvalidIndexValue extends RuntimeException {
+    private static final long serialVersionUID = 5206879022237837242L;
 
-import java.io.Serializable;
+    private final Object index;
 
-@RequiredArgsConstructor
-public class RtSchemaNode implements Serializable {
-    private static final long serialVersionUID = -3071467129758460657L;
-
-    @Getter
-    private final RtSchemaTypes type;
-
-    @Getter
-    @Setter
-    private int index;
-
-    public Class<?> getJavaClass() {
-        return type.getJavaClass();
+    public InvalidIndexValue(Object index) {
+        super(
+            "The index value must be an integer/string const in a tuple/dict, but is \"" + index + "\"."
+        );
+        this.index = index;
     }
 }

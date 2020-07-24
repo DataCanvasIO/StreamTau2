@@ -16,23 +16,38 @@
 
 package com.zetyun.streamtau.runtime.schema;
 
+import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Map;
 
-public class RtSchemaDict extends RtSchemaNode {
+public class RtSchemaDict extends RtSchema {
     private static final long serialVersionUID = -1122265270144992921L;
 
     @Getter
     @Setter
-    private Map<String, RtSchemaNode> children;
+    private Map<String, RtSchema> children;
 
     public RtSchemaDict() {
         super(RtSchemaTypes.DICT);
     }
 
-    public RtSchemaNode getChild(String name) {
+    public RtSchema getChild(String name) {
         return children.get(name);
+    }
+
+    @Override
+    public CompileContext getChild(int index) {
+        return null;
+    }
+
+    @Override
+    public int createIndex(int start) {
+        setIndex(-1);
+        for (RtSchema s : children.values()) {
+            start = s.createIndex(start);
+        }
+        return start;
     }
 }

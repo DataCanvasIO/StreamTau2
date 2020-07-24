@@ -12,4 +12,16 @@ properties:
     type: array
   aMap:
     type: object
+  aTuple:
+    type: array
+    items:
+      - type: integer
+      - type: string
+    additionalItems: false
+  aDict:
+    type: object
+    properties:
+      foo: { type: number }
+      bar: { type: string }
+    additionalProperties: false
 additionalProperties: false

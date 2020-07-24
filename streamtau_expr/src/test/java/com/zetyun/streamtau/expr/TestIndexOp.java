@@ -56,14 +56,16 @@ public class TestIndexOp {
             TestIndexOp.class.getResourceAsStream("/schema/composite_vars.yml"),
             SchemaSpec.class
         );
-        ctx = new RtSchema(spec.createRtNode());
+        ctx = spec.createRtSchema();
         RtSchemaParser parser = RtSchemaParser.createYamlEventParser(ctx);
         etx1 = parser.parse(
             "{"
                 + "anIntArray: [1, 2, 3], "
                 + "aStrArray: [foo, bar], "
                 + "aList: [1, abc], "
-                + "aMap: {a: 1, b: abc}"
+                + "aMap: {a: 1, b: abc},"
+                + "aTuple: [10, tuple],"
+                + "aDict: {foo: 2.5, bar: TOM}"
                 + "}"
         );
         etx2 = parser.parse(
@@ -71,7 +73,9 @@ public class TestIndexOp {
                 + "anIntArray: [4, 5, 6], "
                 + "aStrArray: [a, b], "
                 + "aList: [def, 1], "
-                + "aMap: {a: def, b: 1}"
+                + "aMap: {a: def, b: 1},"
+                + "aTuple: [20, TUPLE],"
+                + "aDict: {foo: 3.4, bar: JERRY}"
                 + "}"
         );
     }
@@ -86,6 +90,10 @@ public class TestIndexOp {
             {"aStrArray[0]+aStrArray[1]", "foobar", "ab"},
             {"aList[0]", 1L, "def"},
             {"aMap.a", 1L, "def"},
+            {"aTuple[0]", 10L, 20L},
+            {"aTuple[1]", "tuple", "TUPLE"},
+            {"aDict.foo", 2.5, 3.4},
+            {"aDict['bar']", "TOM", "JERRY"},
         });
     }
 

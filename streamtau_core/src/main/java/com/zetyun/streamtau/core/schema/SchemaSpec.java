@@ -19,7 +19,7 @@ package com.zetyun.streamtau.core.schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.zetyun.streamtau.runtime.schema.RtSchemaNode;
+import com.zetyun.streamtau.runtime.schema.RtSchema;
 import lombok.Getter;
 
 @JsonTypeInfo(
@@ -38,5 +38,5 @@ public abstract class SchemaSpec {
     @Getter
     private Types type;
 
-    public abstract RtSchemaNode createRtNode();
+    public abstract RtSchema createRtSchema();
 }

@@ -19,7 +19,6 @@ package com.zetyun.streamtau.core.schema;
 import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.runtime.schema.RtSchema;
 import com.zetyun.streamtau.runtime.schema.RtSchemaDict;
-import com.zetyun.streamtau.runtime.schema.RtSchemaNode;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTuple;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,14 +40,15 @@ public class TestSchemaSpec {
             TestSchemaSpec.class.getResourceAsStream("/schema/example.yml"),
             SchemaSpec.class
         );
-        RtSchema schema = new RtSchema(spec.createRtNode());
-        assertThat(schema.getMaxIndex(), is(3));
-        assertThat(schema.getSchema(), instanceOf(RtSchemaDict.class));
-        RtSchemaDict dict = (RtSchemaDict) schema.getSchema();
+        RtSchema schema = spec.createRtSchema();
+        int maxIndex = schema.createIndex(0);
+        assertThat(maxIndex, is(3));
+        assertThat(schema, instanceOf(RtSchemaDict.class));
+        RtSchemaDict dict = (RtSchemaDict) schema;
         assertThat(dict.getIndex(), is(-1));
-        RtSchemaNode a = dict.getChild("a");
+        RtSchema a = dict.getChild("a");
         assertThat(a.getIndex(), is(0));
-        RtSchemaNode b = dict.getChild("b");
+        RtSchema b = dict.getChild("b");
         assertThat(b, instanceOf(RtSchemaTuple.class));
         assertThat(b.getIndex(), is(-1));
         RtSchemaTuple tuple = (RtSchemaTuple) b;

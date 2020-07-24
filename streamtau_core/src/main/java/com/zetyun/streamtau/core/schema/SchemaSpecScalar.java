@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.core.schema;
 
-import com.zetyun.streamtau.runtime.schema.RtSchemaNode;
+import com.zetyun.streamtau.runtime.schema.RtSchema;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTypes;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -24,17 +24,17 @@ import org.jetbrains.annotations.NotNull;
 public final class SchemaSpecScalar extends SchemaSpec {
     @Contract(" -> new")
     @Override
-    public @NotNull RtSchemaNode createRtNode() {
+    public @NotNull RtSchema createRtSchema() {
         Types type = getType();
         switch (type) {
             case INTEGER:
-                return new RtSchemaNode(RtSchemaTypes.INT);
+                return new RtSchema(RtSchemaTypes.INT);
             case NUMBER:
-                return new RtSchemaNode(RtSchemaTypes.REAL);
+                return new RtSchema(RtSchemaTypes.REAL);
             case STRING:
-                return new RtSchemaNode(RtSchemaTypes.STR);
+                return new RtSchema(RtSchemaTypes.STR);
             case BOOLEAN:
-                return new RtSchemaNode(RtSchemaTypes.BOOL);
+                return new RtSchema(RtSchemaTypes.BOOL);
             default:
                 throw new IllegalArgumentException("Invalid schema type \"" + type + "\".");
         }

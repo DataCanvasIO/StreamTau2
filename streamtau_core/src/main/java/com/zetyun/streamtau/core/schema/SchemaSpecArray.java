@@ -19,7 +19,7 @@ package com.zetyun.streamtau.core.schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.zetyun.streamtau.runtime.schema.RtSchemaNode;
+import com.zetyun.streamtau.runtime.schema.RtSchema;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTuple;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTypes;
 import lombok.Getter;
@@ -37,32 +37,32 @@ public final class SchemaSpecArray extends SchemaSpec {
     private Boolean additionalItems;
 
     @Override
-    public @NotNull RtSchemaNode createRtNode() {
+    public @NotNull RtSchema createRtSchema() {
         if (additionalItems == null || additionalItems) {
             if (items == null) {
-                return new RtSchemaNode(RtSchemaTypes.LIST);
+                return new RtSchema(RtSchemaTypes.LIST);
             }
             Types type = items.getType();
             if (type == null) {
-                return new RtSchemaNode(RtSchemaTypes.LIST);
+                return new RtSchema(RtSchemaTypes.LIST);
             }
             switch (type) {
                 case INTEGER:
-                    return new RtSchemaNode(RtSchemaTypes.INT_ARRAY);
+                    return new RtSchema(RtSchemaTypes.INT_ARRAY);
                 case NUMBER:
-                    return new RtSchemaNode(RtSchemaTypes.REAL_ARRAY);
+                    return new RtSchema(RtSchemaTypes.REAL_ARRAY);
                 case STRING:
-                    return new RtSchemaNode(RtSchemaTypes.STR_ARRAY);
+                    return new RtSchema(RtSchemaTypes.STR_ARRAY);
                 case BOOLEAN:
-                    return new RtSchemaNode(RtSchemaTypes.BOOL_ARRAY);
+                    return new RtSchema(RtSchemaTypes.BOOL_ARRAY);
                 default:
                     throw new IllegalArgumentException("Invalid schema type \"" + type + "\".");
             }
         }
         SchemaSpec[] specs = items.getSpecs();
-        RtSchemaNode[] children = new RtSchemaNode[specs.length];
+        RtSchema[] children = new RtSchema[specs.length];
         for (int i = 0; i < specs.length; i++) {
-            children[i] = specs[i].createRtNode();
+            children[i] = specs[i].createRtSchema();
         }
         RtSchemaTuple tuple = new RtSchemaTuple();
         tuple.setChildren(children);

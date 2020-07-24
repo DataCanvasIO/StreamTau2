@@ -19,7 +19,11 @@ package com.zetyun.streamtau.runtime.context;
 import java.io.Serializable;
 
 public interface CompileContext extends Serializable {
-    int getIndex(String name);
+    int getIndex();
 
-    Class<?> get(String name);
+    Class<?> getJavaClass();
+
+    CompileContext getChild(String name);
+
+    CompileContext getChild(int index);
 }

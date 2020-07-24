@@ -17,7 +17,7 @@
 package com.zetyun.streamtau.runtime.exception;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.zetyun.streamtau.runtime.schema.RtSchemaNode;
+import com.zetyun.streamtau.runtime.schema.RtSchema;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,12 +25,12 @@ public class SchemaNodeTypeMismatch extends RuntimeException {
     private static final long serialVersionUID = 546096342035441897L;
 
     @Getter
-    private final RtSchemaNode schemaNode;
+    private final RtSchema schemaNode;
     @Getter
     private final JsonNode jsonNode;
 
     public SchemaNodeTypeMismatch(
-        @NotNull RtSchemaNode schemaNode,
+        @NotNull RtSchema schemaNode,
         @NotNull JsonNode jsonNode
     ) {
         super(

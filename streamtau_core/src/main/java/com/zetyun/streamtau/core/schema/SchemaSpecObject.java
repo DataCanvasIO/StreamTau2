@@ -19,8 +19,8 @@ package com.zetyun.streamtau.core.schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.runtime.schema.RtSchema;
 import com.zetyun.streamtau.runtime.schema.RtSchemaDict;
-import com.zetyun.streamtau.runtime.schema.RtSchemaNode;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTypes;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -40,13 +40,13 @@ public final class SchemaSpecObject extends SchemaSpec {
     private Boolean additionalProperties;
 
     @Override
-    public @NotNull RtSchemaNode createRtNode() {
+    public @NotNull RtSchema createRtSchema() {
         if (additionalProperties == null || additionalProperties) {
-            return new RtSchemaNode(RtSchemaTypes.MAP);
+            return new RtSchema(RtSchemaTypes.MAP);
         }
-        Map<String, RtSchemaNode> children = new HashMap<>(properties.size());
+        Map<String, RtSchema> children = new HashMap<>(properties.size());
         for (Map.Entry<String, SchemaSpec> entry : properties.entrySet()) {
-            children.put(entry.getKey(), entry.getValue().createRtNode());
+            children.put(entry.getKey(), entry.getValue().createRtSchema());
         }
         RtSchemaDict dict = new RtSchemaDict();
         dict.setChildren(children);

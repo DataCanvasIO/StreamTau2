@@ -56,7 +56,7 @@ public class TestFun {
             TestFun.class.getResourceAsStream("/schema/simple_vars.yml"),
             SchemaSpec.class
         );
-        ctx = new RtSchema(spec.createRtNode());
+        ctx = spec.createRtSchema();
         RtSchemaParser parser = RtSchemaParser.createYamlEventParser(ctx);
         etx1 = parser.parse("{anInt: 2, aReal: 3.0, aStr: foo, aBool: true}");
         etx2 = parser.parse("{anInt: 3, aReal: 4.0, aStr: bar, aBool: false}");

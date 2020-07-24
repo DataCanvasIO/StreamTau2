@@ -33,6 +33,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.zetyun.streamtau.runtime.ScriptFormat;
 import com.zetyun.streamtau.runtime.context.RtEvent;
+import com.zetyun.streamtau.runtime.exception.MissingRequiredItem;
 import com.zetyun.streamtau.runtime.exception.MissingRequiredKey;
 import com.zetyun.streamtau.runtime.exception.SchemaNodeTypeMismatch;
 import com.zetyun.streamtau.runtime.exception.UnsupportedFormat;
@@ -62,6 +63,7 @@ public class RtSchemaParser implements Serializable {
 
     private final ObjectMapper mapper;
     private final RtSchema schema;
+    private final int maxIndex;
 
     @Contract(pure = true)
     public RtSchemaParser(@NotNull ScriptFormat format, RtSchema schema) {
@@ -76,6 +78,7 @@ public class RtSchemaParser implements Serializable {
                 throw new UnsupportedFormat(format);
         }
         this.schema = schema;
+        this.maxIndex = schema.createIndex(0);
     }
 
     private static @NotNull ObjectMapper createJsonMapper() {
@@ -127,18 +130,18 @@ public class RtSchemaParser implements Serializable {
         if (pretty) {
             mapper = this.mapper.enable(SerializationFeature.INDENT_OUTPUT);
         }
-        JsonNode jsonNode = toJsonNodeAccordingSchema(event, schema.getSchema());
+        JsonNode jsonNode = toJsonNodeAccordingSchema(event, schema);
         return mapper.writeValueAsString(jsonNode);
     }
 
     private @NotNull RtEvent jsonNodeToEvent(JsonNode jsonNode) {
-        RtEvent event = new RtEvent(schema.getMaxIndex());
-        parseAccordingSchema(event, jsonNode, schema.getSchema());
+        RtEvent event = new RtEvent(maxIndex);
+        parseAccordingSchema(event, jsonNode, schema);
         return event;
 
     }
 
-    private void parseAccordingSchema(RtEvent event, JsonNode jsonNode, @NotNull RtSchemaNode schema) {
+    private void parseAccordingSchema(RtEvent event, JsonNode jsonNode, @NotNull RtSchema schema) {
         switch (schema.getType()) {
             case INT:
                 event.set(schema.getIndex(), jsonNode.asLong());
@@ -195,12 +198,17 @@ public class RtSchemaParser implements Serializable {
             case TUPLE:
                 RtSchemaTuple schemaTuple = (RtSchemaTuple) schema;
                 for (int i = 0; i < schemaTuple.getChildren().length; i++) {
-                    parseAccordingSchema(event, jsonNode.get(i), schemaTuple.getChildren()[i]);
+                    JsonNode item = jsonNode.get(i);
+                    if (item != null) {
+                        parseAccordingSchema(event, jsonNode.get(i), schemaTuple.getChildren()[i]);
+                    } else {
+                        throw new MissingRequiredItem(jsonNode, i);
+                    }
                 }
                 return;
             case DICT:
                 RtSchemaDict schemaObject = (RtSchemaDict) schema;
-                for (Map.Entry<String, RtSchemaNode> entry : schemaObject.getChildren().entrySet()) {
+                for (Map.Entry<String, RtSchema> entry : schemaObject.getChildren().entrySet()) {
                     String key = entry.getKey();
                     JsonNode child = jsonNode.get(key);
                     if (child != null) {
@@ -251,7 +259,7 @@ public class RtSchemaParser implements Serializable {
         );
     }
 
-    private JsonNode toJsonNodeAccordingSchema(RtEvent event, @NotNull RtSchemaNode schema) {
+    private JsonNode toJsonNodeAccordingSchema(RtEvent event, @NotNull RtSchema schema) {
         JsonNode jsonNode;
         switch (schema.getType()) {
             case INT:
@@ -284,7 +292,7 @@ public class RtSchemaParser implements Serializable {
             case DICT:
                 ObjectNode objectNode = new ObjectNode(JsonNodeFactory.instance);
                 RtSchemaDict schemaObject = (RtSchemaDict) schema;
-                for (Map.Entry<String, RtSchemaNode> entry : schemaObject.getChildren().entrySet()) {
+                for (Map.Entry<String, RtSchema> entry : schemaObject.getChildren().entrySet()) {
                     objectNode.set(entry.getKey(), toJsonNodeAccordingSchema(event, entry.getValue()));
                 }
                 jsonNode = objectNode;
