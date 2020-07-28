@@ -29,21 +29,23 @@ import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.List;
 
+import static com.zetyun.streamtau.manager.citrus.CitrusCommon.createPeasInList;
+import static com.zetyun.streamtau.manager.citrus.CitrusCommon.deletePeasInList;
 import static com.zetyun.streamtau.manager.citrus.CitrusCommon.getSortedAssetList;
-import static com.zetyun.streamtau.manager.citrus.CitrusCommon.updateChildrenId;
 import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJobDef;
 
 public class FlinkJarAppIT extends JUnit4CitrusTest {
     @Test
     @CitrusTest
-    public void testRun(@CitrusResource TestDesigner designer) throws IOException {
+    public void testRun(@CitrusResource @NotNull TestDesigner designer) throws IOException {
         String projectId = "test";
         designer.applyBehavior(new Projects.Create(
             projectId,
@@ -51,10 +53,7 @@ public class FlinkJarAppIT extends JUnit4CitrusTest {
         ));
         JobDefPod pod = readJobDef("/jobdef/flinkjar/flink_jar_app.json");
         List<AssetPea> peaList = getSortedAssetList(pod.getPeaMap());
-        for (AssetPea pea : peaList) {
-            updateChildrenId(pea);
-            designer.applyBehavior(new Assets.Create(projectId, pea.getId(), pea));
-        }
+        createPeasInList(designer, peaList, projectId);
         designer.applyBehavior(new Files.Upload(
             projectId,
             "JAR",
@@ -65,9 +64,7 @@ public class FlinkJarAppIT extends JUnit4CitrusTest {
             "job",
             new JobRequest("test", varRef(Assets.idVarName(pod.getAppId())), JobStatus.READY)
         ));
-        for (AssetPea pea : peaList) {
-            designer.applyBehavior(new Assets.Delete(projectId, pea.getId()));
-        }
+        deletePeasInList(designer, peaList, projectId);
         designer.applyBehavior(new Projects.Delete(projectId));
     }
 }

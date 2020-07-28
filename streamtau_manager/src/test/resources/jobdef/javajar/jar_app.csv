@@ -1,4 +1,4 @@
-"asset_id","project_asset_id","asset_name","asset_description","asset_type","asset_category","script_format"   ,"script"
-1         ,"EXECUTOR"        ,"executor"  ,""                 ,"Executor"  ,"SERVER"        ,"text/plain"      ,""
-2         ,"JAR"             ,"jarFile"   ,""                 ,"JarFile"   ,"FILE"          ,"text/plain"      ,"X.jar"
-3         ,"APP"             ,"app"       ,""                 ,"JavaJarApp","APPLICATION"   ,"application/yaml","{jarFile: JAR, server: EXECUTOR}"
+"asset_id","project_asset_id","asset_name"     ,"asset_description"              ,"asset_type","asset_category","script_format"   ,"script"
+1         ,"COMMON_EXECUTOR" ,"Common executor","Thread pool to execute cmdline.","Executor"  ,"SERVER"        ,"text/plain"      ,""
+2         ,"JAR"             ,"jarFile"        ,""                               ,"JarFile"   ,"FILE"          ,"text/plain"      ,"X.jar"
+3         ,"APP"             ,"app"            ,""                               ,"JavaJarApp","APPLICATION"   ,"application/yaml","{jarFile: JAR, server: COMMON_EXECUTOR}"

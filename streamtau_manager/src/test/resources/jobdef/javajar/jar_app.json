@@ -6,12 +6,13 @@
       "category": "APPLICATION",
       "jarFile": "JAR",
       "name": "app",
-      "server": "EXECUTOR"
+      "server": "COMMON_EXECUTOR"
     },
-    "EXECUTOR": {
+    "COMMON_EXECUTOR": {
       "type": "Executor",
       "category": "SERVER",
-      "name": "executor"
+      "description": "Thread pool to execute cmdline.",
+      "name": "Common executor"
     },
     "JAR": {
       "type": "JarFile",

@@ -40,3 +40,33 @@ databaseChangeLog:
               - column:
                   name: script
                   type: clob
+        - loadData:
+            tableName: asset
+            encoding: UTF-8
+            quotchar: '"'
+            separator: ','
+            commentLineStartsWith: '#'
+            relativeToChangelogFile: true
+            file: data/init_asset.csv
+            columns:
+              - column:
+                  name: asset_id
+                  type: numeric
+              - column:
+                  name: asset_name
+                  type: string
+              - column:
+                  name: asset_description
+                  type: string
+              - column:
+                  name: asset_type
+                  type: string
+              - column:
+                  name: asset_category
+                  type: string
+              - column:
+                  name: script_format
+                  type: string
+              - column:
+                  name: script
+                  type: string

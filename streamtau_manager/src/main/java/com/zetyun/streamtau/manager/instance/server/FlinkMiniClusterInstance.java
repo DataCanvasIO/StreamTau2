@@ -42,9 +42,12 @@ public class FlinkMiniClusterInstance extends ServerInstance {
 
     @Override
     public void start() {
+        if (status() == ServerStatus.ACTIVE) {
+            return;
+        }
         if (miniCluster == null) {
             Configuration configuration = new Configuration();
-            configuration.setInteger(RestOptions.PORT, 0);
+            configuration.setInteger(RestOptions.PORT, 8081);
             configuration.setString(CoreOptions.CLASSLOADER_RESOLVE_ORDER, "parent-first");
             MiniClusterConfiguration conf = new MiniClusterConfiguration.Builder()
                 .setConfiguration(configuration)

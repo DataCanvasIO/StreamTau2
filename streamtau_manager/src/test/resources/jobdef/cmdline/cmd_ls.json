@@ -6,7 +6,7 @@
       "category": "APPLICATION",
       "cmdLine": "CMD",
       "name": "app",
-      "server": "EXECUTOR"
+      "server": "COMMON_EXECUTOR"
     },
     "CMD": {
       "type": "CmdLine",
@@ -14,10 +14,11 @@
       "cmd": "ls -l",
       "name": "cmd"
     },
-    "EXECUTOR": {
+    "COMMON_EXECUTOR": {
       "type": "Executor",
       "category": "SERVER",
-      "name": "executor"
+      "description": "Thread pool to execute cmdline.",
+      "name": "Common executor"
     }
   }
 }

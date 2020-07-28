@@ -31,3 +31,21 @@ databaseChangeLog:
         - addPrimaryKey:
             tableName: project_asset
             columnNames: project_id, asset_id
+        - loadData:
+            tableName: project_asset
+            encoding: UTF-8
+            quotchar: '"'
+            separator: ','
+            commentLineStartsWith: '#'
+            relativeToChangelogFile: true
+            file: data/init_project_asset.csv
+            columns:
+              - column:
+                  name: project_id
+                  type: numeric
+              - column:
+                  name: asset_id
+                  type: numeric
+              - column:
+                  name: project_asset_id
+                  type: string

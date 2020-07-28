@@ -105,6 +105,7 @@
         <module>streamtau_expr_annotation</module>
         <module>streamtau_expr</module>
         <module>streamtau_test</module>
+        <module>streamtau_streaming</module>
         <module>streamtau_manager</module>
         <module>dist</module>
     </modules>
@@ -178,6 +179,11 @@
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-clients_2.12</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-runtime-web_2.12</artifactId>
                 <version>${flink.version}</version>
             </dependency>
 

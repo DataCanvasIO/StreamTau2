@@ -16,11 +16,13 @@
 
 package com.zetyun.streamtau.manager.citrus;
 
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.zetyun.streamtau.manager.citrus.behavior.Assets;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import java.util.Map;
 import static com.zetyun.streamtau.core.pea.PeaUtils.replacePeaIds;
 
 public class CitrusCommon {
+    public static final String COMMON_PREFIX = "COMMON_";
     public static final String SERVER_ID = "streamtau-manager";
 
     @Contract(pure = true)
@@ -36,7 +39,12 @@ public class CitrusCommon {
     }
 
     public static void updateChildrenId(AssetPea pea) {
-        replacePeaIds(pea, (String x) -> varRef(Assets.idVarName(x)));
+        replacePeaIds(pea, (String x) -> {
+            if (x.startsWith(COMMON_PREFIX)) {
+                return x;
+            }
+            return varRef(Assets.idVarName(x));
+        });
     }
 
     public static @NotNull List<AssetPea> getSortedAssetList(
@@ -52,5 +60,32 @@ public class CitrusCommon {
             return 0;
         });
         return peaList;
+    }
+
+    public static void createPeasInList(
+        TestDesigner designer,
+        @NotNull List<AssetPea> peaList,
+        String projectId
+    ) throws IOException {
+        for (AssetPea pea : peaList) {
+            if (pea.getId().startsWith(COMMON_PREFIX)) {
+                continue;
+            }
+            updateChildrenId(pea);
+            designer.applyBehavior(new Assets.Create(projectId, pea.getId(), pea));
+        }
+    }
+
+    public static void deletePeasInList(
+        TestDesigner designer,
+        @NotNull List<AssetPea> peaList,
+        String projectId
+    ) {
+        for (AssetPea pea : peaList) {
+            if (pea.getId().startsWith(COMMON_PREFIX)) {
+                continue;
+            }
+            designer.applyBehavior(new Assets.Delete(projectId, pea.getId()));
+        }
     }
 }

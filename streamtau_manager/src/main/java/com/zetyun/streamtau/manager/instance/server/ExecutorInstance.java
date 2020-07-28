@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
 public class ExecutorInstance extends ServerInstance {
-    private static ExecutorService executorService = null;
+    private ExecutorService executorService = null;
 
     public ExecutorInstance(Server server) {
         super(server);

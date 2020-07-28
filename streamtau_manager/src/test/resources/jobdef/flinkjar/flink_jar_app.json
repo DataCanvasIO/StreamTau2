@@ -6,12 +6,13 @@
       "category": "APPLICATION",
       "jarFile": "JAR",
       "name": "app",
-      "server": "FLINK_MINI_CLUSTER"
+      "server": "COMMON_FLINK_MINI_CLUSTER"
     },
-    "FLINK_MINI_CLUSTER": {
+    "COMMON_FLINK_MINI_CLUSTER": {
       "type": "FlinkMiniCluster",
       "category": "SERVER",
-      "name": "Flink mini cluster"
+      "description": "Flink mini cluster to run flink job.",
+      "name": "Common Flink mini cluster"
     },
     "JAR": {
       "type": "JarFile",

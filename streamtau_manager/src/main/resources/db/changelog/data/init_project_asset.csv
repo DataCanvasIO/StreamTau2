@@ -1,0 +1,3 @@
+project_id,asset_id,project_asset_id
+1         ,1       ,COMMON_EXECUTOR
+1         ,2       ,COMMON_FLINK_MINI_CLUSTER

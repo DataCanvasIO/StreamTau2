@@ -65,8 +65,8 @@ public class TestCmdLineRunner {
         job.setProjectId(2L);
         job.setJobDefinition(readJsonCompact("/jobdef/cmdline/cmd_sleep.json"));
         ExecutorInstance executorInstance = new ExecutorInstance(new Executor());
-        when(serverService.getInstance(2L, "EXECUTOR")).thenReturn(executorInstance);
+        when(serverService.getInstance(2L, "COMMON_EXECUTOR")).thenReturn(executorInstance);
         RunnerFactory.get().run(job, null);
-        verify(serverService, times(1)).getInstance(2L, "EXECUTOR");
+        verify(serverService, times(1)).getInstance(2L, "COMMON_EXECUTOR");
     }
 }
