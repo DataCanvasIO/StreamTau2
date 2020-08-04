@@ -25,6 +25,6 @@ public class FlinkStreamingExample {
             .keyBy(i -> i % 2)
             .map(x -> x / 2.0)
             .print();
-        env.execute();
+        env.execute("Flink Streaming Example");
     }
 }

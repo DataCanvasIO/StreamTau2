@@ -7,16 +7,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="streamtau-manager" />
-        <module name="streamtau-expr" />
-        <module name="streamtau-expr-annotation" />
         <module name="streamtau-test-hello-world" />
-        <module name="streamtau-test-flink-streaming" />
-        <module name="streamtau-streaming" />
-        <module name="streamtau-runtime" />
         <module name="streamtau-expr-runtime" />
-        <module name="dist" />
         <module name="streamtau-core" />
+        <module name="streamtau-manager" />
+        <module name="streamtau-streaming" />
+        <module name="streamtau-expr" />
+        <module name="dist" />
+        <module name="streamtau-expr-annotation" />
+        <module name="streamtau-runtime" />
+        <module name="streamtau-test-flink-streaming" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

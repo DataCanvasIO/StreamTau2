@@ -16,26 +16,17 @@
 
 package com.zetyun.streamtau.manager.pea.server;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.zetyun.streamtau.manager.db.model.Asset;
-import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 
 @JsonTypeName("FlinkMiniCluster")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class FlinkMiniCluster extends Server {
-    @Override
-    public void mapFrom(@NotNull Asset model) throws IOException {
-    }
-
-    @Override
-    public void mapTo(@NotNull Asset model) throws IOException {
-        model.setScriptFormat(ScriptFormat.TEXT_PLAIN);
-        model.setScript("");
-    }
+    @JsonProperty("restPort")
+    @Getter
+    private Integer restPort;
 }

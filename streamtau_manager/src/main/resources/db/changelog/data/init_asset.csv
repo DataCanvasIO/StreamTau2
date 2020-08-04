@@ -1,3 +1,3 @@
-asset_id,asset_name               ,asset_description                   ,asset_type      ,asset_category,script_format,script
-1       ,Common executor          ,Thread pool to execute cmdline.     ,Executor        ,SERVER        ,text/plain   ,
-2       ,Common Flink mini cluster,Flink mini cluster to run flink job.,FlinkMiniCluster,SERVER        ,text/plain   ,
+asset_id,asset_name               ,asset_description                   ,asset_type      ,asset_category,script_format   ,script
+1       ,Common executor          ,Thread pool to execute cmdline.     ,Executor        ,SERVER        ,text/plain      ,
+2       ,Common Flink mini cluster,Flink mini cluster to run flink job.,FlinkMiniCluster,SERVER        ,application/yaml,restPort: 8081

@@ -24,14 +24,8 @@ import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.client.program.PackagedProgram;
-import org.apache.flink.client.program.PackagedProgramUtils;
 import org.apache.flink.client.program.ProgramInvocationException;
-import org.apache.flink.configuration.Configuration;
-import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
 
 @Slf4j
 public class FlinkJarRunner extends SingleServerRunner {
@@ -41,16 +35,7 @@ public class FlinkJarRunner extends SingleServerRunner {
         StorageService storageService = ApplicationContextProvider.getStorageService();
         String path = storageService.resolve(jarFile.getPath());
         try {
-            PackagedProgram program = PackagedProgram.newBuilder()
-                .setJarFile(new File(path))
-                .build();
-            JobGraph jobGraph = PackagedProgramUtils.createJobGraph(
-                program,
-                new Configuration(),
-                1,
-                false
-            );
-            flinkMiniClusterInstance.submitJobGraph(jobGraph);
+            flinkMiniClusterInstance.runPackagedProgram(path);
         } catch (ProgramInvocationException e) {
             throw new StreamTauException("10301", flinkJarApp.getName());
         }

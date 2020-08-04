@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.instance.server;
 
+import com.zetyun.streamtau.manager.pea.server.FlinkMiniCluster;
 import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import lombok.EqualsAndHashCode;
@@ -23,12 +24,17 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.JobID;
 import org.apache.flink.client.program.MiniClusterClient;
+import org.apache.flink.client.program.PackagedProgram;
+import org.apache.flink.client.program.PackagedProgramUtils;
+import org.apache.flink.client.program.ProgramInvocationException;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.CoreOptions;
 import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.apache.flink.runtime.minicluster.MiniCluster;
 import org.apache.flink.runtime.minicluster.MiniClusterConfiguration;
+
+import java.io.File;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -47,7 +53,11 @@ public class FlinkMiniClusterInstance extends ServerInstance {
         }
         if (miniCluster == null) {
             Configuration configuration = new Configuration();
-            configuration.setInteger(RestOptions.PORT, 8081);
+            Integer port = ((FlinkMiniCluster) getServer()).getRestPort();
+            if (port == null) {
+                port = 8081;
+            }
+            configuration.setInteger(RestOptions.PORT, port);
             configuration.setString(CoreOptions.CLASSLOADER_RESOLVE_ORDER, "parent-first");
             MiniClusterConfiguration conf = new MiniClusterConfiguration.Builder()
                 .setConfiguration(configuration)
@@ -92,5 +102,18 @@ public class FlinkMiniClusterInstance extends ServerInstance {
         if (log.isInfoEnabled()) {
             log.info("Submitted job {} successfully. JobID = {}.", jobGraph.getName(), jobID);
         }
+    }
+
+    public void runPackagedProgram(String path) throws ProgramInvocationException {
+        PackagedProgram program = PackagedProgram.newBuilder()
+            .setJarFile(new File(path))
+            .build();
+        JobGraph jobGraph = PackagedProgramUtils.createJobGraph(
+            program,
+            new Configuration(),
+            1,
+            false
+        );
+        submitJobGraph(jobGraph);
     }
 }
