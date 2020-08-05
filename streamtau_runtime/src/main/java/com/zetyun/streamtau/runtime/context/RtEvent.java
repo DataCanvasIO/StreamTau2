@@ -25,6 +25,12 @@ public class RtEvent implements ExecContext {
         indexedVars = new Object[numIndexedVars];
     }
 
+    public static RtEvent singleValue(Object value) {
+        RtEvent event = new RtEvent(1);
+        event.set(0, value);
+        return event;
+    }
+
     @Override
     public Object get(int index) {
         return indexedVars[index];

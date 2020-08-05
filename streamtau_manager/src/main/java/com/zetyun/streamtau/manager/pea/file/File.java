@@ -30,14 +30,12 @@ import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
 
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public abstract class File extends AssetPea {
     private static final Map<String, String> typeMap = ImmutableMap.<String, String>builder()

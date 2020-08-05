@@ -20,13 +20,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
 @JsonTypeName("Executor")
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Executor extends Server {
     @Override

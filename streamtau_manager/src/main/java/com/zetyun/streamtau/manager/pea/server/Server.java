@@ -24,9 +24,7 @@ import com.zetyun.streamtau.manager.pea.AssetPea;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public abstract class Server extends AssetPea {
     @JsonView(PeaParser.Public.class)

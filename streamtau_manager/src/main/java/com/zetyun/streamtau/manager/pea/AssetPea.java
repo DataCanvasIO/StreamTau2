@@ -42,7 +42,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -55,9 +54,15 @@ import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
 @Schema(
     type = "object",
     subTypes = {
+        CmdLineApp.class,
+        JavaJarApp.class,
+        FlinkJarApp.class,
         CmdLine.class,
         Host.class,
-        CmdLineApp.class,
+        JarFile.class,
+        TxtFile.class,
+        Executor.class,
+        FlinkMiniCluster.class,
     }
 )
 @JsonPropertyOrder(alphabetic = true)
@@ -68,7 +73,7 @@ import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
     @JsonSubTypes.Type(JavaJarApp.class),
     @JsonSubTypes.Type(FlinkJarApp.class),
     // Misc
-    @JsonSubTypes.Type(value = CmdLine.class, name = "CmdLine"),
+    @JsonSubTypes.Type(CmdLine.class),
     @JsonSubTypes.Type(Host.class),
     // File
     @JsonSubTypes.Type(JarFile.class),
@@ -78,7 +83,6 @@ import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
     @JsonSubTypes.Type(FlinkMiniCluster.class),
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@ToString
 @EqualsAndHashCode
 public abstract class AssetPea implements Pea<String, String> {
     @JsonIgnore
@@ -137,5 +141,15 @@ public abstract class AssetPea implements Pea<String, String> {
             collectPeaIds(childrenCache, this);
         }
         return childrenCache;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return PeaParser.YAML.stringShowAll(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

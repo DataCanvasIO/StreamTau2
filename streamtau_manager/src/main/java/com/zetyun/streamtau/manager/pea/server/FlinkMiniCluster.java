@@ -20,10 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 @JsonTypeName("FlinkMiniCluster")
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class FlinkMiniCluster extends Server {
     @JsonProperty("restPort")

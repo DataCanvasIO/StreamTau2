@@ -18,10 +18,8 @@ package com.zetyun.streamtau.manager.pea.file;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @JsonTypeName("JarFile")
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class JarFile extends File {
     @Override

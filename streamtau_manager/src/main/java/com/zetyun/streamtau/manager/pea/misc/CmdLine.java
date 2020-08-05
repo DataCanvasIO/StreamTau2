@@ -25,11 +25,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 @JsonTypeName("CmdLine")
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CmdLine extends AssetPea {
     @Schema(
