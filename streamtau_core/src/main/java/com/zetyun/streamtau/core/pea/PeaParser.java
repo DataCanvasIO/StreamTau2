@@ -77,8 +77,8 @@ public class PeaParser {
             .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
     }
 
-    public Map<String, Class<?>> getSubtypeClasses(Class<?> clazz) {
-        DeserializationConfig config = mapper.getDeserializationConfig();
+    public static Map<String, Class<?>> getSubtypeClasses(Class<?> clazz) {
+        DeserializationConfig config = JSON.mapper.getDeserializationConfig();
         AnnotationIntrospector annotationIntrospector = config.getAnnotationIntrospector();
         AnnotatedClass annotatedClass = AnnotatedClassResolver.resolveWithoutSuperTypes(config, clazz);
         List<NamedType> typeList = annotationIntrospector.findSubtypes(annotatedClass);

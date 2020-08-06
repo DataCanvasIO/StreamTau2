@@ -16,6 +16,8 @@
 
 package com.zetyun.streamtau.runtime.context;
 
+import com.zetyun.streamtau.runtime.exception.NotSingleValue;
+
 public class RtEvent implements ExecContext {
     private static final long serialVersionUID = 4296554739886078865L;
 
@@ -31,6 +33,14 @@ public class RtEvent implements ExecContext {
         return event;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getSingleValue() {
+        if (indexedVars.length != 1) {
+            throw new NotSingleValue(this);
+        }
+        return (T) indexedVars[0];
+    }
+
     @Override
     public Object get(int index) {
         return indexedVars[index];
@@ -39,5 +49,23 @@ public class RtEvent implements ExecContext {
     @Override
     public void set(int index, Object value) {
         indexedVars[index] = value;
+    }
+
+    @Override
+    public String toString() {
+        if (indexedVars.length == 0) {
+            return "(empty)";
+        }
+        if (indexedVars.length == 1) {
+            return indexedVars[0].toString();
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < indexedVars.length; i++) {
+            sb.append(String.format("%03d", i));
+            sb.append(": ");
+            sb.append(indexedVars[i]);
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }

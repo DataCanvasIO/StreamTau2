@@ -1,0 +1,31 @@
+{
+  "operators": {
+    "TheSource": {
+      "fid": "prelude.in-place-source",
+      "name": "ElementsSource",
+      "description": "Source of some integers.",
+      "parallelism": 1,
+      "elements": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    "TheSink": {
+      "fid": "test.collect-sink",
+      "name": "PrintSink",
+      "description": "Sink to print the result.",
+      "parallelism": 1,
+      "dependencies": [
+        "TheSource"
+      ]
+    }
+  }
+}

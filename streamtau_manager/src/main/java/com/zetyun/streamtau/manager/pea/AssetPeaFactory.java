@@ -25,7 +25,7 @@ public class AssetPeaFactory extends PeaFactory<String, String, AssetPea> {
     public static final AssetPeaFactory INS = new AssetPeaFactory();
 
     private AssetPeaFactory() {
-        for (Map.Entry<String, Class<?>> entry : PeaParser.JSON.getSubtypeClasses(AssetPea.class).entrySet()) {
+        for (Map.Entry<String, Class<?>> entry : PeaParser.getSubtypeClasses(AssetPea.class).entrySet()) {
             register(entry.getKey(), () -> {
                 try {
                     return (AssetPea) entry.getValue().newInstance();
