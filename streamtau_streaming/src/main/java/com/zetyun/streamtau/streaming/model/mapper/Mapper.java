@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.model.sink;
+package com.zetyun.streamtau.streaming.model.mapper;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.ToString;
 
-@JsonTypeName("test.collect-sink")
 @ToString(callSuper = true)
-public class TestCollectSink extends Sink {
+public abstract class Mapper extends Operator {
 }

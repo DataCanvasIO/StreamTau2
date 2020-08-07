@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.streaming.model.mapper.SchemaParser;
 import com.zetyun.streamtau.streaming.model.sink.PrintSink;
 import com.zetyun.streamtau.streaming.model.sink.TestCollectSink;
 import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
@@ -33,9 +34,13 @@ import java.util.List;
 
 @JsonTypeInfo(property = "fid", use = JsonTypeInfo.Id.NAME, visible = true)
 @JsonSubTypes({
+    // Sources
     @JsonSubTypes.Type(InPlaceSource.class),
+    // Sinks
     @JsonSubTypes.Type(PrintSink.class),
-    @JsonSubTypes.Type(TestCollectSink.class)
+    @JsonSubTypes.Type(TestCollectSink.class),
+    // Mappers
+    @JsonSubTypes.Type(SchemaParser.class),
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ToString

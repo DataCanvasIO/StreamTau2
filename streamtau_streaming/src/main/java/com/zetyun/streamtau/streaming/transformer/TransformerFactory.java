@@ -18,9 +18,12 @@ package com.zetyun.streamtau.streaming.transformer;
 
 import com.zetyun.streamtau.streaming.exception.UnsupportedOperator;
 import com.zetyun.streamtau.streaming.model.Operator;
+import com.zetyun.streamtau.streaming.transformer.mapper.MapperTransformer;
+import com.zetyun.streamtau.streaming.transformer.mapper.SchemaParserFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import com.zetyun.streamtau.streaming.transformer.sink.PrintSinkTransformer;
-import com.zetyun.streamtau.streaming.transformer.sink.TestCollectSinkTransformer;
+import com.zetyun.streamtau.streaming.transformer.sink.SinkTransformer;
+import com.zetyun.streamtau.streaming.transformer.sink.TestCollectSinkFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.source.InPlaceSourceTransformer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,9 +38,17 @@ public class TransformerFactory {
 
     private TransformerFactory() {
         transformerMap = new LinkedHashMap<>(10);
-        registerTransformer("prelude.in-place-source", new InPlaceSourceTransformer());
-        registerTransformer("prelude.print-sink", new PrintSinkTransformer());
-        registerTransformer("test.collect-sink", new TestCollectSinkTransformer());
+        // Sources
+        registerTransformer("prelude.in-place-source",
+            new InPlaceSourceTransformer());
+        // Sinks
+        registerTransformer("prelude.print-sink",
+            new PrintSinkTransformer());
+        registerTransformer("test.collect-sink",
+            new SinkTransformer(new TestCollectSinkFunctionProvider()));
+        // Mappers
+        registerTransformer("prelude.schema-parser",
+            new MapperTransformer(new SchemaParserFunctionProvider()));
     }
 
     public static TransformerFactory get() {

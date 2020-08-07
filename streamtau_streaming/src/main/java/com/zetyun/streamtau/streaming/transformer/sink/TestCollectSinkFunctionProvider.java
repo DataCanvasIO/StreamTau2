@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.model.sink;
+package com.zetyun.streamtau.streaming.transformer.sink;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import lombok.ToString;
+import com.zetyun.streamtau.runtime.context.RtEvent;
+import com.zetyun.streamtau.streaming.model.Operator;
+import com.zetyun.streamtau.streaming.runtime.sink.TestCollectSinkFunction;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 
-@JsonTypeName("test.collect-sink")
-@ToString(callSuper = true)
-public class TestCollectSink extends Sink {
+import java.util.function.Function;
+
+public class TestCollectSinkFunctionProvider implements Function<Operator, SinkFunction<RtEvent>> {
+    @Override
+    public SinkFunction<RtEvent> apply(Operator operator) {
+        return new TestCollectSinkFunction();
+    }
 }

@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.model.sink;
+package com.zetyun.streamtau.streaming.model.mapper;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.core.schema.SchemaSpec;
+import lombok.Getter;
 import lombok.ToString;
 
-@JsonTypeName("test.collect-sink")
+@JsonTypeName("prelude.schema-parser")
 @ToString(callSuper = true)
-public class TestCollectSink extends Sink {
+public class SchemaParser extends Mapper {
+    @JsonProperty("schema")
+    @Getter
+    private SchemaSpec schema;
 }

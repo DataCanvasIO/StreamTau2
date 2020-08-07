@@ -100,12 +100,13 @@
 
     <modules>
         <module>streamtau_runtime</module>
-        <module>streamtau_expr_runtime</module>
         <module>streamtau_core</module>
+        <module>streamtau_expr_runtime</module>
         <module>streamtau_expr_annotation</module>
         <module>streamtau_expr</module>
-        <module>streamtau_test</module>
+        <module>streamtau_streaming_runtime</module>
         <module>streamtau_streaming</module>
+        <module>streamtau_test</module>
         <module>streamtau_manager</module>
         <module>dist</module>
     </modules>
@@ -396,6 +397,16 @@
                 <artifactId>streamtau-runtime</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.zetyun.streamtau</groupId>
+                <artifactId>streamtau-streaming</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zetyun.streamtau</groupId>
+                <artifactId>streamtau-streaming-runtime</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -558,7 +569,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <parallel>methods</parallel>
+                    <parallel>classes</parallel>
                     <perCoreThreadCount>true</perCoreThreadCount>
                     <threadCount>1</threadCount>
                 </configuration>

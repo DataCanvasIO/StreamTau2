@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.sink;
+package com.zetyun.streamtau.streaming.transformer.mapper;
 
+import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
-import com.zetyun.streamtau.streaming.model.sink.TestCollectSink;
 import com.zetyun.streamtau.streaming.transformer.Transformer;
 import com.zetyun.streamtau.streaming.transformer.TransformerContext;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
+import lombok.RequiredArgsConstructor;
+import org.apache.flink.api.common.functions.MapFunction;
 
-public class TestCollectSinkTransformer implements Transformer {
+import java.util.function.Function;
+
+@RequiredArgsConstructor
+public class MapperTransformer implements Transformer {
+    private final Function<Operator, MapFunction<RtEvent, RtEvent>> mapFunctionProvider;
+
     @Override
     public StreamNode transform(Operator operator, TransformerContext context) {
         StreamNode node = getUnionizedUpstreamNode(operator, context);
         return StreamNode.of(
             node.asStream()
-                .addSink(new TestCollectSink.Runtime())
+                .map(mapFunctionProvider.apply(operator))
                 .setParallelism(operator.getParallelism())
         );
     }

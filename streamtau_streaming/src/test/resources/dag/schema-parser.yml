@@ -1,0 +1,38 @@
+operators:
+  TheSource:
+    fid: prelude.in-place-source
+    name: ElementsSource
+    description: Source of some integers.
+    parallelism: 1
+    elements:
+      - '{"name": "Alice", "gender": "F", "scores": {"maths": 100, "english": 80}}'
+  TheParser:
+    fid: 'prelude.schema-parser'
+    name: SchemaParser
+    description: Parsing event according schema.
+    parallelism: 1
+    dependencies:
+      - TheSource
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        scores:
+          type: object
+          additionalProperties: false
+          properties:
+            maths:
+              type: integer
+            english:
+              type: integer
+  TheSink:
+    fid: test.collect-sink
+    name: PrintSink
+    description: Sink to print the result.
+    parallelism: 1
+    dependencies:
+      - TheParser
