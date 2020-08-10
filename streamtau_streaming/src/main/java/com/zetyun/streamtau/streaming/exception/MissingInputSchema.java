@@ -19,19 +19,16 @@ package com.zetyun.streamtau.streaming.exception;
 import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.Getter;
 
-public class InvalidUsingOfOperator extends RuntimeException {
-    private static final long serialVersionUID = -1071379778626087571L;
+public class MissingInputSchema extends RuntimeException {
+    private static final long serialVersionUID = -9144974233738425175L;
 
     @Getter
     private final Operator operator;
-    @Getter
-    private final String reason;
 
-    public InvalidUsingOfOperator(Operator operator, String reason) {
+    public MissingInputSchema(Operator operator) {
         super(
-            "Invalid use of operator \"" + operator.getName() + "\": " + reason + "."
+            "Must specify input schema for operator \"" + operator.getName() + "\"."
         );
         this.operator = operator;
-        this.reason = reason;
     }
 }

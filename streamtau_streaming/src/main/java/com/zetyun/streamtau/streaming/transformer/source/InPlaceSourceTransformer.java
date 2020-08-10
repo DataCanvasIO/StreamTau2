@@ -19,8 +19,8 @@ package com.zetyun.streamtau.streaming.transformer.source;
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
+import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import com.zetyun.streamtau.streaming.transformer.Transformer;
-import com.zetyun.streamtau.streaming.transformer.TransformerContext;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class InPlaceSourceTransformer implements Transformer {
     @Override
-    public StreamNode transform(Operator operator, TransformerContext context) {
+    public StreamNode transform(Operator operator, TransformContext context) {
         List<RtEvent> eventList = ((InPlaceSource) operator).getElements().stream()
             .map(RtEvent::singleValue)
             .collect(Collectors.toList());

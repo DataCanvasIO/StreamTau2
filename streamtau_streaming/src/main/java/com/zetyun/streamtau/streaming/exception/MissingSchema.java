@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.sink;
+package com.zetyun.streamtau.streaming.exception;
 
 import com.zetyun.streamtau.streaming.model.Operator;
-import com.zetyun.streamtau.streaming.transformer.TransformContext;
-import com.zetyun.streamtau.streaming.transformer.Transformer;
-import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
+import lombok.Getter;
 
-public class PrintSinkTransformer implements Transformer {
-    @Override
-    public StreamNode transform(Operator operator, TransformContext context) {
-        StreamNode node = context.getUnionizedUpstreamNode(operator);
-        return StreamNode.of(
-            SinkUtils.beforeSink(node)
-                .print()
-                .setParallelism(operator.getParallelism())
+public class MissingSchema extends RuntimeException {
+    private static final long serialVersionUID = -3575957181634403237L;
+
+    @Getter
+    private final Operator operator;
+
+    public MissingSchema(Operator operator) {
+        super(
+            "Must specify output schema for operator \"" + operator.getName() + "\"."
         );
+        this.operator = operator;
     }
 }

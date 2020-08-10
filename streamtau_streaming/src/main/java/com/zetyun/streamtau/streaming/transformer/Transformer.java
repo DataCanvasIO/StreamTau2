@@ -16,40 +16,9 @@
 
 package com.zetyun.streamtau.streaming.transformer;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
-import com.zetyun.streamtau.streaming.exception.InvalidUsingOfOperator;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
-import org.apache.flink.streaming.api.datastream.DataStream;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public interface Transformer {
-    StreamNode transform(Operator operator, TransformerContext context);
-
-    default List<StreamNode> getUpstreamNodes(Operator operator, TransformerContext context) {
-        return context.getDag().dependenciesOf(operator).stream()
-            .map(op -> TransformerFactory.get().transform(op, context))
-            .collect(Collectors.toList());
-    }
-
-    default StreamNode getUnionizedUpstreamNode(Operator operator, TransformerContext context) {
-        List<StreamNode> nodes = getUpstreamNodes(operator, context);
-        if (nodes.size() == 0) {
-            throw new InvalidUsingOfOperator(operator, "get upstream of an operator with no dependencies");
-        }
-        if (nodes.size() == 1) {
-            return nodes.get(0);
-        }
-        DataStream<RtEvent> dataStream = null;
-        for (StreamNode node : nodes) {
-            if (dataStream == null) {
-                dataStream = node.asStream();
-            } else {
-                dataStream = dataStream.union(node.asStream());
-            }
-        }
-        return StreamNode.of(dataStream);
-    }
+    StreamNode transform(Operator operator, TransformContext context);
 }

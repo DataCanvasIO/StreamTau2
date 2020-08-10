@@ -16,15 +16,21 @@
 
 package com.zetyun.streamtau.streaming.transformer.node;
 
+import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 
 public abstract class StreamNode {
     @Getter
+    @Setter
     private String name;
+    @Getter
+    @Setter
+    private SchemaSpec schema;
 
     public static DataStreamNode of(DataStream<RtEvent> dataStream) {
         return new DataStreamNode(dataStream);
@@ -36,11 +42,6 @@ public abstract class StreamNode {
 
     public static DataStreamSinkNode of(DataStreamSink<RtEvent> dataStreamSink) {
         return new DataStreamSinkNode(dataStreamSink);
-    }
-
-    public StreamNode setName(String name) {
-        this.name = name;
-        return this;
     }
 
     public abstract DataStream<RtEvent> asStream();

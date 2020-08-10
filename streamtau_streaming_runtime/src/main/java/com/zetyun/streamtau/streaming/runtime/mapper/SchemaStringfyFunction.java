@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.sink;
+package com.zetyun.streamtau.streaming.runtime.mapper;
 
 import com.zetyun.streamtau.runtime.context.RtEvent;
-import com.zetyun.streamtau.streaming.model.Operator;
-import com.zetyun.streamtau.streaming.runtime.sink.TestCollectSinkFunction;
-import com.zetyun.streamtau.streaming.transformer.TransformContext;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
+import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
+import lombok.RequiredArgsConstructor;
+import org.apache.flink.api.common.functions.MapFunction;
 
-public class TestCollectSinkFunctionProvider implements SinkFunctionProvider {
+@RequiredArgsConstructor
+public class SchemaStringfyFunction implements MapFunction<RtEvent, RtEvent> {
+    private static final long serialVersionUID = -935944840797948644L;
+
+    private final RtSchemaParser parser;
+
     @Override
-    public SinkFunction<RtEvent> apply(Operator operator, TransformContext context) {
-        return new TestCollectSinkFunction();
+    public RtEvent map(RtEvent event) throws Exception {
+        return RtEvent.singleValue(parser.stringify(event));
     }
 }

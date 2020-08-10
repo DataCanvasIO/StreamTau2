@@ -16,19 +16,16 @@
 
 package com.zetyun.streamtau.streaming.transformer.sink;
 
+import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
-import com.zetyun.streamtau.streaming.transformer.Transformer;
-import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 
-public class PrintSinkTransformer implements Transformer {
-    @Override
-    public StreamNode transform(Operator operator, TransformContext context) {
-        StreamNode node = context.getUnionizedUpstreamNode(operator);
-        return StreamNode.of(
-            SinkUtils.beforeSink(node)
-                .print()
-                .setParallelism(operator.getParallelism())
-        );
-    }
+import java.util.function.BiFunction;
+
+public interface SinkFunctionProvider extends BiFunction<
+    Operator,
+    TransformContext,
+    SinkFunction<RtEvent>
+    > {
 }

@@ -16,26 +16,22 @@
 
 package com.zetyun.streamtau.streaming.transformer.mapper;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
+import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import com.zetyun.streamtau.streaming.transformer.Transformer;
-import com.zetyun.streamtau.streaming.transformer.TransformerContext;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import lombok.RequiredArgsConstructor;
-import org.apache.flink.api.common.functions.MapFunction;
-
-import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class MapperTransformer implements Transformer {
-    private final Function<Operator, MapFunction<RtEvent, RtEvent>> mapFunctionProvider;
+    private final MapFunctionProvider mapFunctionProvider;
 
     @Override
-    public StreamNode transform(Operator operator, TransformerContext context) {
-        StreamNode node = getUnionizedUpstreamNode(operator, context);
+    public StreamNode transform(Operator operator, TransformContext context) {
+        StreamNode node = context.getUnionizedUpstreamNode(operator);
         return StreamNode.of(
             node.asStream()
-                .map(mapFunctionProvider.apply(operator))
+                .map(mapFunctionProvider.apply(operator, context))
                 .setParallelism(operator.getParallelism())
         );
     }

@@ -16,16 +16,10 @@
 
 package com.zetyun.streamtau.streaming.model.mapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.zetyun.streamtau.runtime.ScriptFormat;
-import lombok.Getter;
 import lombok.ToString;
 
-@JsonTypeName("prelude.schema-parser")
+@JsonTypeName("prelude.schema-stringfy")
 @ToString(callSuper = true)
-public class SchemaParser extends Mapper {
-    @JsonProperty("format")
-    @Getter
-    private ScriptFormat format;
+public class SchemaStringfy extends SchemaParser {
 }

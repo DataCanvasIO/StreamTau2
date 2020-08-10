@@ -21,7 +21,7 @@ import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Dag;
 import com.zetyun.streamtau.streaming.model.TestDag;
 import com.zetyun.streamtau.streaming.runtime.sink.TestCollectSinkFunction;
-import com.zetyun.streamtau.streaming.transformer.TransformerContext;
+import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import org.apache.flink.runtime.testutils.MiniClusterResourceConfiguration;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.test.util.MiniClusterWithClientResource;
@@ -54,10 +54,10 @@ public class TestRun {
             Dag.class
         );
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        TransformerContext.transform(env, dag);
+        TransformContext.transform(env, dag);
         TestCollectSinkFunction.clear();
         env.execute();
-        List<Integer> values = TestCollectSinkFunction.getValues().stream()
+        List<Object> values = TestCollectSinkFunction.getValues().stream()
             .map(x -> (Integer) x.getSingleValue())
             .collect(Collectors.toList());
         assertThat(values, is(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)));
@@ -70,10 +70,26 @@ public class TestRun {
             Dag.class
         );
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        TransformerContext.transform(env, dag);
+        TransformContext.transform(env, dag);
         TestCollectSinkFunction.clear();
         env.execute();
         List<RtEvent> values = TestCollectSinkFunction.getValues();
-        assertThat(values.get(0).toString(), is("000: Alice\n001: F\n002: 80\n003: 100\n"));
+        assertThat(values.get(0).getSingleValue(),
+            is("{\"gender\":\"F\",\"name\":\"Alice\",\"scores\":{\"english\":80,\"maths\":100}}"));
+    }
+
+    @Test
+    public void testSchemaStringfy() throws Exception {
+        Dag dag = PeaParser.YAML.parse(
+            TestDag.class.getResourceAsStream("/dag/schema-stringfy.yml"),
+            Dag.class
+        );
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        TransformContext.transform(env, dag);
+        TestCollectSinkFunction.clear();
+        env.execute();
+        List<RtEvent> values = TestCollectSinkFunction.getValues();
+        assertThat(values.get(0).getSingleValue(),
+            is("---\ngender: F\nname: Alice\nscores:\n  english: 80\n  maths: 100\n"));
     }
 }

@@ -19,13 +19,14 @@ package com.zetyun.streamtau.streaming.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zetyun.streamtau.core.pea.PeaParser;
+import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.streaming.exception.MissingDependency;
+import com.zetyun.streamtau.streaming.exception.OperatorHasNoDependency;
 import com.zetyun.streamtau.streaming.model.sink.Sink;
 import lombok.Getter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,9 @@ public class Dag {
     @JsonProperty("operators")
     @Getter
     private Map<String, Operator> operators;
+    @JsonProperty("schemas")
+    @Getter
+    private Map<String, SchemaSpec> schemas;
 
     @Override
     public String toString() {
@@ -45,29 +49,41 @@ public class Dag {
     }
 
     @JsonIgnore
-    public List<Operator> dependenciesOf(Operator operator) {
+    public Map<String, Operator> dependenciesOf(Operator operator) {
         List<String> dependencies = operator.getDependencies();
-        List<Operator> ops = new ArrayList<>(dependencies.size());
+        if (dependencies == null || dependencies.isEmpty()) {
+            throw new OperatorHasNoDependency(operator);
+        }
+        Map<String, Operator> operators = new HashMap<>(dependencies.size());
         for (String dependency : dependencies) {
-            Operator op = operators.get(dependency);
+            Operator op = this.operators.get(dependency);
             if (op != null) {
-                ops.add(op);
+                operators.put(dependency, op);
             } else {
                 throw new MissingDependency(dependency);
             }
         }
-        return ops;
+        return operators;
     }
 
     @JsonIgnore
-    public List<Sink> getSinks() {
-        List<Sink> sinks = new LinkedList<>();
+    public Map<String, Sink> getSinks() {
+        Map<String, Sink> sinks = new HashMap<>();
         for (Map.Entry<String, Operator> entry : operators.entrySet()) {
             Operator operator = entry.getValue();
             if (operator instanceof Sink) {
-                sinks.add((Sink) operator);
+                sinks.put(entry.getKey(), (Sink) operator);
             }
         }
         return sinks;
+    }
+
+    @JsonIgnore
+    public SchemaSpec schemaOf(Operator operator) {
+        String schemaId = operator.getSchemaId();
+        if (schemaId != null) {
+            return schemas.get(operator.getSchemaId());
+        }
+        return null;
     }
 }

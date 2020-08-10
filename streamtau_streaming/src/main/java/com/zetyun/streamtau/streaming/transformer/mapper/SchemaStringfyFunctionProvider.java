@@ -20,25 +20,25 @@ import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.runtime.ScriptFormat;
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
-import com.zetyun.streamtau.streaming.exception.MissingSchema;
+import com.zetyun.streamtau.streaming.exception.MissingInputSchema;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.model.mapper.SchemaParser;
-import com.zetyun.streamtau.streaming.runtime.mapper.SchemaParserFunction;
+import com.zetyun.streamtau.streaming.runtime.mapper.SchemaStringfyFunction;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import org.apache.flink.api.common.functions.MapFunction;
 
-public class SchemaParserFunctionProvider implements MapFunctionProvider {
+public class SchemaStringfyFunctionProvider implements MapFunctionProvider {
     @Override
     public MapFunction<RtEvent, RtEvent> apply(Operator operator, TransformContext context) {
-        SchemaSpec schema = context.getDag().schemaOf(operator);
+        SchemaSpec schema = context.getUnionizedUpstreamNode(operator).getSchema();
         if (schema == null) {
-            throw new MissingSchema(operator);
+            throw new MissingInputSchema(operator);
         }
         ScriptFormat format = ((SchemaParser) operator).getFormat();
         if (format == null) {
             format = ScriptFormat.APPLICATION_JSON;
         }
         RtSchemaParser parser = new RtSchemaParser(format, schema.createRtSchema());
-        return new SchemaParserFunction(parser);
+        return new SchemaStringfyFunction(parser);
     }
 }

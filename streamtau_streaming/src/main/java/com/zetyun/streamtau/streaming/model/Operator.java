@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.streaming.model.mapper.SchemaParser;
+import com.zetyun.streamtau.streaming.model.mapper.SchemaStringfy;
 import com.zetyun.streamtau.streaming.model.sink.PrintSink;
 import com.zetyun.streamtau.streaming.model.sink.TestCollectSink;
 import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
@@ -41,6 +42,7 @@ import java.util.List;
     @JsonSubTypes.Type(TestCollectSink.class),
     // Mappers
     @JsonSubTypes.Type(SchemaParser.class),
+    @JsonSubTypes.Type(SchemaStringfy.class),
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ToString
@@ -61,6 +63,9 @@ public abstract class Operator {
     @JsonProperty("dependencies")
     @Getter
     private List<String> dependencies;
+    @JsonProperty("schemaId")
+    @Getter
+    private String schemaId;
 
     @JsonIgnore
     public static String fid(Class<? extends Operator> clazz) {

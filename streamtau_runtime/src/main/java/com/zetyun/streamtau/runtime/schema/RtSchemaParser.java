@@ -50,6 +50,7 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class RtSchemaParser implements Serializable {
     private final int maxIndex;
 
     @Contract(pure = true)
-    public RtSchemaParser(@NotNull ScriptFormat format, RtSchema schema) {
+    public RtSchemaParser(@NotNull ScriptFormat format, @NotNull RtSchema schema) {
         switch (format) {
             case APPLICATION_JSON:
                 mapper = JSON;
@@ -130,15 +131,14 @@ public class RtSchemaParser implements Serializable {
         if (pretty) {
             mapper = this.mapper.enable(SerializationFeature.INDENT_OUTPUT);
         }
-        JsonNode jsonNode = toJsonNodeAccordingSchema(event, schema);
-        return mapper.writeValueAsString(jsonNode);
+        Object object = toListMapAccordingSchema(event, schema);
+        return mapper.writeValueAsString(object);
     }
 
     private @NotNull RtEvent jsonNodeToEvent(JsonNode jsonNode) {
         RtEvent event = new RtEvent(maxIndex);
         parseAccordingSchema(event, jsonNode, schema);
         return event;
-
     }
 
     private void parseAccordingSchema(RtEvent event, JsonNode jsonNode, @NotNull RtSchema schema) {
@@ -259,6 +259,7 @@ public class RtSchemaParser implements Serializable {
         );
     }
 
+    // If this function was called, the `ORDER_MAP_ENTRIES_BY_KEYS` feature would not take effect.
     private JsonNode toJsonNodeAccordingSchema(RtEvent event, @NotNull RtSchema schema) {
         JsonNode jsonNode;
         switch (schema.getType()) {
@@ -301,5 +302,37 @@ public class RtSchemaParser implements Serializable {
                 throw new UnsupportedSchemaType(schema);
         }
         return jsonNode;
+    }
+
+    private Object toListMapAccordingSchema(RtEvent event, @NotNull RtSchema schema) {
+        switch (schema.getType()) {
+            case INT:
+            case REAL:
+            case STR:
+            case BOOL:
+            case INT_ARRAY:
+            case REAL_ARRAY:
+            case STR_ARRAY:
+            case BOOL_ARRAY:
+            case LIST:
+            case MAP:
+                return event.get(schema.getIndex());
+            case TUPLE:
+                List<Object> list = new LinkedList<>();
+                RtSchemaTuple schemaTuple = (RtSchemaTuple) schema;
+                for (int i = 0; i < schemaTuple.getChildren().length; i++) {
+                    list.add(toListMapAccordingSchema(event, schemaTuple.getChildren()[i]));
+                }
+                return list;
+            case DICT:
+                Map<String, Object> map = new LinkedHashMap<>();
+                RtSchemaDict schemaObject = (RtSchemaDict) schema;
+                for (Map.Entry<String, RtSchema> entry : schemaObject.getChildren().entrySet()) {
+                    map.put(entry.getKey(), toListMapAccordingSchema(event, entry.getValue()));
+                }
+                return map;
+            default:
+                throw new UnsupportedSchemaType(schema);
+        }
     }
 }

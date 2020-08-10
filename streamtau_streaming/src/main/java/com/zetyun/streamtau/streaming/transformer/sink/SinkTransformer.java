@@ -16,26 +16,22 @@
 
 package com.zetyun.streamtau.streaming.transformer.sink;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
+import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import com.zetyun.streamtau.streaming.transformer.Transformer;
-import com.zetyun.streamtau.streaming.transformer.TransformerContext;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
-
-import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class SinkTransformer implements Transformer {
-    private final Function<Operator, SinkFunction<RtEvent>> sinkFunctionProvider;
+    private final SinkFunctionProvider sinkFunctionProvider;
 
     @Override
-    public StreamNode transform(Operator operator, TransformerContext context) {
-        StreamNode node = getUnionizedUpstreamNode(operator, context);
+    public StreamNode transform(Operator operator, TransformContext context) {
+        StreamNode node = context.getUnionizedUpstreamNode(operator);
         return StreamNode.of(
-            node.asStream()
-                .addSink(sinkFunctionProvider.apply(operator))
+            SinkUtils.beforeSink(node)
+                .addSink(sinkFunctionProvider.apply(operator, context))
                 .setParallelism(operator.getParallelism())
         );
     }

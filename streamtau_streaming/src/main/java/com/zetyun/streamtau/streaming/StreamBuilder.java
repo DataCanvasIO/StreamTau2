@@ -17,7 +17,7 @@
 package com.zetyun.streamtau.streaming;
 
 import com.zetyun.streamtau.streaming.model.Dag;
-import com.zetyun.streamtau.streaming.transformer.TransformerContext;
+import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import org.apache.flink.client.FlinkPipelineTranslationUtil;
 import org.apache.flink.client.program.StreamPlanEnvironment;
 import org.apache.flink.configuration.Configuration;
@@ -26,7 +26,7 @@ import org.apache.flink.runtime.jobgraph.JobGraph;
 public class StreamBuilder {
     public static JobGraph buildJobGraph(Dag dag) {
         StreamPlanEnvironment env = new StreamPlanEnvironment(new Configuration(), null, 1);
-        TransformerContext.transform(env, dag);
+        TransformContext.transform(env, dag);
         return FlinkPipelineTranslationUtil.getJobGraph(env.getPipeline(), new Configuration(), 1);
     }
 }

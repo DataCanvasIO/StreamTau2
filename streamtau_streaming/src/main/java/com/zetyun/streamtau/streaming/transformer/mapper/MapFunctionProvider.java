@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.sink;
+package com.zetyun.streamtau.streaming.transformer.mapper;
 
+import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
-import com.zetyun.streamtau.streaming.transformer.Transformer;
-import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
+import org.apache.flink.api.common.functions.MapFunction;
 
-public class PrintSinkTransformer implements Transformer {
-    @Override
-    public StreamNode transform(Operator operator, TransformContext context) {
-        StreamNode node = context.getUnionizedUpstreamNode(operator);
-        return StreamNode.of(
-            SinkUtils.beforeSink(node)
-                .print()
-                .setParallelism(operator.getParallelism())
-        );
-    }
+import java.util.function.BiFunction;
+
+public interface MapFunctionProvider extends BiFunction<
+    Operator,
+    TransformContext,
+    MapFunction<RtEvent, RtEvent>
+    > {
 }

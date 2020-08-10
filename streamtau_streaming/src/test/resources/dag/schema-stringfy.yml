@@ -15,13 +15,21 @@ operators:
       - TheSource
     schemaId: A
     format: application/yaml
+  TheStringfy:
+    fid: prelude.schema-stringfy
+    name: SchemaStringfy
+    description: Stringfy the evnet according schema.
+    parallelism: 1
+    dependencies:
+      - TheParser
+    format: application/yaml
   TheSink:
     fid: test.collect-sink
     name: PrintSink
     description: Sink to print the result.
     parallelism: 1
     dependencies:
-      - TheParser
+      - TheStringfy
 schemas:
   A:
     type: object

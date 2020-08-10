@@ -20,6 +20,7 @@ import com.zetyun.streamtau.streaming.exception.UnsupportedOperator;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.mapper.MapperTransformer;
 import com.zetyun.streamtau.streaming.transformer.mapper.SchemaParserFunctionProvider;
+import com.zetyun.streamtau.streaming.transformer.mapper.SchemaStringfyFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import com.zetyun.streamtau.streaming.transformer.sink.PrintSinkTransformer;
 import com.zetyun.streamtau.streaming.transformer.sink.SinkTransformer;
@@ -49,6 +50,8 @@ public class TransformerFactory {
         // Mappers
         registerTransformer("prelude.schema-parser",
             new MapperTransformer(new SchemaParserFunctionProvider()));
+        registerTransformer("prelude.schema-stringfy",
+            new MapperTransformer(new SchemaStringfyFunctionProvider()));
     }
 
     public static TransformerFactory get() {
@@ -62,11 +65,14 @@ public class TransformerFactory {
         transformerMap.put(type, transformer);
     }
 
-    public StreamNode transform(Operator operator, TransformerContext context) {
+    public StreamNode transform(String operatorId, Operator operator, TransformContext context) {
         Transformer transformer = transformerMap.get(operator.getFid());
         if (transformer != null) {
             StreamNode node = transformer.transform(operator, context);
-            return node.setName(operator.getName());
+            node.setName(operator.getName());
+            node.setSchema(context.getDag().schemaOf(operator));
+            context.registerStreamNode(operatorId, node);
+            return node;
         }
         throw new UnsupportedOperator(operator);
     }
