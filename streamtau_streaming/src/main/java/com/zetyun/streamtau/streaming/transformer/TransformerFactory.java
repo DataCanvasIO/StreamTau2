@@ -19,6 +19,7 @@ package com.zetyun.streamtau.streaming.transformer;
 import com.zetyun.streamtau.streaming.exception.UnsupportedOperator;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.mapper.MapperTransformer;
+import com.zetyun.streamtau.streaming.transformer.mapper.SchemaMapperFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.mapper.SchemaParserFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.mapper.SchemaStringfyFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
@@ -39,6 +40,9 @@ public class TransformerFactory {
 
     private TransformerFactory() {
         transformerMap = new LinkedHashMap<>(10);
+        // Internal
+        registerTransformer("internal.union",
+            new UnionTransformer());
         // Sources
         registerTransformer("prelude.in-place-source",
             new InPlaceSourceTransformer());
@@ -52,6 +56,8 @@ public class TransformerFactory {
             new MapperTransformer(new SchemaParserFunctionProvider()));
         registerTransformer("prelude.schema-stringfy",
             new MapperTransformer(new SchemaStringfyFunctionProvider()));
+        registerTransformer("prelude.schema-mapper",
+            new MapperTransformer(new SchemaMapperFunctionProvider()));
     }
 
     public static TransformerFactory get() {
@@ -65,13 +71,13 @@ public class TransformerFactory {
         transformerMap.put(type, transformer);
     }
 
-    public StreamNode transform(String operatorId, Operator operator, TransformContext context) {
+    public StreamNode transform(Object nodeId, Operator operator, TransformContext context) {
         Transformer transformer = transformerMap.get(operator.getFid());
         if (transformer != null) {
             StreamNode node = transformer.transform(operator, context);
             node.setName(operator.getName());
-            node.setSchema(context.getDag().schemaOf(operator));
-            context.registerStreamNode(operatorId, node);
+            node.setSchemaId(operator.getSchemaId());
+            context.registerStreamNode(nodeId, node);
             return node;
         }
         throw new UnsupportedOperator(operator);

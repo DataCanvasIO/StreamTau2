@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.node;
+package com.zetyun.streamtau.streaming.runtime.mapper;
 
 import com.zetyun.streamtau.runtime.context.RtEvent;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.api.common.functions.MapFunction;
 
 @RequiredArgsConstructor
-public final class DataStreamSourceNode extends StreamNode {
-    @Getter
-    private final DataStreamSource<RtEvent> dataStreamSource;
+public class SchemaMapperFunction implements MapFunction<RtEvent, RtEvent> {
+    private static final long serialVersionUID = 96241259710387195L;
+
+    private final RtSchemaMapping[] mappings;
+    private final int numIndexedVars;
 
     @Override
-    public DataStream<RtEvent> asDataStream() {
-        return dataStreamSource;
+    public RtEvent map(RtEvent event) throws Exception {
+        RtEvent out = new RtEvent(numIndexedVars);
+        for (RtSchemaMapping mapping : mappings) {
+            mapping.getTarget().set(out, mapping.getValue().eval(event));
+        }
+        return out;
     }
 }

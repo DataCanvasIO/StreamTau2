@@ -16,22 +16,22 @@
 
 package com.zetyun.streamtau.streaming.exception;
 
-import com.zetyun.streamtau.streaming.transformer.node.DataStreamSinkNode;
+import com.zetyun.streamtau.runtime.schema.RtSchemaRoot;
 import lombok.Getter;
 
-public class InvalidUsingOfSink extends RuntimeException {
-    private static final long serialVersionUID = 5830188353617036177L;
+public class InvalidMappingTarget extends RuntimeException {
+    private static final long serialVersionUID = 7222701441123124786L;
 
     @Getter
-    private final DataStreamSinkNode node;
+    private final String target;
     @Getter
-    private final String reason;
+    private final RtSchemaRoot schema;
 
-    public InvalidUsingOfSink(DataStreamSinkNode node, String reason) {
+    public InvalidMappingTarget(String target, RtSchemaRoot schema) {
         super(
-            "Invalid use of sink \"" + node.getName() + "\": " + reason + "."
+            "Mapping target \"" + target + "\" must be a var in the following schema:\n" + schema
         );
-        this.node = node;
-        this.reason = reason;
+        this.target = target;
+        this.schema = schema;
     }
 }

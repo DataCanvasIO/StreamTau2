@@ -20,15 +20,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.core.schema.SchemaSpec;
-import com.zetyun.streamtau.streaming.exception.MissingDependency;
-import com.zetyun.streamtau.streaming.exception.OperatorHasNoDependency;
+import com.zetyun.streamtau.streaming.exception.MissingOperator;
+import com.zetyun.streamtau.streaming.exception.MissingSchema;
 import com.zetyun.streamtau.streaming.model.sink.Sink;
 import lombok.Getter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Dag {
     @JsonProperty("operators")
@@ -49,41 +49,30 @@ public class Dag {
     }
 
     @JsonIgnore
-    public Map<String, Operator> dependenciesOf(Operator operator) {
-        List<String> dependencies = operator.getDependencies();
-        if (dependencies == null || dependencies.isEmpty()) {
-            throw new OperatorHasNoDependency(operator);
-        }
-        Map<String, Operator> operators = new HashMap<>(dependencies.size());
-        for (String dependency : dependencies) {
-            Operator op = this.operators.get(dependency);
-            if (op != null) {
-                operators.put(dependency, op);
-            } else {
-                throw new MissingDependency(dependency);
-            }
-        }
-        return operators;
-    }
-
-    @JsonIgnore
-    public Map<String, Sink> getSinks() {
-        Map<String, Sink> sinks = new HashMap<>();
+    public Set<String> getSinkIds() {
+        Set<String> sinkIds = new HashSet<>();
         for (Map.Entry<String, Operator> entry : operators.entrySet()) {
             Operator operator = entry.getValue();
             if (operator instanceof Sink) {
-                sinks.put(entry.getKey(), (Sink) operator);
+                sinkIds.add(entry.getKey());
             }
         }
-        return sinks;
+        return sinkIds;
     }
 
     @JsonIgnore
-    public SchemaSpec schemaOf(Operator operator) {
-        String schemaId = operator.getSchemaId();
-        if (schemaId != null) {
-            return schemas.get(operator.getSchemaId());
+    public Operator getOperator(String operatorId) {
+        if (!operators.containsKey(operatorId)) {
+            throw new MissingOperator(operatorId);
         }
-        return null;
+        return operators.get(operatorId);
+    }
+
+    @JsonIgnore
+    public SchemaSpec getSchema(String schemaId) {
+        if (!schemas.containsKey(schemaId)) {
+            throw new MissingSchema(schemaId);
+        }
+        return schemas.get(schemaId);
     }
 }

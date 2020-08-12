@@ -33,6 +33,6 @@ public class TestDag {
             Dag.class
         );
         assertThat(dag.getOperators().size(), is(2));
-        assertThat(dag.getSinks().get("TheSink").getFid(), is(Operator.fid(TestCollectSink.class)));
+        assertThat(dag.getOperator("TheSink").getFid(), is(Operator.fid(TestCollectSink.class)));
     }
 }

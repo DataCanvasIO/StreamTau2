@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.exception;
+package com.zetyun.streamtau.streaming.model.mapper;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
-public class MissingDependency extends RuntimeException {
-    private static final long serialVersionUID = 3202446781879257973L;
-
+@ToString
+public class SchemaMapping {
+    @JsonProperty("target")
     @Getter
-    private final String dependency;
-
-    public MissingDependency(String dependency) {
-        super(
-            "Operator with id \"" + dependency + "\" is required but not found in dag."
-        );
-        this.dependency = dependency;
-    }
+    private String target;
+    @JsonProperty
+    @Getter
+    private String value;
 }

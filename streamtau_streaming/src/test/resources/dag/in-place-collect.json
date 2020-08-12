@@ -20,8 +20,8 @@
     },
     "TheSink": {
       "fid": "test.collect-sink",
-      "name": "PrintSink",
-      "description": "Sink to print the result.",
+      "name": "CollectSink",
+      "description": "Sink to collect the result.",
       "parallelism": 1,
       "dependencies": [
         "TheSource"

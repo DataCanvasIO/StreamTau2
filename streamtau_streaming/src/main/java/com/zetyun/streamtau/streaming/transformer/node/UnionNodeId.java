@@ -16,19 +16,22 @@
 
 package com.zetyun.streamtau.streaming.transformer.node;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import lombok.ToString;
 
-@RequiredArgsConstructor
-public final class DataStreamSourceNode extends StreamNode {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+@ToString
+@EqualsAndHashCode
+public class UnionNodeId {
     @Getter
-    private final DataStreamSource<RtEvent> dataStreamSource;
+    private final List<String> idList;
 
-    @Override
-    public DataStream<RtEvent> asDataStream() {
-        return dataStreamSource;
+    public UnionNodeId(Collection<String> ids) {
+        this.idList = new ArrayList<>(ids);
+        idList.sort(null);
     }
 }

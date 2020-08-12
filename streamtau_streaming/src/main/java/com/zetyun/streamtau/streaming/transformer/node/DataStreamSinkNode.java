@@ -17,19 +17,12 @@
 package com.zetyun.streamtau.streaming.transformer.node;
 
 import com.zetyun.streamtau.runtime.context.RtEvent;
-import com.zetyun.streamtau.streaming.exception.InvalidUsingOfSink;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 
 @RequiredArgsConstructor
 public final class DataStreamSinkNode extends StreamNode {
     @Getter
     private final DataStreamSink<RtEvent> dataStreamSink;
-
-    @Override
-    public DataStream<RtEvent> asStream() {
-        throw new InvalidUsingOfSink(this, "use it as DataStream");
-    }
 }

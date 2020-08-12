@@ -38,8 +38,6 @@ import com.zetyun.streamtau.runtime.exception.MissingRequiredKey;
 import com.zetyun.streamtau.runtime.exception.SchemaNodeTypeMismatch;
 import com.zetyun.streamtau.runtime.exception.UnsupportedFormat;
 import com.zetyun.streamtau.runtime.exception.UnsupportedSchemaType;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +53,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class RtSchemaParser implements Serializable {
     private static final ObjectMapper JSON = createJsonMapper();
     private static final ObjectMapper YAML = createYamlMapper();
@@ -63,11 +60,10 @@ public class RtSchemaParser implements Serializable {
     private static final long serialVersionUID = 8125735181754377412L;
 
     private final ObjectMapper mapper;
-    private final RtSchema schema;
-    private final int maxIndex;
+    private final RtSchemaRoot schema;
 
     @Contract(pure = true)
-    public RtSchemaParser(@NotNull ScriptFormat format, @NotNull RtSchema schema) {
+    public RtSchemaParser(@NotNull ScriptFormat format, @NotNull RtSchemaRoot schema) {
         switch (format) {
             case APPLICATION_JSON:
                 mapper = JSON;
@@ -79,7 +75,6 @@ public class RtSchemaParser implements Serializable {
                 throw new UnsupportedFormat(format);
         }
         this.schema = schema;
-        this.maxIndex = schema.createIndex(0);
     }
 
     private static @NotNull ObjectMapper createJsonMapper() {
@@ -103,12 +98,12 @@ public class RtSchemaParser implements Serializable {
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public static @NotNull RtSchemaParser createJsonEventParser(RtSchema schema) {
+    public static @NotNull RtSchemaParser createJsonEventParser(RtSchemaRoot schema) {
         return new RtSchemaParser(ScriptFormat.APPLICATION_JSON, schema);
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public static @NotNull RtSchemaParser createYamlEventParser(RtSchema schema) {
+    public static @NotNull RtSchemaParser createYamlEventParser(RtSchemaRoot schema) {
         return new RtSchemaParser(ScriptFormat.APPLICATION_YAML, schema);
     }
 
@@ -131,13 +126,13 @@ public class RtSchemaParser implements Serializable {
         if (pretty) {
             mapper = this.mapper.enable(SerializationFeature.INDENT_OUTPUT);
         }
-        Object object = toListMapAccordingSchema(event, schema);
+        Object object = toListMapAccordingSchema(event, schema.getRoot());
         return mapper.writeValueAsString(object);
     }
 
     private @NotNull RtEvent jsonNodeToEvent(JsonNode jsonNode) {
-        RtEvent event = new RtEvent(maxIndex);
-        parseAccordingSchema(event, jsonNode, schema);
+        RtEvent event = new RtEvent(schema.getMaxIndex());
+        parseAccordingSchema(event, jsonNode, schema.getRoot());
         return event;
     }
 

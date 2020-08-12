@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.node;
+package com.zetyun.streamtau.runtime.schema;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
 
-@RequiredArgsConstructor
-public final class DataStreamSourceNode extends StreamNode {
+import java.io.Serializable;
+
+public class RtSchemaRoot implements Serializable {
+    private static final long serialVersionUID = -5075934637295240308L;
+
     @Getter
-    private final DataStreamSource<RtEvent> dataStreamSource;
+    private final RtSchema root;
+    @Getter
+    private final int maxIndex;
 
-    @Override
-    public DataStream<RtEvent> asDataStream() {
-        return dataStreamSource;
+    public RtSchemaRoot(RtSchema root) {
+        this.root = root;
+        this.maxIndex = root.createIndex(0);
     }
 }

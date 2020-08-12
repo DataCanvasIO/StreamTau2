@@ -15,21 +15,28 @@ operators:
       - TheSource
     schemaId: A
     format: application/yaml
-  TheStringfy:
-    fid: prelude.schema-stringfy
-    name: SchemaStringfy
-    description: Stringfy the evnet according schema.
+  TheMapper:
+    fid: prelude.schema-mapper
+    name: ScheamMapper
+    description: Map event from one schema to another schema.
     parallelism: 1
     dependencies:
       - TheParser
-    format: application/yaml
+    schemaId: B
+    mappings:
+      - target: name
+        value: name
+      - target: gender
+        value: gender
+      - target: totalScore
+        value: scores.maths + scores.english
   TheSink:
     fid: test.collect-sink
     name: CollectSink
     description: Sink to collect the result.
     parallelism: 1
     dependencies:
-      - TheStringfy
+      - TheMapper
 schemas:
   A:
     type: object
@@ -47,3 +54,13 @@ schemas:
             type: integer
           english:
             type: integer
+  B:
+    type: object
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      gender:
+        type: string
+      totalScore:
+        type: integer

@@ -16,18 +16,14 @@
 
 package com.zetyun.streamtau.expr;
 
-import com.zetyun.streamtau.core.pea.PeaParser;
-import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.runtime.context.ExecContext;
-import com.zetyun.streamtau.runtime.schema.RtSchema;
-import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -42,24 +38,19 @@ import static org.junit.Assert.assertThat;
 @RunWith(Parameterized.class)
 @RequiredArgsConstructor
 public class TestFun {
-    private static RtSchema ctx;
-    private static ExecContext etx1;
-    private static ExecContext etx2;
+    @ClassRule
+    public static ContextResource res = new ContextResource(
+        "/schema/simple_vars.yml",
+        "{anInt: 2, aReal: 3.0, aStr: foo, aBool: true}",
+        "{anInt: 3, aReal: 4.0, aStr: bar, aBool: false}"
+    );
 
     private final String exprString;
+    private final Object value0;
     private final Object value1;
-    private final Object value2;
 
     @BeforeClass
     public static void setupClass() throws IOException {
-        SchemaSpec spec = PeaParser.YAML.parse(
-            TestFun.class.getResourceAsStream("/schema/simple_vars.yml"),
-            SchemaSpec.class
-        );
-        ctx = spec.createRtSchema();
-        RtSchemaParser parser = RtSchemaParser.createYamlEventParser(ctx);
-        etx1 = parser.parse("{anInt: 2, aReal: 3.0, aStr: foo, aBool: true}");
-        etx2 = parser.parse("{anInt: 3, aReal: 4.0, aStr: bar, aBool: false}");
     }
 
     @Contract(pure = true)
@@ -73,8 +64,8 @@ public class TestFun {
     @Test
     public void test() {
         Expr expr = StreamtauExprCompiler.INS.parse(exprString);
-        RtExpr rtExpr = expr.compileIn(ctx);
-        assertThat(rtExpr.eval(etx1), is(value1));
-        assertThat(rtExpr.eval(etx2), is(value2));
+        RtExpr rtExpr = expr.compileIn(res.getCtx());
+        assertThat(rtExpr.eval(res.getEtx(0)), is(value0));
+        assertThat(rtExpr.eval(res.getEtx(1)), is(value1));
     }
 }

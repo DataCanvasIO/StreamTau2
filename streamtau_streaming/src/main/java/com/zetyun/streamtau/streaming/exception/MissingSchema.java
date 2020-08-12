@@ -16,19 +16,18 @@
 
 package com.zetyun.streamtau.streaming.exception;
 
-import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.Getter;
 
 public class MissingSchema extends RuntimeException {
-    private static final long serialVersionUID = -3575957181634403237L;
+    private static final long serialVersionUID = 1457376212481627522L;
 
     @Getter
-    private final Operator operator;
+    private final String schemaId;
 
-    public MissingSchema(Operator operator) {
+    public MissingSchema(String schemaId) {
         super(
-            "Must specify output schema for operator \"" + operator.getName() + "\"."
+            "Schema with id \"" + schemaId + "\" is required but not found in dag."
         );
-        this.operator = operator;
+        this.schemaId = schemaId;
     }
 }

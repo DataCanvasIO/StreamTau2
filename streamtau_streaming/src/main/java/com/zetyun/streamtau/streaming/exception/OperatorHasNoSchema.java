@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.node;
+package com.zetyun.streamtau.streaming.exception;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
+import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
 
-@RequiredArgsConstructor
-public final class DataStreamSourceNode extends StreamNode {
+public class OperatorHasNoSchema extends RuntimeException {
+    private static final long serialVersionUID = -3575957181634403237L;
+
     @Getter
-    private final DataStreamSource<RtEvent> dataStreamSource;
+    private final Operator operator;
 
-    @Override
-    public DataStream<RtEvent> asDataStream() {
-        return dataStreamSource;
+    public OperatorHasNoSchema(Operator operator) {
+        super(
+            "Must specify output schema for operator \"" + operator.getName() + "\"."
+        );
+        this.operator = operator;
     }
 }

@@ -60,6 +60,10 @@
         </dependency>
         <dependency>
             <groupId>com.zetyun.streamtau</groupId>
+            <artifactId>streamtau-expr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zetyun.streamtau</groupId>
             <artifactId>streamtau-streaming-runtime</artifactId>
         </dependency>
     </dependencies>

@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.node;
+package com.zetyun.streamtau.streaming.model.mapper;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import lombok.ToString;
 
-@RequiredArgsConstructor
-public final class DataStreamSourceNode extends StreamNode {
+@JsonTypeName("prelude.schema-mapper")
+@ToString(callSuper = true)
+public class SchemaMapper extends Mapper {
+    @JsonProperty("mappings")
     @Getter
-    private final DataStreamSource<RtEvent> dataStreamSource;
-
-    @Override
-    public DataStream<RtEvent> asDataStream() {
-        return dataStreamSource;
-    }
+    private SchemaMapping[] mappings;
 }

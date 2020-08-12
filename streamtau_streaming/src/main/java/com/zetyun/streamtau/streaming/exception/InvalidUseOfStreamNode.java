@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.node;
+package com.zetyun.streamtau.streaming.exception;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
+import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
 
-@RequiredArgsConstructor
-public final class DataStreamSourceNode extends StreamNode {
+public class InvalidUseOfStreamNode extends RuntimeException {
+    private static final long serialVersionUID = 5830188353617036177L;
+
     @Getter
-    private final DataStreamSource<RtEvent> dataStreamSource;
+    private final StreamNode node;
+    @Getter
+    private final String methodName;
 
-    @Override
-    public DataStream<RtEvent> asDataStream() {
-        return dataStreamSource;
+    public InvalidUseOfStreamNode(StreamNode node, String methodName) {
+        super(
+            "Cannot use stream node \"" + node.getName() + "\" in method \"" + methodName + "\"."
+        );
+        this.node = node;
+        this.methodName = methodName;
     }
 }

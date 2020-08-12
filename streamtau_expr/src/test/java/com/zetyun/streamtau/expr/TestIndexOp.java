@@ -16,18 +16,14 @@
 
 package com.zetyun.streamtau.expr;
 
-import com.zetyun.streamtau.core.pea.PeaParser;
-import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.runtime.context.ExecContext;
-import com.zetyun.streamtau.runtime.schema.RtSchema;
-import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -42,42 +38,33 @@ import static org.junit.Assert.assertThat;
 @RunWith(Parameterized.class)
 @RequiredArgsConstructor
 public class TestIndexOp {
-    private static RtSchema ctx;
-    private static ExecContext etx1;
-    private static ExecContext etx2;
+    @ClassRule
+    public static ContextResource res = new ContextResource(
+        "/schema/composite_vars.yml",
+        "{"
+            + "anIntArray: [1, 2, 3], "
+            + "aStrArray: [foo, bar], "
+            + "aList: [1, abc], "
+            + "aMap: {a: 1, b: abc},"
+            + "aTuple: [10, tuple],"
+            + "aDict: {foo: 2.5, bar: TOM}"
+            + "}",
+        "{"
+            + "anIntArray: [4, 5, 6], "
+            + "aStrArray: [a, b], "
+            + "aList: [def, 1], "
+            + "aMap: {a: def, b: 1},"
+            + "aTuple: [20, TUPLE],"
+            + "aDict: {foo: 3.4, bar: JERRY}"
+            + "}"
+    );
 
     private final String exprString;
+    private final Object value0;
     private final Object value1;
-    private final Object value2;
 
     @BeforeClass
     public static void setupClass() throws IOException {
-        SchemaSpec spec = PeaParser.YAML.parse(
-            TestIndexOp.class.getResourceAsStream("/schema/composite_vars.yml"),
-            SchemaSpec.class
-        );
-        ctx = spec.createRtSchema();
-        RtSchemaParser parser = RtSchemaParser.createYamlEventParser(ctx);
-        etx1 = parser.parse(
-            "{"
-                + "anIntArray: [1, 2, 3], "
-                + "aStrArray: [foo, bar], "
-                + "aList: [1, abc], "
-                + "aMap: {a: 1, b: abc},"
-                + "aTuple: [10, tuple],"
-                + "aDict: {foo: 2.5, bar: TOM}"
-                + "}"
-        );
-        etx2 = parser.parse(
-            "{"
-                + "anIntArray: [4, 5, 6], "
-                + "aStrArray: [a, b], "
-                + "aList: [def, 1], "
-                + "aMap: {a: def, b: 1},"
-                + "aTuple: [20, TUPLE],"
-                + "aDict: {foo: 3.4, bar: JERRY}"
-                + "}"
-        );
     }
 
     @Contract(pure = true)
@@ -100,8 +87,8 @@ public class TestIndexOp {
     @Test
     public void test() {
         Expr expr = StreamtauExprCompiler.INS.parse(exprString);
-        RtExpr rtExpr = expr.compileIn(ctx);
-        assertThat(rtExpr.eval(etx1), is(value1));
-        assertThat(rtExpr.eval(etx2), is(value2));
+        RtExpr rtExpr = expr.compileIn(res.getCtx());
+        assertThat(rtExpr.eval(res.getEtx(0)), is(value0));
+        assertThat(rtExpr.eval(res.getEtx(1)), is(value1));
     }
 }

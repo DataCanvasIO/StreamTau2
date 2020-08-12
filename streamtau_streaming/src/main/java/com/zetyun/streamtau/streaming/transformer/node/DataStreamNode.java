@@ -27,7 +27,7 @@ public final class DataStreamNode extends StreamNode {
     private final DataStream<RtEvent> dataStream;
 
     @Override
-    public DataStream<RtEvent> asStream() {
+    public DataStream<RtEvent> asDataStream() {
         return dataStream;
     }
 }

@@ -44,6 +44,10 @@
             <groupId>com.zetyun.streamtau</groupId>
             <artifactId>streamtau-runtime</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.zetyun.streamtau</groupId>
+            <artifactId>streamtau-expr-runtime</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

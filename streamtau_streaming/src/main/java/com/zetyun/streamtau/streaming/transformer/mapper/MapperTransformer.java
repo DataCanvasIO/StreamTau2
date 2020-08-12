@@ -30,7 +30,7 @@ public class MapperTransformer implements Transformer {
     public StreamNode transform(Operator operator, TransformContext context) {
         StreamNode node = context.getUnionizedUpstreamNode(operator);
         return StreamNode.of(
-            node.asStream()
+            node.asDataStream()
                 .map(mapFunctionProvider.apply(operator, context))
                 .setParallelism(operator.getParallelism())
         );

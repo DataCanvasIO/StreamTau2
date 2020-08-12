@@ -33,12 +33,11 @@ public class RtEvent implements ExecContext {
         return event;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getSingleValue() {
+    public Object getSingleValue() {
         if (indexedVars.length != 1) {
             throw new NotSingleValue(this);
         }
-        return (T) indexedVars[0];
+        return indexedVars[0];
     }
 
     @Override

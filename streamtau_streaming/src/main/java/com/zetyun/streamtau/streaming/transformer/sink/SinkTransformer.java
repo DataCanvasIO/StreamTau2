@@ -28,9 +28,8 @@ public class SinkTransformer implements Transformer {
 
     @Override
     public StreamNode transform(Operator operator, TransformContext context) {
-        StreamNode node = context.getUnionizedUpstreamNode(operator);
         return StreamNode.of(
-            SinkUtils.beforeSink(node)
+            SinkUtils.beforeSink(operator, context)
                 .addSink(sinkFunctionProvider.apply(operator, context))
                 .setParallelism(operator.getParallelism())
         );

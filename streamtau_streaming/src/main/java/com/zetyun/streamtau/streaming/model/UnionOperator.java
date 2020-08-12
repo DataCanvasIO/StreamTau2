@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.node;
+package com.zetyun.streamtau.streaming.model;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.streaming.transformer.node.UnionNodeId;
+import lombok.ToString;
 
-@RequiredArgsConstructor
-public final class DataStreamSourceNode extends StreamNode {
-    @Getter
-    private final DataStreamSource<RtEvent> dataStreamSource;
-
-    @Override
-    public DataStream<RtEvent> asDataStream() {
-        return dataStreamSource;
+@JsonTypeName("internal.union")
+@ToString(callSuper = true)
+public class UnionOperator extends Operator {
+    public UnionOperator(UnionNodeId nodeId) {
+        setDependencies(nodeId.getIdList());
     }
 }

@@ -16,8 +16,8 @@
 
 package com.zetyun.streamtau.streaming.transformer.node;
 
-import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.runtime.context.RtEvent;
+import com.zetyun.streamtau.streaming.exception.InvalidUseOfStreamNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -30,19 +30,21 @@ public abstract class StreamNode {
     private String name;
     @Getter
     @Setter
-    private SchemaSpec schema;
+    private String schemaId;
 
     public static DataStreamNode of(DataStream<RtEvent> dataStream) {
         return new DataStreamNode(dataStream);
-    }
-
-    public static DataStreamSourceNode of(DataStreamSource<RtEvent> dataStreamSource) {
-        return new DataStreamSourceNode(dataStreamSource);
     }
 
     public static DataStreamSinkNode of(DataStreamSink<RtEvent> dataStreamSink) {
         return new DataStreamSinkNode(dataStreamSink);
     }
 
-    public abstract DataStream<RtEvent> asStream();
+    public static DataStreamSourceNode of(DataStreamSource<RtEvent> dataStreamSource) {
+        return new DataStreamSourceNode(dataStreamSource);
+    }
+
+    public DataStream<RtEvent> asDataStream() {
+        throw new InvalidUseOfStreamNode(this, "asDataStream");
+    }
 }

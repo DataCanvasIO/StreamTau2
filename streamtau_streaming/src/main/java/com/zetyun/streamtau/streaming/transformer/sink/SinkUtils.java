@@ -16,24 +16,25 @@
 
 package com.zetyun.streamtau.streaming.transformer.sink;
 
-import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
+import com.zetyun.streamtau.runtime.schema.RtSchemaRoot;
+import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.runtime.mapper.SchemaStringfyFunction;
+import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class SinkUtils {
     // TODO: if the new node should be registered to context
-    public static DataStream<RtEvent> beforeSink(StreamNode node) {
-        SchemaSpec schema = node.getSchema();
+    public static DataStream<RtEvent> beforeSink(Operator operator, TransformContext context) {
+        StreamNode upstreamNode = context.getUnionizedUpstreamNode(operator);
+        RtSchemaRoot schema = context.getSchemaOf(upstreamNode);
         if (schema == null) {
-            return node.asStream();
+            return upstreamNode.asDataStream();
         }
-        final RtSchemaParser parser = RtSchemaParser.createJsonEventParser(
-            schema.createRtSchema()
-        );
-        return node.asStream()
+        final RtSchemaParser parser = RtSchemaParser.createJsonEventParser(schema);
+        return upstreamNode.asDataStream()
             .map(new SchemaStringfyFunction(parser));
     }
 }

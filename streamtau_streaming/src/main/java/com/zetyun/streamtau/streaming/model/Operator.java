@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.streaming.exception.OperatorHasNoDependency;
+import com.zetyun.streamtau.streaming.model.mapper.SchemaMapper;
 import com.zetyun.streamtau.streaming.model.mapper.SchemaParser;
 import com.zetyun.streamtau.streaming.model.mapper.SchemaStringfy;
 import com.zetyun.streamtau.streaming.model.sink.PrintSink;
@@ -29,6 +31,7 @@ import com.zetyun.streamtau.streaming.model.sink.TestCollectSink;
 import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
@@ -43,6 +46,7 @@ import java.util.List;
     // Mappers
     @JsonSubTypes.Type(SchemaParser.class),
     @JsonSubTypes.Type(SchemaStringfy.class),
+    @JsonSubTypes.Type(SchemaMapper.class),
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ToString
@@ -53,6 +57,7 @@ public abstract class Operator {
     private String fid;
     @JsonProperty("name")
     @Getter
+    @Setter
     private String name;
     @JsonProperty("description")
     @Getter
@@ -62,9 +67,11 @@ public abstract class Operator {
     private Integer parallelism;
     @JsonProperty("dependencies")
     @Getter
+    @Setter
     private List<String> dependencies;
     @JsonProperty("schemaId")
     @Getter
+    @Setter
     private String schemaId;
 
     @JsonIgnore
@@ -74,5 +81,13 @@ public abstract class Operator {
             return name.value();
         }
         return null;
+    }
+
+    @JsonIgnore
+    public List<String> getValidDependencies() {
+        if (dependencies == null || dependencies.isEmpty()) {
+            throw new OperatorHasNoDependency(this);
+        }
+        return dependencies;
     }
 }

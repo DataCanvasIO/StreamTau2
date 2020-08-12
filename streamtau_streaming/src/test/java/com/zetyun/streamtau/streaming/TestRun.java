@@ -25,6 +25,7 @@ import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import org.apache.flink.runtime.testutils.MiniClusterResourceConfiguration;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.test.util.MiniClusterWithClientResource;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -47,6 +48,11 @@ public class TestRun {
                 .build()
         );
 
+    @Before
+    public void setup() {
+        TestCollectSinkFunction.clear();
+    }
+
     @Test
     public void testInPlaceCollect() throws Exception {
         Dag dag = PeaParser.JSON.parse(
@@ -55,7 +61,6 @@ public class TestRun {
         );
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         TransformContext.transform(env, dag);
-        TestCollectSinkFunction.clear();
         env.execute();
         List<Object> values = TestCollectSinkFunction.getValues().stream()
             .map(x -> (Integer) x.getSingleValue())
@@ -71,7 +76,6 @@ public class TestRun {
         );
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         TransformContext.transform(env, dag);
-        TestCollectSinkFunction.clear();
         env.execute();
         List<RtEvent> values = TestCollectSinkFunction.getValues();
         assertThat(values.get(0).getSingleValue(),
@@ -86,10 +90,23 @@ public class TestRun {
         );
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         TransformContext.transform(env, dag);
-        TestCollectSinkFunction.clear();
         env.execute();
         List<RtEvent> values = TestCollectSinkFunction.getValues();
         assertThat(values.get(0).getSingleValue(),
             is("---\ngender: F\nname: Alice\nscores:\n  english: 80\n  maths: 100\n"));
+    }
+
+    @Test
+    public void testSchemaMapper() throws Exception {
+        Dag dag = PeaParser.YAML.parse(
+            TestDag.class.getResourceAsStream("/dag/schema-mapper.yml"),
+            Dag.class
+        );
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        TransformContext.transform(env, dag);
+        env.execute();
+        List<RtEvent> values = TestCollectSinkFunction.getValues();
+        assertThat(values.get(0).getSingleValue(),
+            is("{\"gender\":\"F\",\"name\":\"Alice\",\"totalScore\":180}"));
     }
 }

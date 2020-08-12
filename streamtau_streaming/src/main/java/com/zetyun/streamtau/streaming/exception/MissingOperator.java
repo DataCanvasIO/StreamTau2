@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.node;
+package com.zetyun.streamtau.streaming.exception;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
 
-@RequiredArgsConstructor
-public final class DataStreamSourceNode extends StreamNode {
+public class MissingOperator extends RuntimeException {
+    private static final long serialVersionUID = 3202446781879257973L;
+
     @Getter
-    private final DataStreamSource<RtEvent> dataStreamSource;
+    private final String operatorId;
 
-    @Override
-    public DataStream<RtEvent> asDataStream() {
-        return dataStreamSource;
+    public MissingOperator(String operatorId) {
+        super(
+            "Operator with id \"" + operatorId + "\" is required but not found in dag."
+        );
+        this.operatorId = operatorId;
     }
 }
