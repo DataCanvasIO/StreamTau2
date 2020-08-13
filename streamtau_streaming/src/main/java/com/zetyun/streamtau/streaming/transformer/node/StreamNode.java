@@ -23,6 +23,9 @@ import lombok.Setter;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
+import javax.annotation.Nonnull;
 
 public abstract class StreamNode {
     @Getter
@@ -32,19 +35,30 @@ public abstract class StreamNode {
     @Setter
     private String schemaId;
 
+    @Nonnull
     public static DataStreamNode of(DataStream<RtEvent> dataStream) {
         return new DataStreamNode(dataStream);
     }
 
+    @Nonnull
     public static DataStreamSinkNode of(DataStreamSink<RtEvent> dataStreamSink) {
         return new DataStreamSinkNode(dataStreamSink);
     }
 
+    @Nonnull
     public static DataStreamSourceNode of(DataStreamSource<RtEvent> dataStreamSource) {
         return new DataStreamSourceNode(dataStreamSource);
     }
 
     public DataStream<RtEvent> asDataStream() {
         throw new InvalidUseOfStreamNode(this, "asDataStream");
+    }
+
+    public int getParallelism() {
+        throw new InvalidUseOfStreamNode(this, "getParallelism");
+    }
+
+    public StreamExecutionEnvironment getEnv() {
+        throw new InvalidUseOfStreamNode(this, "getEnv");
     }
 }

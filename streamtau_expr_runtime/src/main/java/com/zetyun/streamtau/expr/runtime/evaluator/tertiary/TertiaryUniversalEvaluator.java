@@ -20,6 +20,8 @@ import com.zetyun.streamtau.expr.runtime.exception.FailGetTertiaryEvaluator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
+
 @RequiredArgsConstructor
 @Slf4j
 public class TertiaryUniversalEvaluator implements TertiaryEvaluator {
@@ -28,7 +30,7 @@ public class TertiaryUniversalEvaluator implements TertiaryEvaluator {
     private final TertiaryEvaluatorFactory factory;
 
     @Override
-    public Object eval(Object value0, Object value1, Object value2) {
+    public Object eval(@Nonnull Object value0, @Nonnull Object value1, @Nonnull Object value2) {
         Class<?> paraType0 = value0.getClass();
         Class<?> paraType1 = value1.getClass();
         Class<?> paraType2 = value2.getClass();

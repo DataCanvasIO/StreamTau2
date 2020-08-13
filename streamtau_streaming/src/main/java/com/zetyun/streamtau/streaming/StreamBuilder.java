@@ -23,7 +23,10 @@ import org.apache.flink.client.program.StreamPlanEnvironment;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.runtime.jobgraph.JobGraph;
 
-public class StreamBuilder {
+public final class StreamBuilder {
+    private StreamBuilder() {
+    }
+
     public static JobGraph buildJobGraph(Dag dag) {
         StreamPlanEnvironment env = new StreamPlanEnvironment(new Configuration(), null, 1);
         TransformContext.transform(env, dag);

@@ -20,10 +20,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.runtime.schema.RtSchema;
+import com.zetyun.streamtau.runtime.schema.RtSchemaSingle;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTuple;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTypes;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @JsonTypeName("array")
 @JsonPropertyOrder({"type", "items"})
@@ -37,24 +39,25 @@ public final class SchemaSpecArray extends SchemaSpec {
     private Boolean additionalItems;
 
     @Override
-    public @NotNull RtSchema createRtSchema() {
+    @Nonnull
+    public RtSchema createRtSchema() {
         if (additionalItems == null || additionalItems) {
             if (items == null) {
-                return new RtSchema(RtSchemaTypes.LIST);
+                return new RtSchemaSingle(RtSchemaTypes.LIST);
             }
             Types type = items.getType();
             if (type == null) {
-                return new RtSchema(RtSchemaTypes.LIST);
+                return new RtSchemaSingle(RtSchemaTypes.LIST);
             }
             switch (type) {
                 case INTEGER:
-                    return new RtSchema(RtSchemaTypes.INT_ARRAY);
+                    return new RtSchemaSingle(RtSchemaTypes.INT_ARRAY);
                 case NUMBER:
-                    return new RtSchema(RtSchemaTypes.REAL_ARRAY);
+                    return new RtSchemaSingle(RtSchemaTypes.REAL_ARRAY);
                 case STRING:
-                    return new RtSchema(RtSchemaTypes.STR_ARRAY);
+                    return new RtSchemaSingle(RtSchemaTypes.STR_ARRAY);
                 case BOOLEAN:
-                    return new RtSchema(RtSchemaTypes.BOOL_ARRAY);
+                    return new RtSchemaSingle(RtSchemaTypes.BOOL_ARRAY);
                 default:
                     throw new IllegalArgumentException("Invalid schema type \"" + type + "\".");
             }

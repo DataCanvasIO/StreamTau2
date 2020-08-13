@@ -23,6 +23,7 @@ import org.apache.flink.api.common.functions.MapFunction;
 
 import java.util.function.BiFunction;
 
+@FunctionalInterface
 public interface MapFunctionProvider extends BiFunction<
     Operator,
     TransformContext,

@@ -19,22 +19,23 @@ package com.zetyun.streamtau.manager.citrus;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.zetyun.streamtau.manager.citrus.behavior.Assets;
 import com.zetyun.streamtau.manager.pea.AssetPea;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 import static com.zetyun.streamtau.core.pea.PeaUtils.replacePeaIds;
 
-public class CitrusCommon {
+public final class CitrusCommon {
     public static final String COMMON_PREFIX = "COMMON_";
     public static final String SERVER_ID = "streamtau-manager";
 
-    @Contract(pure = true)
-    public static @NotNull String varRef(String varName) {
+    private CitrusCommon() {
+    }
+
+    @Nonnull
+    public static String varRef(String varName) {
         return "${" + varName + "}";
     }
 
@@ -47,8 +48,9 @@ public class CitrusCommon {
         });
     }
 
-    public static @NotNull List<AssetPea> getSortedAssetList(
-        @NotNull Map<String, AssetPea> peaMap
+    @Nonnull
+    public static List<AssetPea> getSortedAssetList(
+        @Nonnull Map<String, AssetPea> peaMap
     ) {
         List<AssetPea> peaList = new LinkedList<>(peaMap.values());
         peaList.sort((o1, o2) -> {
@@ -64,9 +66,9 @@ public class CitrusCommon {
 
     public static void createPeasInList(
         TestDesigner designer,
-        @NotNull List<AssetPea> peaList,
+        @Nonnull List<AssetPea> peaList,
         String projectId
-    ) throws IOException {
+    ) {
         for (AssetPea pea : peaList) {
             if (pea.getId().startsWith(COMMON_PREFIX)) {
                 continue;
@@ -78,7 +80,7 @@ public class CitrusCommon {
 
     public static void deletePeasInList(
         TestDesigner designer,
-        @NotNull List<AssetPea> peaList,
+        @Nonnull List<AssetPea> peaList,
         String projectId
     ) {
         for (AssetPea pea : peaList) {

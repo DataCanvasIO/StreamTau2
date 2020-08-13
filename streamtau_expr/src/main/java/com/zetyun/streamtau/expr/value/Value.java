@@ -20,7 +20,10 @@ import com.zetyun.streamtau.expr.core.AbstractExpr;
 import com.zetyun.streamtau.expr.runtime.RtConst;
 import com.zetyun.streamtau.runtime.context.CompileContext;
 
+import javax.annotation.Nonnull;
+
 public abstract class Value extends AbstractExpr {
+    @Nonnull
     @Override
     public RtConst compileIn(CompileContext ctx) {
         return new RtConst(this.getValue());

@@ -20,11 +20,15 @@ import com.zetyun.streamtau.expr.runtime.evaluator.EvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.exception.FailGetTertiaryEvaluator;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 @Slf4j
 public class TertiaryEvaluatorFactory extends EvaluatorFactory<TertiaryEvaluator> {
     private static final long serialVersionUID = -2339963717462816482L;
 
-    private static String id(Class<?> paraType0, Class<?> paraType1, Class<?> paraType2) {
+    @Nonnull
+    private static String id(@Nullable Class<?> paraType0, @Nullable Class<?> paraType1, @Nullable Class<?> paraType2) {
         if (paraType0 != null && paraType1 != null && paraType2 != null) {
             return paraId(paraType0) + paraId(paraType1) + paraId(paraType2);
         }

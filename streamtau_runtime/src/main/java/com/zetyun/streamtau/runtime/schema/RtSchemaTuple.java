@@ -16,9 +16,10 @@
 
 package com.zetyun.streamtau.runtime.schema;
 
-import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.annotation.Nullable;
 
 public class RtSchemaTuple extends RtSchema {
     private static final long serialVersionUID = -2100318134202177165L;
@@ -31,13 +32,14 @@ public class RtSchemaTuple extends RtSchema {
         super(RtSchemaTypes.TUPLE);
     }
 
+    @Nullable
     @Override
-    public CompileContext getChild(String name) {
+    public RtSchema getChild(String name) {
         return null;
     }
 
     @Override
-    public CompileContext getChild(int index) {
+    public RtSchema getChild(int index) {
         return children[index];
     }
 

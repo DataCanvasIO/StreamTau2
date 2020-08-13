@@ -27,8 +27,6 @@ import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.ScheduleService;
 import com.zetyun.streamtau.manager.service.dto.JobDto;
 import com.zetyun.streamtau.manager.service.impl.JobServiceImpl;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,14 +61,6 @@ public class TestJobServiceImpl {
     private ProjectService projectService;
     @MockBean
     private ScheduleService scheduleService;
-
-    @BeforeClass
-    public static void setupClass() {
-    }
-
-    @Before
-    public void setup() {
-    }
 
     @Test
     public void testCreate() throws IOException {

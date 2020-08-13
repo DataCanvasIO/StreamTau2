@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @RequiredArgsConstructor
-public class RtSchema implements CompileContext {
+public abstract class RtSchema implements CompileContext {
     private static final long serialVersionUID = -3071467129758460657L;
 
     @Getter
@@ -36,18 +36,5 @@ public class RtSchema implements CompileContext {
         return type.getJavaClass();
     }
 
-    @Override
-    public CompileContext getChild(String name) {
-        return null;
-    }
-
-    @Override
-    public CompileContext getChild(int index) {
-        return null;
-    }
-
-    public int createIndex(int start) {
-        index = start++;
-        return start;
-    }
+    public abstract int createIndex(int start);
 }

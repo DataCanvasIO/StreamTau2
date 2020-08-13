@@ -19,15 +19,18 @@ package com.zetyun.streamtau.expr.runtime.op;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.runtime.context.ExecContext;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class RtAndOp extends RtBinaryOp {
     private static final long serialVersionUID = -709513497487133841L;
 
-    public RtAndOp(RtExpr para0, RtExpr para1) {
-        super(null, para0, para1);
+    public RtAndOp(@Nonnull RtExpr para0, @Nonnull RtExpr para1) {
+        super(para0, para1);
     }
 
     @Override
-    public Object eval(ExecContext etx) {
+    public Object eval(@Nullable ExecContext etx) {
         return (boolean) para0.eval(etx) && (boolean) para1.eval(etx);
     }
 }

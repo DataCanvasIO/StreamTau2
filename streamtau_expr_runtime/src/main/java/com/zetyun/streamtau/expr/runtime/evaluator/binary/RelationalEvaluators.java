@@ -25,7 +25,10 @@ import java.math.BigDecimal;
     evaluatorFactory = BinaryEvaluatorFactory.class,
     universalEvaluator = BinaryUniversalEvaluator.class
 )
-public class RelationalEvaluators {
+public final class RelationalEvaluators {
+    private RelationalEvaluators() {
+    }
+
     public static boolean eq(boolean first, boolean second) {
         return first == second;
     }

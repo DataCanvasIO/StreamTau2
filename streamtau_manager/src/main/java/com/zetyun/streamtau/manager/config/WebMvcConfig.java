@@ -16,7 +16,6 @@
 
 package com.zetyun.streamtau.manager.config;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -24,17 +23,19 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Nonnull;
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Override
-    public void configurePathMatch(@NotNull PathMatchConfigurer configurer) {
+    public void configurePathMatch(@Nonnull PathMatchConfigurer configurer) {
         AntPathMatcher matcher = new AntPathMatcher();
         matcher.setCaseSensitive(false);
         configurer.setPathMatcher(matcher);
     }
 
     @Override
-    public void addFormatters(@NotNull FormatterRegistry registry) {
+    public void addFormatters(@Nonnull FormatterRegistry registry) {
         // Convert string to enum ignoring case
         ApplicationConversionService.configure(registry);
     }

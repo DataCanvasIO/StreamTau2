@@ -21,6 +21,8 @@ import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
 import lombok.RequiredArgsConstructor;
 import org.apache.flink.api.common.functions.MapFunction;
 
+import javax.annotation.Nonnull;
+
 @RequiredArgsConstructor
 public class SchemaParserFunction implements MapFunction<RtEvent, RtEvent> {
     private static final long serialVersionUID = 3243266995733072705L;
@@ -28,7 +30,7 @@ public class SchemaParserFunction implements MapFunction<RtEvent, RtEvent> {
     private final RtSchemaParser parser;
 
     @Override
-    public RtEvent map(RtEvent event) throws Exception {
+    public RtEvent map(@Nonnull RtEvent event) throws Exception {
         return parser.parse((String) event.getSingleValue());
     }
 }

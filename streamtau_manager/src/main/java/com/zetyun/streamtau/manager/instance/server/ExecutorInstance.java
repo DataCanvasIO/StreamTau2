@@ -16,7 +16,6 @@
 
 package com.zetyun.streamtau.manager.instance.server;
 
-import com.google.common.base.Charsets;
 import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import lombok.EqualsAndHashCode;
@@ -25,14 +24,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
 public class ExecutorInstance extends ServerInstance {
+    @Nullable
     private ExecutorService executorService = null;
 
     public ExecutorInstance(Server server) {
@@ -80,15 +83,15 @@ public class ExecutorInstance extends ServerInstance {
         if (log.isInfoEnabled()) {
             log.info("The command is: `{}`", String.join(" ", cmd));
         }
-        executorService.execute(() -> {
+        Objects.requireNonNull(executorService).execute(() -> {
             try {
                 Process process = Runtime.getRuntime().exec(cmd);
                 if (onFinish != null) {
                     onFinish.run();
                 }
                 if (log.isInfoEnabled()) {
-                    String output = IOUtils.toString(process.getInputStream(), Charsets.UTF_8);
-                    String error = IOUtils.toString(process.getErrorStream(), Charsets.UTF_8);
+                    String output = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
+                    String error = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
                     log.info("The console output is: \n{}", output);
                     log.info("The console error output is: \n{}", error);
                 }

@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.runtime;
+package com.zetyun.streamtau.streaming.model.source;
 
-public class Constants {
-    public static final String ROOT_VAR_NAME = "$";
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.Getter;
+import lombok.ToString;
+
+@JsonTypeName("prelude.local-file-source")
+@ToString(callSuper = true)
+public class LocalFileSource extends Source {
+    @JsonProperty("path")
+    @Getter
+    private String path;
 }

@@ -16,11 +16,11 @@
 
 package com.zetyun.streamtau.runtime.schema;
 
-import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Map;
+import javax.annotation.Nullable;
 
 public class RtSchemaDict extends RtSchema {
     private static final long serialVersionUID = -1122265270144992921L;
@@ -33,12 +33,14 @@ public class RtSchemaDict extends RtSchema {
         super(RtSchemaTypes.DICT);
     }
 
+    @Override
     public RtSchema getChild(String name) {
         return children.get(name);
     }
 
+    @Nullable
     @Override
-    public CompileContext getChild(int index) {
+    public RtSchema getChild(int index) {
         return null;
     }
 

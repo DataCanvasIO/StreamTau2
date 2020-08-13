@@ -20,15 +20,19 @@ import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import javax.annotation.Nonnull;
+
 @RequiredArgsConstructor
 public class Real extends Value {
     @Getter
     private final Double value;
 
+    @Nonnull
     public static Real fromString(String text) {
         return new Real(Double.parseDouble(text));
     }
 
+    @Nonnull
     @Override
     public Class<?> calcType(CompileContext ctx) {
         return Double.class;

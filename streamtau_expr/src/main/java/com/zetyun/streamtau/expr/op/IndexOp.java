@@ -23,11 +23,14 @@ import com.zetyun.streamtau.expr.runtime.evaluator.binary.index.IndexEvaluatorFa
 import com.zetyun.streamtau.expr.var.VarStub;
 import com.zetyun.streamtau.runtime.context.CompileContext;
 
+import javax.annotation.Nonnull;
+
 public class IndexOp extends BinaryOp {
     public IndexOp() {
         super(IndexEvaluatorFactory.INS);
     }
 
+    @Nonnull
     @Override
     public RtExpr compileIn(CompileContext ctx) {
         RtExpr rtExpr0 = expr0.compileIn(ctx);

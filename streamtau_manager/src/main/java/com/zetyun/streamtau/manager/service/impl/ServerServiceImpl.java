@@ -19,15 +19,14 @@ package com.zetyun.streamtau.manager.service.impl;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
+import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.instance.server.ServerInstance;
 import com.zetyun.streamtau.manager.instance.server.ServerInstanceFactory;
 import com.zetyun.streamtau.manager.pea.AssetPod;
 import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.pea.server.ServerStatus;
-import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.ServerService;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +35,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import javax.annotation.PreDestroy;
 
 @Service
@@ -45,10 +45,8 @@ public class ServerServiceImpl implements ServerService {
 
     @Autowired
     private AssetMapper assetMapper;
-    @Autowired
-    private ProjectService projectService;
 
-    private void updateServerInstanceMap(@NotNull Asset model) throws IOException {
+    private void updateServerInstanceMap(@Nonnull Asset model) throws IOException {
         Long serverId = model.getAssetId();
         serverInstanceMap.putIfAbsent(
             serverId,
@@ -56,6 +54,7 @@ public class ServerServiceImpl implements ServerService {
         );
     }
 
+    @Nonnull
     @Override
     public ServerInstance getInstance(Long projectId, String projectAssetId) throws IOException {
         Asset model = assetMapper.findByIdInProject(projectId, projectAssetId);
@@ -63,7 +62,7 @@ public class ServerServiceImpl implements ServerService {
             updateServerInstanceMap(model);
             return serverInstanceMap.get(model.getAssetId());
         }
-        return null;
+        throw new StreamTauException("10002", projectAssetId);
     }
 
     @Override

@@ -19,7 +19,9 @@ package com.zetyun.streamtau.expr.runtime;
 import com.zetyun.streamtau.runtime.context.ExecContext;
 
 import java.io.Serializable;
+import javax.annotation.Nullable;
 
+@FunctionalInterface
 public interface RtExpr extends Serializable {
-    Object eval(ExecContext etx);
+    Object eval(@Nullable ExecContext etx);
 }

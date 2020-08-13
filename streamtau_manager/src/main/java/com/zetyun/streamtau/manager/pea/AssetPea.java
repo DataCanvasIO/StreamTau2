@@ -42,12 +42,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
 
@@ -122,12 +122,12 @@ public abstract class AssetPea implements Pea<String, String> {
         return AssetCategory.MISCELLANEOUS;
     }
 
-    public void mapFrom(@NotNull Asset model) throws IOException {
+    public void mapFrom(@Nonnull Asset model) throws IOException {
         PeaParser parser = PeaParser.get(model.getScriptFormat());
         parser.parse(this, model.getScript());
     }
 
-    public void mapTo(@NotNull Asset model) throws IOException {
+    public void mapTo(@Nonnull Asset model) throws IOException {
         model.setScriptFormat(ScriptFormat.APPLICATION_JSON);
         PeaParser parser = PeaParser.get(model.getScriptFormat());
         model.setScript(parser.stringHideSome(this));

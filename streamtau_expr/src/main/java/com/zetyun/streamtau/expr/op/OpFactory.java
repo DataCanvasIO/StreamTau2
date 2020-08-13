@@ -32,12 +32,15 @@ import com.zetyun.streamtau.expr.runtime.evaluator.binary.string.StartsWithEvalu
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.arithmetic.NegEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.arithmetic.PosEvaluatorFactory;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
-public class OpFactory {
-    @Contract("_ -> new")
-    public static @NotNull UnaryOp getUnary(int type) {
+import javax.annotation.Nonnull;
+
+public final class OpFactory {
+    private OpFactory() {
+    }
+
+    @Nonnull
+    public static UnaryOp getUnary(int type) {
         switch (type) {
             case StreamtauExprParser.ADD:
                 return new UnaryOp(PosEvaluatorFactory.INS);
@@ -50,8 +53,8 @@ public class OpFactory {
         }
     }
 
-    @Contract("_ -> new")
-    public static @NotNull BinaryOp getBinary(int type) {
+    @Nonnull
+    public static BinaryOp getBinary(int type) {
         switch (type) {
             case StreamtauExprParser.ADD:
                 return new BinaryOp(AddEvaluatorFactory.INS);

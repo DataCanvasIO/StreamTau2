@@ -19,13 +19,15 @@ package com.zetyun.streamtau.streaming.exception;
 import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class UnionizeDifferentSchemas extends RuntimeException {
     private static final long serialVersionUID = 3416275443057587127L;
 
     @Getter
     private final Operator operator;
 
-    public UnionizeDifferentSchemas(Operator operator) {
+    public UnionizeDifferentSchemas(@Nonnull Operator operator) {
         super(
             "Cannot unionize streams of different schema in operator \"" + operator.getName() + "\"."
         );

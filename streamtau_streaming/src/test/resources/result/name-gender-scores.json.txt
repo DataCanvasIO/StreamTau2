@@ -1,0 +1,2 @@
+{"gender":"F","name":"Alice","scores":{"english":80,"maths":100}}
+{"gender":"M","name":"Bob","scores":{"english":70,"maths":90}}

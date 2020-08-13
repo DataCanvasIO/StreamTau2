@@ -19,15 +19,16 @@ package com.zetyun.streamtau.expr.runtime.evaluator.unary;
 import com.zetyun.streamtau.expr.runtime.evaluator.EvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.exception.FailGetUnaryEvaluator;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @Slf4j
 public abstract class UnaryEvaluatorFactory extends EvaluatorFactory<UnaryEvaluator> {
     private static final long serialVersionUID = -464551349014289660L;
 
-    @Contract(pure = true)
-    private static @NotNull String id(Class<?> paraType) {
+    @Nonnull
+    private static String id(@Nullable Class<?> paraType) {
         if (paraType != null) {
             return paraId(paraType);
         }

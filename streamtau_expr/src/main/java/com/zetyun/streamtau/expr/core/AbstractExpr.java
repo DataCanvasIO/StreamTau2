@@ -18,16 +18,21 @@ package com.zetyun.streamtau.expr.core;
 
 import com.zetyun.streamtau.runtime.context.CompileContext;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public abstract class AbstractExpr implements Expr {
     private Class<?> typeCache = null;
 
+    @Nonnull
     @Override
-    public Class<?> typeIn(CompileContext ctx) {
+    public Class<?> typeIn(@Nullable CompileContext ctx) {
         if (typeCache == null) {
             typeCache = calcType(ctx);
         }
         return typeCache;
     }
 
-    protected abstract Class<?> calcType(CompileContext ctx);
+    @Nonnull
+    protected abstract Class<?> calcType(@Nullable CompileContext ctx);
 }

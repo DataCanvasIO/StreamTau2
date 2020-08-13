@@ -19,11 +19,12 @@ package com.zetyun.streamtau.manager.runner;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @Slf4j
 public class RunnerFactory {
@@ -49,7 +50,7 @@ public class RunnerFactory {
         runnerMap.put(type, runner);
     }
 
-    public void run(@NotNull Job job, Runnable onFinish) throws IOException {
+    public void run(@Nonnull Job job, @Nullable Runnable onFinish) throws IOException {
         Runner runner = runnerMap.get(job.getAppType());
         if (runner == null) {
             throw new StreamTauException("10101", job.getAppType());

@@ -28,7 +28,10 @@ import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.JSON_MAPPER;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class Projects {
+public final class Projects {
+    private Projects() {
+    }
+
     public static String idVarName(String id) {
         return "project_id" + "_" + id;
     }

@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 @RequiredArgsConstructor
 public final class DataStreamSourceNode extends StreamNode {
@@ -30,5 +31,15 @@ public final class DataStreamSourceNode extends StreamNode {
     @Override
     public DataStream<RtEvent> asDataStream() {
         return dataStreamSource;
+    }
+
+    @Override
+    public int getParallelism() {
+        return dataStreamSource.getParallelism();
+    }
+
+    @Override
+    public StreamExecutionEnvironment getEnv() {
+        return dataStreamSource.getExecutionEnvironment();
     }
 }

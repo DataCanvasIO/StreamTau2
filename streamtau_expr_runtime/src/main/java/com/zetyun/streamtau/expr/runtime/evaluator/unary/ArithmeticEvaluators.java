@@ -25,7 +25,10 @@ import java.math.BigDecimal;
     evaluatorFactory = UnaryEvaluatorFactory.class,
     universalEvaluator = UnaryUniversalEvaluator.class
 )
-public class ArithmeticEvaluators {
+public final class ArithmeticEvaluators {
+    private ArithmeticEvaluators() {
+    }
+
     public static int pos(int value) {
         return value;
     }

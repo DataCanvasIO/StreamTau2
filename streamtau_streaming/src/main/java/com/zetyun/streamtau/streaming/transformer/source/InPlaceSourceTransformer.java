@@ -22,20 +22,25 @@ import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import com.zetyun.streamtau.streaming.transformer.Transformer;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
+import org.apache.flink.streaming.api.datastream.DataStreamSource;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
 public class InPlaceSourceTransformer implements Transformer {
+    @Nonnull
     @Override
-    public StreamNode transform(Operator operator, TransformContext context) {
-        List<RtEvent> eventList = ((InPlaceSource) operator).getElements().stream()
+    public StreamNode transform(@Nonnull Operator operator, @Nonnull TransformContext context) {
+        final List<RtEvent> eventList = ((InPlaceSource) operator).getElements().stream()
             .map(RtEvent::singleValue)
             .collect(Collectors.toList());
-        return StreamNode.of(
-            context.getEnv()
-                .fromCollection(eventList)
-                .setParallelism(operator.getParallelism())
-        );
+        DataStreamSource<RtEvent> stream = context.getEnv()
+            .fromCollection(eventList);
+        Integer parallelism = operator.getParallelism();
+        if (parallelism != null) {
+            stream.setParallelism(parallelism);
+        }
+        return StreamNode.of(stream);
     }
 }

@@ -26,7 +26,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @JsonTypeName("Host")
 @EqualsAndHashCode(callSuper = true)
@@ -41,12 +42,12 @@ public class Host extends AssetPea {
     private String hostname;
 
     @Override
-    public void mapFrom(@NotNull Asset model) {
+    public void mapFrom(@Nonnull Asset model) {
         hostname = model.getScript();
     }
 
     @Override
-    public void mapTo(@NotNull Asset model) {
+    public void mapTo(@Nonnull Asset model) {
         model.setScriptFormat(ScriptFormat.TEXT_PLAIN);
         model.setScript(hostname);
     }

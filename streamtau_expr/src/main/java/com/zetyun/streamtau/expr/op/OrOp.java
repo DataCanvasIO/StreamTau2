@@ -18,26 +18,29 @@ package com.zetyun.streamtau.expr.op;
 
 import com.zetyun.streamtau.expr.runtime.RtConst;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.op.RtBinaryOp;
 import com.zetyun.streamtau.expr.runtime.op.RtOrOp;
 import com.zetyun.streamtau.runtime.context.CompileContext;
+
+import javax.annotation.Nonnull;
 
 public class OrOp extends BinaryOp {
     public OrOp() {
         super(null);
     }
 
+    @Nonnull
     @Override
     public RtExpr compileIn(CompileContext ctx) {
         RtExpr rtExpr0 = expr0.compileIn(ctx);
         RtExpr rtExpr1 = expr1.compileIn(ctx);
-        RtBinaryOp rt = new RtOrOp(rtExpr0, rtExpr1);
+        RtOrOp rt = new RtOrOp(rtExpr0, rtExpr1);
         if (rtExpr0 instanceof RtConst && rtExpr1 instanceof RtConst) {
             return new RtConst(rt.eval(null));
         }
         return rt;
     }
 
+    @Nonnull
     @Override
     public Class<?> calcType(CompileContext ctx) {
         return Boolean.class;

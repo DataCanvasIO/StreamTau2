@@ -17,37 +17,37 @@
 package com.zetyun.streamtau.expr.runtime.evaluator.binary;
 
 import com.zetyun.streamtau.expr.annotation.Evaluators;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 @Evaluators(
     evaluatorInterface = BinaryEvaluator.class,
     evaluatorFactory = BinaryEvaluatorFactory.class,
     universalEvaluator = BinaryUniversalEvaluator.class
 )
-public class IndexEvaluators {
-    @Contract(pure = true)
-    public static Object index(@NotNull Object[] array, @NotNull Long index) {
+public final class IndexEvaluators {
+    private IndexEvaluators() {
+    }
+
+    public static Object index(@Nonnull Object[] array, @Nonnull Long index) {
         return array[index.intValue()];
     }
 
-    @Contract(pure = true)
-    public static Long index(@NotNull Long[] array, @NotNull Long index) {
+    public static Long index(@Nonnull Long[] array, @Nonnull Long index) {
         return array[index.intValue()];
     }
 
-    public static String index(@NotNull String[] array, @NotNull Long index) {
+    public static String index(@Nonnull String[] array, @Nonnull Long index) {
         return array[index.intValue()];
     }
 
-    public static Object index(@NotNull List<?> array, @NotNull Long index) {
+    public static Object index(@Nonnull List<?> array, @Nonnull Long index) {
         return array.get(index.intValue());
     }
 
-    public static Object index(@NotNull Map<String, ?> map, String index) {
+    public static Object index(@Nonnull Map<String, ?> map, String index) {
         return map.get(index);
     }
 }

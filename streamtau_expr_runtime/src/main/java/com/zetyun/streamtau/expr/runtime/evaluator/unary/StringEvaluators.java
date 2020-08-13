@@ -17,31 +17,34 @@
 package com.zetyun.streamtau.expr.runtime.evaluator.unary;
 
 import com.zetyun.streamtau.expr.annotation.Evaluators;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @Evaluators(
     evaluatorInterface = UnaryEvaluator.class,
     evaluatorFactory = UnaryEvaluatorFactory.class,
     universalEvaluator = UnaryUniversalEvaluator.class
 )
-public class StringEvaluators {
-    public static int length(@NotNull String str) {
+public final class StringEvaluators {
+    private StringEvaluators() {
+    }
+
+    public static int length(@Nonnull String str) {
         return str.length();
     }
 
-    @Contract(pure = true)
-    public static @NotNull String toLowerCase(@NotNull String str) {
+    @Nonnull
+    public static String toLowerCase(@Nonnull String str) {
         return str.toLowerCase();
     }
 
-    @Contract(pure = true)
-    public static @NotNull String toUpperCase(@NotNull String str) {
+    @Nonnull
+    public static String toUpperCase(@Nonnull String str) {
         return str.toUpperCase();
     }
 
-    @Contract(pure = true)
-    public static @NotNull String trim(@NotNull String str) {
+    @Nonnull
+    public static String trim(@Nonnull String str) {
         return str.trim();
     }
 }

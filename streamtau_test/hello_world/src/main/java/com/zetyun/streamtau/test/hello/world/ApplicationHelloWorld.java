@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.test.hello.world;
 
-public class ApplicationHelloWorld {
+public final class ApplicationHelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello, world!");
     }

@@ -17,24 +17,19 @@
 package com.zetyun.streamtau.expr.runtime.op;
 
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.evaluator.binary.BinaryEvaluator;
-import com.zetyun.streamtau.runtime.context.ExecContext;
 
-public class RtBinaryOp implements RtExpr {
-    private static final long serialVersionUID = -8130035605710130085L;
+import javax.annotation.Nonnull;
 
+public abstract class RtBinaryOp implements RtExpr {
+    private static final long serialVersionUID = 1131738354159693880L;
+
+    @Nonnull
     protected final RtExpr para0;
+    @Nonnull
     protected final RtExpr para1;
-    private final BinaryEvaluator evaluator;
 
-    public RtBinaryOp(BinaryEvaluator evaluator, RtExpr para0, RtExpr para1) {
-        this.evaluator = evaluator;
+    protected RtBinaryOp(@Nonnull RtExpr para0, @Nonnull RtExpr para1) {
         this.para0 = para0;
         this.para1 = para1;
-    }
-
-    @Override
-    public Object eval(ExecContext etx) {
-        return evaluator.eval(para0.eval(etx), para1.eval(etx));
     }
 }

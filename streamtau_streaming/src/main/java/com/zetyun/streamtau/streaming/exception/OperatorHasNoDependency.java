@@ -19,13 +19,15 @@ package com.zetyun.streamtau.streaming.exception;
 import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class OperatorHasNoDependency extends RuntimeException {
     private static final long serialVersionUID = -1071379778626087571L;
 
     @Getter
     private final Operator operator;
 
-    public OperatorHasNoDependency(Operator operator) {
+    public OperatorHasNoDependency(@Nonnull Operator operator) {
         super(
             "Cannot get dependencies of operator \"" + operator.getName() + "\" which has none."
         );

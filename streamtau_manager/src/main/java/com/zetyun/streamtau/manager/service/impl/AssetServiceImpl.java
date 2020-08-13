@@ -26,13 +26,13 @@ import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.AssetPod;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.service.AssetService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 
 @Service
 public class AssetServiceImpl implements AssetService {
@@ -41,8 +41,8 @@ public class AssetServiceImpl implements AssetService {
     @Autowired
     private ProjectAssetMapper projectAssetMapper;
 
-    @NotNull
-    private List<AssetPea> getAssetPeas(@NotNull List<Asset> models) throws IOException {
+    @Nonnull
+    private List<AssetPea> getAssetPeas(@Nonnull List<Asset> models) throws IOException {
         List<AssetPea> peas = new ArrayList<>(models.size());
         for (Asset model : models) {
             peas.add(AssetPod.fromModel(model));

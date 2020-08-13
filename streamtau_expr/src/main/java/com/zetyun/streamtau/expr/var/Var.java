@@ -23,15 +23,17 @@ import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.expr.runtime.var.RtVar;
 import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @RequiredArgsConstructor
 public class Var extends AbstractExpr {
     private final String name;
 
-    @Contract("_ -> new")
-    public static @NotNull RtExpr createVar(@NotNull CompileContext ctx) {
+    @Nonnull
+    public static RtExpr createVar(@Nonnull CompileContext ctx) {
         int index = ctx.getIndex();
         if (index >= 0) {
             return new RtVar(index);
@@ -42,18 +44,20 @@ public class Var extends AbstractExpr {
         throw new VarIndexError(ctx);
     }
 
+    @Nonnull
     @Override
-    public Class<?> calcType(@NotNull CompileContext ctx) {
-        CompileContext child = ctx.getChild(name);
+    public Class<?> calcType(@Nullable CompileContext ctx) {
+        CompileContext child = Objects.requireNonNull(ctx).getChild(name);
         if (child != null) {
             return ctx.getChild(name).getJavaClass();
         }
         throw new ElementNotExist(name, ctx);
     }
 
+    @Nonnull
     @Override
-    public RtExpr compileIn(@NotNull CompileContext ctx) {
-        CompileContext child = ctx.getChild(name);
+    public RtExpr compileIn(@Nullable CompileContext ctx) {
+        CompileContext child = Objects.requireNonNull(ctx).getChild(name);
         if (child != null) {
             return createVar(child);
         }

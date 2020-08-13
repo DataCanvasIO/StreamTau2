@@ -38,9 +38,6 @@ import com.zetyun.streamtau.runtime.exception.MissingRequiredKey;
 import com.zetyun.streamtau.runtime.exception.SchemaNodeTypeMismatch;
 import com.zetyun.streamtau.runtime.exception.UnsupportedFormat;
 import com.zetyun.streamtau.runtime.exception.UnsupportedSchemaType;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +49,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RtSchemaParser implements Serializable {
     private static final ObjectMapper JSON = createJsonMapper();
@@ -62,8 +61,7 @@ public class RtSchemaParser implements Serializable {
     private final ObjectMapper mapper;
     private final RtSchemaRoot schema;
 
-    @Contract(pure = true)
-    public RtSchemaParser(@NotNull ScriptFormat format, @NotNull RtSchemaRoot schema) {
+    public RtSchemaParser(@Nonnull ScriptFormat format, RtSchemaRoot schema) {
         switch (format) {
             case APPLICATION_JSON:
                 mapper = JSON;
@@ -77,13 +75,12 @@ public class RtSchemaParser implements Serializable {
         this.schema = schema;
     }
 
-    private static @NotNull ObjectMapper createJsonMapper() {
+    private static ObjectMapper createJsonMapper() {
         JsonMapper mapper = new JsonMapper();
         return mapperWithCommonProperties(mapper);
     }
 
-    @Contract(" -> new")
-    private static @NotNull ObjectMapper createYamlMapper() {
+    private static ObjectMapper createYamlMapper() {
         ObjectMapper mapper;
         YAMLFactory yamlFactory = new YAMLFactory()
             .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
@@ -91,19 +88,19 @@ public class RtSchemaParser implements Serializable {
         return mapperWithCommonProperties(mapper);
     }
 
-    private static ObjectMapper mapperWithCommonProperties(@NotNull ObjectMapper mapper) {
+    private static ObjectMapper mapperWithCommonProperties(@Nonnull ObjectMapper mapper) {
         return mapper
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
     }
 
-    @Contract(value = "_ -> new", pure = true)
-    public static @NotNull RtSchemaParser createJsonEventParser(RtSchemaRoot schema) {
+    @Nonnull
+    public static RtSchemaParser createJsonEventParser(RtSchemaRoot schema) {
         return new RtSchemaParser(ScriptFormat.APPLICATION_JSON, schema);
     }
 
-    @Contract(value = "_ -> new", pure = true)
-    public static @NotNull RtSchemaParser createYamlEventParser(RtSchemaRoot schema) {
+    @Nonnull
+    public static RtSchemaParser createYamlEventParser(RtSchemaRoot schema) {
         return new RtSchemaParser(ScriptFormat.APPLICATION_YAML, schema);
     }
 
@@ -130,13 +127,14 @@ public class RtSchemaParser implements Serializable {
         return mapper.writeValueAsString(object);
     }
 
-    private @NotNull RtEvent jsonNodeToEvent(JsonNode jsonNode) {
+    @Nonnull
+    private RtEvent jsonNodeToEvent(JsonNode jsonNode) {
         RtEvent event = new RtEvent(schema.getMaxIndex());
         parseAccordingSchema(event, jsonNode, schema.getRoot());
         return event;
     }
 
-    private void parseAccordingSchema(RtEvent event, JsonNode jsonNode, @NotNull RtSchema schema) {
+    private void parseAccordingSchema(RtEvent event, JsonNode jsonNode, @Nonnull RtSchema schema) {
         switch (schema.getType()) {
             case INT:
                 event.set(schema.getIndex(), jsonNode.asLong());
@@ -219,7 +217,8 @@ public class RtSchemaParser implements Serializable {
         throw new SchemaNodeTypeMismatch(schema, jsonNode);
     }
 
-    private @Nullable Object jsonNodeValue(@NotNull JsonNode jsonNode) {
+    @Nullable
+    private Object jsonNodeValue(@Nonnull JsonNode jsonNode) {
         switch (jsonNode.getNodeType()) {
             case NUMBER:
                 if (jsonNode.isInt()) {
@@ -255,7 +254,8 @@ public class RtSchemaParser implements Serializable {
     }
 
     // If this function was called, the `ORDER_MAP_ENTRIES_BY_KEYS` feature would not take effect.
-    private JsonNode toJsonNodeAccordingSchema(RtEvent event, @NotNull RtSchema schema) {
+    @SuppressWarnings("unused")
+    private JsonNode toJsonNodeAccordingSchema(RtEvent event, @Nonnull RtSchema schema) {
         JsonNode jsonNode;
         switch (schema.getType()) {
             case INT:
@@ -299,7 +299,7 @@ public class RtSchemaParser implements Serializable {
         return jsonNode;
     }
 
-    private Object toListMapAccordingSchema(RtEvent event, @NotNull RtSchema schema) {
+    private Object toListMapAccordingSchema(RtEvent event, @Nonnull RtSchema schema) {
         switch (schema.getType()) {
             case INT:
             case REAL:

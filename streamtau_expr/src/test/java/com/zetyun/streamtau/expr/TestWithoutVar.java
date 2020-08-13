@@ -21,14 +21,13 @@ import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
 import com.zetyun.streamtau.expr.runtime.RtConst;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+import javax.annotation.Nonnull;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -40,9 +39,9 @@ public class TestWithoutVar {
     private final String exprString;
     private final Object value;
 
-    @Contract(pure = true)
     @Parameterized.Parameters(name = "{index}: {0} ==> {1}")
-    public static @NotNull Collection<Object[]> getParameters() {
+    @Nonnull
+    public static Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
             // value
             {"2", 2L},

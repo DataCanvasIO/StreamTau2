@@ -25,11 +25,16 @@ import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.client.program.ProgramInvocationException;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @Slf4j
 public class FlinkJarRunner extends SingleServerRunner {
-    public void run(@NotNull JobDefPod pod, FlinkMiniClusterInstance flinkMiniClusterInstance, Runnable onFinish) {
+    public void run(
+        @Nonnull JobDefPod pod,
+        @Nonnull FlinkMiniClusterInstance flinkMiniClusterInstance,
+        Runnable onFinish
+    ) {
         FlinkJarApp flinkJarApp = (FlinkJarApp) pod.getApp();
         JarFile jarFile = (JarFile) pod.load(flinkJarApp.getJarFile());
         StorageService storageService = ApplicationContextProvider.getStorageService();

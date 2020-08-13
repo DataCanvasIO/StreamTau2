@@ -25,7 +25,6 @@ import com.zetyun.streamtau.manager.service.UserService;
 import com.zetyun.streamtau.manager.service.dto.ProjectDto;
 import com.zetyun.streamtau.manager.service.impl.ProjectServiceImpl;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,10 +60,6 @@ public class TestProjectServiceImpl {
     private UserProjectMapper userProjectMapper;
     @MockBean
     private UserService userService;
-
-    @BeforeClass
-    public static void setupClass() {
-    }
 
     @Before
     public void setup() {

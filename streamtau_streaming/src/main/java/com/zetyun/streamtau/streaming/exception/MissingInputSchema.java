@@ -19,13 +19,15 @@ package com.zetyun.streamtau.streaming.exception;
 import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class MissingInputSchema extends RuntimeException {
     private static final long serialVersionUID = -9144974233738425175L;
 
     @Getter
     private final Operator operator;
 
-    public MissingInputSchema(Operator operator) {
+    public MissingInputSchema(@Nonnull Operator operator) {
         super(
             "Must specify input schema for operator \"" + operator.getName() + "\"."
         );

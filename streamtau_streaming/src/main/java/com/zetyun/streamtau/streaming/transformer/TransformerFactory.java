@@ -16,17 +16,15 @@
 
 package com.zetyun.streamtau.streaming.transformer;
 
-import com.zetyun.streamtau.streaming.exception.UnsupportedOperator;
-import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.mapper.MapperTransformer;
 import com.zetyun.streamtau.streaming.transformer.mapper.SchemaMapperFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.mapper.SchemaParserFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.mapper.SchemaStringfyFunctionProvider;
-import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import com.zetyun.streamtau.streaming.transformer.sink.PrintSinkTransformer;
 import com.zetyun.streamtau.streaming.transformer.sink.SinkTransformer;
 import com.zetyun.streamtau.streaming.transformer.sink.TestCollectSinkFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.source.InPlaceSourceTransformer;
+import com.zetyun.streamtau.streaming.transformer.source.LocalFileSourceTransformer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedHashMap;
@@ -34,7 +32,7 @@ import java.util.Map;
 
 @Slf4j
 public class TransformerFactory {
-    private static TransformerFactory INS;
+    public static final TransformerFactory INS = new TransformerFactory();
 
     private final Map<String, Transformer> transformerMap;
 
@@ -46,6 +44,8 @@ public class TransformerFactory {
         // Sources
         registerTransformer("prelude.in-place-source",
             new InPlaceSourceTransformer());
+        registerTransformer("prelude.local-file-source",
+            new LocalFileSourceTransformer());
         // Sinks
         registerTransformer("prelude.print-sink",
             new PrintSinkTransformer());
@@ -60,26 +60,11 @@ public class TransformerFactory {
             new MapperTransformer(new SchemaMapperFunctionProvider()));
     }
 
-    public static TransformerFactory get() {
-        if (INS == null) {
-            INS = new TransformerFactory();
-        }
-        return INS;
-    }
-
     private void registerTransformer(String type, Transformer transformer) {
         transformerMap.put(type, transformer);
     }
 
-    public StreamNode transform(Object nodeId, Operator operator, TransformContext context) {
-        Transformer transformer = transformerMap.get(operator.getFid());
-        if (transformer != null) {
-            StreamNode node = transformer.transform(operator, context);
-            node.setName(operator.getName());
-            node.setSchemaId(operator.getSchemaId());
-            context.registerStreamNode(nodeId, node);
-            return node;
-        }
-        throw new UnsupportedOperator(operator);
+    public Transformer getTransformer(String fid) {
+        return transformerMap.get(fid);
     }
 }

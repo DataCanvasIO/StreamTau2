@@ -20,11 +20,13 @@ import lombok.Getter;
 
 @Getter
 public class StreamTauException extends RuntimeException {
+    private static final long serialVersionUID = -2191753382497091815L;
+
     private final String errorCode;
     private final Object[] args;
 
     public StreamTauException(String errorCode, Object... args) {
-        super(errorCode);
+        super();
         this.errorCode = errorCode;
         this.args = args;
     }

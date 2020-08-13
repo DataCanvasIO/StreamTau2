@@ -20,17 +20,14 @@ import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import javax.annotation.Nonnull;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -49,13 +46,9 @@ public class TestFun {
     private final Object value0;
     private final Object value1;
 
-    @BeforeClass
-    public static void setupClass() throws IOException {
-    }
-
-    @Contract(pure = true)
     @Parameterized.Parameters(name = "{index}: {0} ==> {1}, {2}")
-    public static @NotNull Collection<Object[]> getParameters() {
+    @Nonnull
+    public static Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
             {"abs(anInt)", 2L, 3L},
         });

@@ -32,9 +32,11 @@ import com.zetyun.streamtau.streaming.runtime.mapper.SchemaMapperFunction;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import org.apache.flink.api.common.functions.MapFunction;
 
+import javax.annotation.Nonnull;
+
 public class SchemaMapperFunctionProvider implements MapFunctionProvider {
     @Override
-    public MapFunction<RtEvent, RtEvent> apply(Operator operator, TransformContext context) {
+    public MapFunction<RtEvent, RtEvent> apply(Operator operator, @Nonnull TransformContext context) {
         RtSchemaRoot inputSchema = context.getInputSchema(operator);
         RtSchemaRoot outputSchema = context.getSchemaOf(operator);
         if (inputSchema == null) {

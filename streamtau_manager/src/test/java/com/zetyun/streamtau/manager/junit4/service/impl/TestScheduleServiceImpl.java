@@ -26,7 +26,6 @@ import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.impl.ScheduleServiceImpl;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +57,6 @@ public class TestScheduleServiceImpl {
     private JobMapper jobMapper;
     @MockBean
     private ServerService serverService;
-
-    @Before
-    public void setup() {
-    }
 
     @Test
     public void testSchedule() throws IOException {

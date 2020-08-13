@@ -31,7 +31,7 @@ import static org.junit.Assert.assertThat;
 public class TestPeaParser {
     @Test
     public void testGetSubtypeClasses() {
-        Map<String, Class<?>> map = PeaParser.JSON.getSubtypeClasses(AssetPea.class);
+        Map<String, Class<?>> map = PeaParser.getSubtypeClasses(AssetPea.class);
         assertThat(map.get("Host"), is(Host.class));
         assertThat(map.get("CmdLine"), is(CmdLine.class));
         assertThat(map.get("CmdLineApp"), is(CmdLineApp.class));

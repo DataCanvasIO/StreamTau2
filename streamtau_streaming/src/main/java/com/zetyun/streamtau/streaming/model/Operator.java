@@ -29,17 +29,21 @@ import com.zetyun.streamtau.streaming.model.mapper.SchemaStringfy;
 import com.zetyun.streamtau.streaming.model.sink.PrintSink;
 import com.zetyun.streamtau.streaming.model.sink.TestCollectSink;
 import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
+import com.zetyun.streamtau.streaming.model.source.LocalFileSource;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @JsonTypeInfo(property = "fid", use = JsonTypeInfo.Id.NAME, visible = true)
 @JsonSubTypes({
     // Sources
     @JsonSubTypes.Type(InPlaceSource.class),
+    @JsonSubTypes.Type(LocalFileSource.class),
     // Sinks
     @JsonSubTypes.Type(PrintSink.class),
     @JsonSubTypes.Type(TestCollectSink.class),
@@ -75,7 +79,8 @@ public abstract class Operator {
     private String schemaId;
 
     @JsonIgnore
-    public static String fid(Class<? extends Operator> clazz) {
+    @Nullable
+    public static String fid(@Nonnull Class<? extends Operator> clazz) {
         JsonTypeName name = clazz.getAnnotation(JsonTypeName.class);
         if (name != null) {
             return name.value();

@@ -14,10 +14,34 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.core;
+package com.zetyun.streamtau.runtime.schema;
 
 import com.zetyun.streamtau.runtime.context.CompileContext;
 
-public interface Compilable<T> {
-    T compileIn(CompileContext ctx);
+import javax.annotation.Nullable;
+
+public class RtSchemaSingle extends RtSchema {
+    private static final long serialVersionUID = 8381945283977704333L;
+
+    public RtSchemaSingle(RtSchemaTypes type) {
+        super(type);
+    }
+
+    @Nullable
+    @Override
+    public CompileContext getChild(String name) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public CompileContext getChild(int index) {
+        return null;
+    }
+
+    @Override
+    public int createIndex(int start) {
+        setIndex(start++);
+        return start;
+    }
 }

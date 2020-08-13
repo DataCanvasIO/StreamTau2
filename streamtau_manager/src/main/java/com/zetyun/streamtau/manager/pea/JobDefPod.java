@@ -22,11 +22,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zetyun.streamtau.core.pea.MapPod;
 import com.zetyun.streamtau.core.pea.PeaParser;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 public class JobDefPod extends MapPod<String, String, AssetPea> {
     @JsonProperty("appId")
@@ -47,13 +47,15 @@ public class JobDefPod extends MapPod<String, String, AssetPea> {
         this.appId = appId;
     }
 
-    public static @NotNull JobDefPod fromJobDefinition(String json) throws IOException {
+    @Nonnull
+    public static JobDefPod fromJobDefinition(String json) throws IOException {
         JobDefPod pod = PeaParser.JSON.parse(json, JobDefPod.class);
         pod.setPeaIdsFromKey();
         return pod;
     }
 
-    public static @NotNull JobDefPod fromJobDefinition(InputStream json) throws IOException {
+    @Nonnull
+    public static JobDefPod fromJobDefinition(InputStream json) throws IOException {
         JobDefPod pod = PeaParser.JSON.parse(json, JobDefPod.class);
         pod.setPeaIdsFromKey();
         return pod;

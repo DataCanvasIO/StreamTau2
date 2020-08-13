@@ -24,10 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import javax.annotation.Nonnull;
+
 @RestControllerAdvice(basePackages = {"com.zetyun.streamtau.manager.controller"})
 public class ResponseBodyDecorator implements ResponseBodyAdvice<Object> {
     @Override
-    public boolean supports(MethodParameter parameter, Class clazz) {
+    public boolean supports(@Nonnull MethodParameter parameter, @Nonnull Class clazz) {
         boolean isSupported = false;
         Class<?> aClass = parameter.getContainingClass();
         if (aClass.getAnnotation(RestController.class) != null) {
@@ -39,11 +41,11 @@ public class ResponseBodyDecorator implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(
         Object body,
-        MethodParameter parameter,
-        MediaType mediaType,
-        Class clazz,
-        ServerHttpRequest serverHttpRequest,
-        ServerHttpResponse serverHttpResponse
+        @Nonnull MethodParameter parameter,
+        @Nonnull MediaType mediaType,
+        @Nonnull Class clazz,
+        @Nonnull ServerHttpRequest serverHttpRequest,
+        @Nonnull ServerHttpResponse serverHttpResponse
     ) {
         return new StreamTauResponse(body);
     }

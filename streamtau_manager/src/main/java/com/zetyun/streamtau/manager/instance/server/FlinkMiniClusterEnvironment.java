@@ -29,6 +29,7 @@ import org.apache.flink.streaming.api.graph.StreamGraph;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.annotation.Nonnull;
 
 public class FlinkMiniClusterEnvironment extends StreamExecutionEnvironment {
     private final JobExecutor jobExecutor;
@@ -68,7 +69,7 @@ public class FlinkMiniClusterEnvironment extends StreamExecutionEnvironment {
     }
 
     @Override
-    public JobExecutionResult execute(StreamGraph streamGraph) throws Exception {
+    public JobExecutionResult execute(@Nonnull StreamGraph streamGraph) throws Exception {
         JobGraph jobGraph = streamGraph.getJobGraph();
         if (jarFiles != null) {
             jarFiles.forEach(jobGraph::addJar);

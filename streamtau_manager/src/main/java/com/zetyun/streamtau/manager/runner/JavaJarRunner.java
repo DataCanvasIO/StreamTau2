@@ -23,13 +23,16 @@ import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import javax.annotation.Nonnull;
 
 @Slf4j
 public class JavaJarRunner extends SingleServerRunner {
-    public void run(@NotNull JobDefPod pod, ExecutorInstance executorInstance, Runnable onFinish) throws IOException {
+    public void run(
+        @Nonnull JobDefPod pod,
+        @Nonnull ExecutorInstance executorInstance,
+        Runnable onFinish
+    ) {
         JavaJarApp javaJarApp = (JavaJarApp) pod.getApp();
         JarFile jarFile = (JarFile) pod.load(javaJarApp.getJarFile());
         StorageService storageService = ApplicationContextProvider.getStorageService();

@@ -20,19 +20,18 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import javax.annotation.Nonnull;
 
 @JsonTypeName("Executor")
 @EqualsAndHashCode(callSuper = true)
 public class Executor extends Server {
     @Override
-    public void mapFrom(@NotNull Asset model) throws IOException {
+    public void mapFrom(@Nonnull Asset model) {
     }
 
     @Override
-    public void mapTo(@NotNull Asset model) throws IOException {
+    public void mapTo(@Nonnull Asset model) {
         model.setScriptFormat(ScriptFormat.TEXT_PLAIN);
         model.setScript("");
     }

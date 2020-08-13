@@ -17,6 +17,7 @@
 package com.zetyun.streamtau.streaming;
 
 import com.zetyun.streamtau.core.pea.PeaParser;
+import com.zetyun.streamtau.runtime.ScriptFormat;
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Dag;
 import com.zetyun.streamtau.streaming.model.TestDag;
@@ -30,12 +31,19 @@ import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 @FixMethodOrder()
 public class TestRun {
@@ -53,15 +61,37 @@ public class TestRun {
         TestCollectSinkFunction.clear();
     }
 
-    @Test
-    public void testInPlaceCollect() throws Exception {
-        Dag dag = PeaParser.JSON.parse(
-            TestDag.class.getResourceAsStream("/dag/in-place-collect.json"),
+    private void runCase(ScriptFormat format, String dagFile) throws Exception {
+        Dag dag = PeaParser.get(format).parse(
+            TestDag.class.getResourceAsStream(dagFile),
             Dag.class
         );
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         TransformContext.transform(env, dag);
         env.execute();
+    }
+
+    private void checkCollectSinkAgainstFile(String fileName) throws URISyntaxException, IOException {
+        Stream<String> lines = Files.lines(Paths.get(getClass().getResource(fileName).toURI()));
+        List<RtEvent> values = TestCollectSinkFunction.getValues();
+        Iterator<RtEvent> eit = values.stream().iterator();
+        Iterator<String> sit = lines.iterator();
+        while (eit.hasNext() && sit.hasNext()) {
+            RtEvent event = eit.next();
+            String line = sit.next();
+            assertThat(event.getSingleValue(), is(line));
+        }
+        if (eit.hasNext()) {
+            fail("More items in collect sink.");
+        }
+        if (sit.hasNext()) {
+            fail("More items in file.");
+        }
+    }
+
+    @Test
+    public void testInPlaceCollect() throws Exception {
+        runCase(ScriptFormat.APPLICATION_JSON, "/dag/in-place-collect.json");
         List<Object> values = TestCollectSinkFunction.getValues().stream()
             .map(x -> (Integer) x.getSingleValue())
             .collect(Collectors.toList());
@@ -70,27 +100,13 @@ public class TestRun {
 
     @Test
     public void testSchemaParser() throws Exception {
-        Dag dag = PeaParser.YAML.parse(
-            TestDag.class.getResourceAsStream("/dag/schema-parser.yml"),
-            Dag.class
-        );
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        TransformContext.transform(env, dag);
-        env.execute();
-        List<RtEvent> values = TestCollectSinkFunction.getValues();
-        assertThat(values.get(0).getSingleValue(),
-            is("{\"gender\":\"F\",\"name\":\"Alice\",\"scores\":{\"english\":80,\"maths\":100}}"));
+        runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-parser.yml");
+        checkCollectSinkAgainstFile("/result/name-gender-scores.json.txt");
     }
 
     @Test
     public void testSchemaStringfy() throws Exception {
-        Dag dag = PeaParser.YAML.parse(
-            TestDag.class.getResourceAsStream("/dag/schema-stringfy.yml"),
-            Dag.class
-        );
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        TransformContext.transform(env, dag);
-        env.execute();
+        runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-stringfy.yml");
         List<RtEvent> values = TestCollectSinkFunction.getValues();
         assertThat(values.get(0).getSingleValue(),
             is("---\ngender: F\nname: Alice\nscores:\n  english: 80\n  maths: 100\n"));
@@ -98,13 +114,7 @@ public class TestRun {
 
     @Test
     public void testSchemaMapper() throws Exception {
-        Dag dag = PeaParser.YAML.parse(
-            TestDag.class.getResourceAsStream("/dag/schema-mapper.yml"),
-            Dag.class
-        );
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        TransformContext.transform(env, dag);
-        env.execute();
+        runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-mapper.yml");
         List<RtEvent> values = TestCollectSinkFunction.getValues();
         assertThat(values.get(0).getSingleValue(),
             is("{\"gender\":\"F\",\"name\":\"Alice\",\"totalScore\":180}"));

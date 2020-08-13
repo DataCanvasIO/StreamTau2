@@ -19,24 +19,27 @@ package com.zetyun.streamtau.expr.op;
 import com.zetyun.streamtau.expr.runtime.RtConst;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.expr.runtime.op.RtNotOp;
-import com.zetyun.streamtau.expr.runtime.op.RtUnaryOp;
 import com.zetyun.streamtau.runtime.context.CompileContext;
+
+import javax.annotation.Nonnull;
 
 public class NotOp extends UnaryOp {
     public NotOp() {
         super(null);
     }
 
+    @Nonnull
     @Override
     public RtExpr compileIn(CompileContext ctx) {
         RtExpr rtExpr = expr.compileIn(ctx);
-        RtUnaryOp rt = new RtNotOp(rtExpr);
+        RtNotOp rt = new RtNotOp(rtExpr);
         if (rtExpr instanceof RtConst) {
             return new RtConst(rt.eval(null));
         }
         return rt;
     }
 
+    @Nonnull
     @Override
     public Class<?> calcType(CompileContext ctx) {
         return Boolean.class;

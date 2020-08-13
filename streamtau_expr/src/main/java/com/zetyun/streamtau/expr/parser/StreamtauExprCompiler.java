@@ -26,6 +26,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 public class StreamtauExprCompiler {
     public static final StreamtauExprCompiler INS = new StreamtauExprCompiler();
@@ -38,6 +39,7 @@ public class StreamtauExprCompiler {
         visitor = new StreamtauExprVisitorImpl();
     }
 
+    @Nonnull
     private StreamtauExprParser getParser(String input) {
         CharStream stream = CharStreams.fromString(input);
         StreamtauExprLexer lexer = new StreamtauExprLexer(stream);

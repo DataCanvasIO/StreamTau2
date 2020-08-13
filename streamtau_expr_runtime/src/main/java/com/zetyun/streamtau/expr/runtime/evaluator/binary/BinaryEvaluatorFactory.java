@@ -19,13 +19,16 @@ package com.zetyun.streamtau.expr.runtime.evaluator.binary;
 import com.zetyun.streamtau.expr.runtime.evaluator.EvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.exception.FailGetBinaryEvaluator;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @Slf4j
 public class BinaryEvaluatorFactory extends EvaluatorFactory<BinaryEvaluator> {
     private static final long serialVersionUID = 7772783649536957094L;
 
-    private static @NotNull String id(Class<?> paraType0, Class<?> paraType1) {
+    @Nonnull
+    private static String id(@Nullable Class<?> paraType0, @Nullable Class<?> paraType1) {
         if (paraType0 != null && paraType1 != null) {
             return paraId(paraType0) + paraId(paraType1);
         }

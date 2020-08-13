@@ -18,17 +18,20 @@ package com.zetyun.streamtau.expr.runtime.evaluator.binary;
 
 
 import com.zetyun.streamtau.expr.annotation.Evaluators;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import javax.annotation.Nonnull;
 
 @Evaluators(
     evaluatorInterface = BinaryEvaluator.class,
     evaluatorFactory = BinaryEvaluatorFactory.class,
     universalEvaluator = BinaryUniversalEvaluator.class
 )
-public class ArithmeticEvaluators {
+public final class ArithmeticEvaluators {
+    private ArithmeticEvaluators() {
+    }
+
     public static int add(int value0, int value1) {
         return value0 + value1;
     }
@@ -41,11 +44,13 @@ public class ArithmeticEvaluators {
         return value0 + value1;
     }
 
-    public static BigDecimal add(@NotNull BigDecimal value0, BigDecimal value1) {
+    @Nonnull
+    public static BigDecimal add(@Nonnull BigDecimal value0, BigDecimal value1) {
         return value0.add(value1);
     }
 
     // This is not arithmetic op, but put here to share the same evaluator factory.
+    @Nonnull
     public static String add(String s0, String s1) {
         return s0 + s1;
     }
@@ -62,7 +67,8 @@ public class ArithmeticEvaluators {
         return value0 - value1;
     }
 
-    public static BigDecimal sub(@NotNull BigDecimal value0, BigDecimal value1) {
+    @Nonnull
+    public static BigDecimal sub(@Nonnull BigDecimal value0, BigDecimal value1) {
         return value0.subtract(value1);
     }
 
@@ -78,7 +84,8 @@ public class ArithmeticEvaluators {
         return value0 * value1;
     }
 
-    public static BigDecimal mul(@NotNull BigDecimal value0, BigDecimal value1) {
+    @Nonnull
+    public static BigDecimal mul(@Nonnull BigDecimal value0, BigDecimal value1) {
         return value0.multiply(value1);
     }
 
@@ -94,7 +101,8 @@ public class ArithmeticEvaluators {
         return value0 / value1;
     }
 
-    public static BigDecimal div(@NotNull BigDecimal value0, BigDecimal value1) {
+    @Nonnull
+    public static BigDecimal div(@Nonnull BigDecimal value0, BigDecimal value1) {
         return value0.divide(value1, RoundingMode.HALF_EVEN);
     }
 }

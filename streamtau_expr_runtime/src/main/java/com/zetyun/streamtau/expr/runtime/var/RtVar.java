@@ -19,7 +19,9 @@ package com.zetyun.streamtau.expr.runtime.var;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.runtime.context.ExecContext;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+import javax.annotation.Nullable;
 
 @RequiredArgsConstructor
 public class RtVar implements RtExpr {
@@ -28,11 +30,11 @@ public class RtVar implements RtExpr {
     private final int index;
 
     @Override
-    public Object eval(@NotNull ExecContext etx) {
-        return etx.get(index);
+    public Object eval(@Nullable ExecContext etx) {
+        return Objects.requireNonNull(etx).get(index);
     }
 
-    public void set(@NotNull ExecContext etx, Object value) {
-        etx.set(index, value);
+    public void set(@Nullable ExecContext etx, Object value) {
+        Objects.requireNonNull(etx).set(index, value);
     }
 }

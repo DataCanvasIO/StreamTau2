@@ -19,7 +19,8 @@ package com.zetyun.streamtau.manager.runner;
 import com.zetyun.streamtau.manager.db.model.Job;
 
 import java.io.IOException;
+import javax.annotation.Nullable;
 
 public interface Runner {
-    void run(Job job, Runnable onFinish) throws IOException;
+    void run(Job job, @Nullable Runnable onFinish) throws IOException;
 }

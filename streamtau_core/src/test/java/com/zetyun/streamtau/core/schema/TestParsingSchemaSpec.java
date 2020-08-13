@@ -17,7 +17,6 @@
 package com.zetyun.streamtau.core.schema;
 
 import com.zetyun.streamtau.core.pea.PeaParser;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -27,10 +26,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TestParsingSchemaSpec {
-    @BeforeClass
-    public static void setupClass() {
-    }
-
     @Test
     public void testScalar() throws IOException {
         String str = "{type: string}";

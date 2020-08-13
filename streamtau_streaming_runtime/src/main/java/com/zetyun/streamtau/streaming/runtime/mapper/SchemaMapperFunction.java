@@ -28,7 +28,7 @@ public class SchemaMapperFunction implements MapFunction<RtEvent, RtEvent> {
     private final int numIndexedVars;
 
     @Override
-    public RtEvent map(RtEvent event) throws Exception {
+    public RtEvent map(RtEvent event) {
         RtEvent out = new RtEvent(numIndexedVars);
         for (RtSchemaMapping mapping : mappings) {
             mapping.getTarget().set(out, mapping.getValue().eval(event));

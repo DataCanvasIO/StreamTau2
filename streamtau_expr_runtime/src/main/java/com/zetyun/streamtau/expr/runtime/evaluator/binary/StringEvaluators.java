@@ -17,62 +17,64 @@
 package com.zetyun.streamtau.expr.runtime.evaluator.binary;
 
 import com.zetyun.streamtau.expr.annotation.Evaluators;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @Evaluators(
     evaluatorInterface = BinaryEvaluator.class,
     evaluatorFactory = BinaryEvaluatorFactory.class,
     universalEvaluator = BinaryUniversalEvaluator.class
 )
-public class StringEvaluators {
-    public static char charAt(@NotNull String str, int index) {
+public final class StringEvaluators {
+    private StringEvaluators() {
+    }
+
+    public static char charAt(@Nonnull String str, int index) {
         return str.charAt(index);
     }
 
-    @Contract(pure = true)
-    public static int indexOf(@NotNull String haystack, String needle) {
+    public static int indexOf(@Nonnull String haystack, String needle) {
         return haystack.indexOf(needle);
     }
 
-    public static int lastIndexOf(@NotNull String haystack, String needle) {
+    public static int lastIndexOf(@Nonnull String haystack, String needle) {
         return haystack.lastIndexOf(needle);
     }
 
-    @Contract(pure = true)
-    public static @NotNull String substring(@NotNull String haystack, int start) {
+    @Nonnull
+    public static String substring(@Nonnull String haystack, int start) {
         return haystack.substring(start);
     }
 
-    public static boolean contains(@NotNull String haystack, String needle) {
+    public static boolean contains(@Nonnull String haystack, String needle) {
         return haystack.contains(needle);
     }
 
-    public static boolean endsWith(@NotNull String haystack, String needle) {
+    public static boolean endsWith(@Nonnull String haystack, String needle) {
         return haystack.endsWith(needle);
     }
 
-    public static boolean matches(@NotNull String haystack, String needle) {
+    public static boolean matches(@Nonnull String haystack, String needle) {
         return haystack.matches(needle);
     }
 
-    public static boolean notContains(@NotNull String haystack, String needle) {
+    public static boolean notContains(@Nonnull String haystack, String needle) {
         return !haystack.contains(needle);
     }
 
-    public static boolean notEndsWith(@NotNull String haystack, String needle) {
+    public static boolean notEndsWith(@Nonnull String haystack, String needle) {
         return !haystack.endsWith(needle);
     }
 
-    public static boolean notMatches(@NotNull String haystack, String needle) {
+    public static boolean notMatches(@Nonnull String haystack, String needle) {
         return !haystack.matches(needle);
     }
 
-    public static boolean notStartsWith(@NotNull String haystack, String needle) {
+    public static boolean notStartsWith(@Nonnull String haystack, String needle) {
         return !haystack.startsWith(needle);
     }
 
-    public static boolean startsWith(@NotNull String haystack, String needle) {
+    public static boolean startsWith(@Nonnull String haystack, String needle) {
         return haystack.startsWith(needle);
     }
 }

@@ -19,6 +19,8 @@ package com.zetyun.streamtau.streaming.exception;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class InvalidUseOfStreamNode extends RuntimeException {
     private static final long serialVersionUID = 5830188353617036177L;
 
@@ -27,7 +29,7 @@ public class InvalidUseOfStreamNode extends RuntimeException {
     @Getter
     private final String methodName;
 
-    public InvalidUseOfStreamNode(StreamNode node, String methodName) {
+    public InvalidUseOfStreamNode(@Nonnull StreamNode node, String methodName) {
         super(
             "Cannot use stream node \"" + node.getName() + "\" in method \"" + methodName + "\"."
         );

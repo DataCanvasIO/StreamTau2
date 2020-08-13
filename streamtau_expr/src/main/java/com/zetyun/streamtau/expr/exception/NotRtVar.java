@@ -17,10 +17,12 @@
 package com.zetyun.streamtau.expr.exception;
 
 import com.zetyun.streamtau.runtime.context.CompileContext;
+import lombok.Getter;
 
 public class NotRtVar extends RuntimeException {
     private static final long serialVersionUID = 2759651537714799288L;
 
+    @Getter
     private final CompileContext ctx;
 
     public NotRtVar(CompileContext ctx) {

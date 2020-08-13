@@ -19,7 +19,8 @@ package com.zetyun.streamtau.expr.runtime.evaluator.unary;
 import com.zetyun.streamtau.expr.runtime.exception.FailGetUnaryEvaluator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,7 +30,7 @@ public class UnaryUniversalEvaluator implements UnaryEvaluator {
     private final UnaryEvaluatorFactory factory;
 
     @Override
-    public Object eval(@NotNull Object value) {
+    public Object eval(@Nonnull Object value) {
         Class<?> paraType = value.getClass();
         UnaryEvaluator evaluator = factory.getEvaluator(paraType);
         if (evaluator != this) {

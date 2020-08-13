@@ -30,11 +30,11 @@ import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @EqualsAndHashCode(callSuper = true)
 public abstract class File extends AssetPea {
@@ -49,7 +49,8 @@ public abstract class File extends AssetPea {
     @Setter
     private String path;
 
-    public static @Nullable String typeFromName(@NotNull String name) {
+    @Nullable
+    public static String typeFromName(@Nonnull String name) {
         int index = name.lastIndexOf('.');
         if (index == -1) {
             return null;
@@ -66,12 +67,12 @@ public abstract class File extends AssetPea {
     public abstract String getExtension();
 
     @Override
-    public void mapFrom(@NotNull Asset model) throws IOException {
+    public void mapFrom(@Nonnull Asset model) {
         path = model.getScript();
     }
 
     @Override
-    public void mapTo(@NotNull Asset model) throws IOException {
+    public void mapTo(@Nonnull Asset model) {
         model.setScriptFormat(ScriptFormat.TEXT_PLAIN);
         model.setScript(path);
     }

@@ -27,9 +27,11 @@ import com.zetyun.streamtau.streaming.runtime.mapper.SchemaStringfyFunction;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import org.apache.flink.api.common.functions.MapFunction;
 
+import javax.annotation.Nonnull;
+
 public class SchemaStringfyFunctionProvider implements MapFunctionProvider {
     @Override
-    public MapFunction<RtEvent, RtEvent> apply(Operator operator, TransformContext context) {
+    public MapFunction<RtEvent, RtEvent> apply(Operator operator, @Nonnull TransformContext context) {
         RtSchemaRoot schema = context.getInputSchema(operator);
         if (schema == null) {
             throw new MissingInputSchema(operator);

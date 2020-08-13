@@ -16,9 +16,12 @@
 
 package com.zetyun.streamtau.expr.exception;
 
+import lombok.Getter;
+
 public class InvalidIndexValue extends RuntimeException {
     private static final long serialVersionUID = 5206879022237837242L;
 
+    @Getter
     private final Object index;
 
     public InvalidIndexValue(Object index) {

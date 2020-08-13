@@ -18,6 +18,7 @@ package com.zetyun.streamtau.expr.runtime.evaluator.unary;
 
 import java.io.Serializable;
 
+@FunctionalInterface
 public interface UnaryEvaluator extends Serializable {
     Object eval(Object value);
 }

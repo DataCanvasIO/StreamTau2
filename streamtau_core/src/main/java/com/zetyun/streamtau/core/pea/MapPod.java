@@ -16,7 +16,6 @@
 
 package com.zetyun.streamtau.core.pea;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +38,7 @@ public class MapPod<I, T, P extends Pea<I, T>> implements Pod<I, T, P> {
     }
 
     @Override
-    public void save(P pea) throws IOException {
+    public void save(P pea) {
         peaMap.put(pea.getId(), pea);
     }
 }

@@ -18,11 +18,12 @@ package com.zetyun.streamtau.manager.utils;
 
 import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.StorageService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Nonnull;
 
 @Configuration
 public class ApplicationContextProvider implements ApplicationContextAware {
@@ -33,14 +34,16 @@ public class ApplicationContextProvider implements ApplicationContextAware {
     }
 
     @Override
-    public void setApplicationContext(@NotNull ApplicationContext ctx) throws BeansException {
+    public void setApplicationContext(@Nonnull ApplicationContext ctx) throws BeansException {
         context = ctx;
     }
 
+    @Nonnull
     public static StorageService getStorageService() {
         return context.getBean(StorageService.class);
     }
 
+    @Nonnull
     public static ServerService getServerService() {
         return context.getBean(ServerService.class);
     }

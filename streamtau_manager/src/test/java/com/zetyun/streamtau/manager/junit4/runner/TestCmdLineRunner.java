@@ -23,8 +23,6 @@ import com.zetyun.streamtau.manager.runner.RunnerFactory;
 import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,14 +46,6 @@ import static org.mockito.Mockito.when;
 public class TestCmdLineRunner {
     @MockBean
     private ServerService serverService;
-
-    @BeforeClass
-    public static void setupClass() {
-    }
-
-    @Before
-    public void setup() {
-    }
 
     @Test
     public void testRun() throws IOException {

@@ -17,22 +17,25 @@
 package com.zetyun.streamtau.expr.runtime.evaluator.tertiary;
 
 import com.zetyun.streamtau.expr.annotation.Evaluators;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @Evaluators(
     evaluatorInterface = TertiaryEvaluator.class,
     evaluatorFactory = TertiaryEvaluatorFactory.class,
     universalEvaluator = TertiaryUniversalEvaluator.class
 )
-public class StringEvaluators {
-    @Contract(pure = true)
-    public static @NotNull String replace(@NotNull String haystack, String needle, String needle2) {
+public final class StringEvaluators {
+    private StringEvaluators() {
+    }
+
+    @Nonnull
+    public static String replace(@Nonnull String haystack, String needle, String needle2) {
         return haystack.replace(needle, needle2);
     }
 
-    @Contract(pure = true)
-    public static @NotNull String substring(@NotNull String haystack, int start, int end) {
+    @Nonnull
+    public static String substring(@Nonnull String haystack, int start, int end) {
         return haystack.substring(start, end);
     }
 }

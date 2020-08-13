@@ -27,10 +27,15 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 
 import java.io.IOException;
 import java.util.List;
+import javax.annotation.Nonnull;
 
-public class ResourceUtils {
+public final class ResourceUtils {
     public static final ObjectMapper JSON_MAPPER = new JsonMapper();
 
+    private ResourceUtils() {
+    }
+
+    @Nonnull
     public static JobDefPod readJobDef(String classPath) throws IOException {
         return JobDefPod.fromJobDefinition(ResourceUtils.class.getResourceAsStream(classPath));
     }

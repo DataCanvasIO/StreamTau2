@@ -23,6 +23,7 @@ import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 
 import java.util.function.BiFunction;
 
+@FunctionalInterface
 public interface SinkFunctionProvider extends BiFunction<
     Operator,
     TransformContext,

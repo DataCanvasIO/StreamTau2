@@ -19,6 +19,10 @@ package com.zetyun.streamtau.streaming.transformer;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 
+import javax.annotation.Nonnull;
+
+@FunctionalInterface
 public interface Transformer {
-    StreamNode transform(Operator operator, TransformContext context);
+    @Nonnull
+    StreamNode transform(@Nonnull Operator operator, @Nonnull TransformContext context);
 }

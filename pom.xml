@@ -80,7 +80,8 @@
         <log4j2.version>2.10.0</log4j2.version>
         <logstash.version>6.2</logstash.version>
 
-        <!-- jetbrains -->
+        <!-- static check -->
+        <jsr305.version>3.0.2</jsr305.version>
         <jetbrains-annotations.version>19.0.0</jetbrains-annotations.version>
 
         <!-- plugins -->
@@ -197,7 +198,6 @@
                         <artifactId>log4j-slf4j-impl</artifactId>
                     </exclusion>
                 </exclusions>
-                <scope>test</scope>
             </dependency>
 
             <!-- jackson -->
@@ -293,7 +293,6 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <!-- citrus -->
@@ -301,19 +300,16 @@
                 <groupId>com.consol.citrus</groupId>
                 <artifactId>citrus-core</artifactId>
                 <version>${citrus.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.consol.citrus</groupId>
                 <artifactId>citrus-java-dsl</artifactId>
                 <version>${citrus.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.consol.citrus</groupId>
                 <artifactId>citrus-http</artifactId>
                 <version>${citrus.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <!-- logging -->
@@ -326,25 +322,21 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-to-slf4j</artifactId>
                 <version>${log4j2.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jul-to-slf4j</artifactId>
                 <version>${slf4j.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>log4j-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
@@ -360,15 +352,18 @@
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>${logstash.version}</version>
-                <scope>provided</scope>
             </dependency>
 
-            <!-- jetbrains -->
+            <!-- static check -->
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${jsr305.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
                 <version>${jetbrains-annotations.version}</version>
-                <scope>compile</scope>
             </dependency>
 
             <!-- this project -->
@@ -411,51 +406,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-
-        <!-- logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-to-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-        </dependency>
-
-        <!-- jetbrains -->
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -596,6 +546,7 @@
                 </executions>
                 <configuration>
                     <!-- set `skipITs` to skip integration test, `skipTest` skips unit test only. -->
+                    <!--suppress MavenModelInspection -->
                     <skipTests>${skipITs}</skipTests>
                 </configuration>
             </plugin>

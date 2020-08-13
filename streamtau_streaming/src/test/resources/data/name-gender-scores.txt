@@ -1,0 +1,2 @@
+{name: Alice, gender: F, scores: {maths: 100, english: 80}}
+{name: Bob, gender: M, scores: {maths: 90, english: 70}}

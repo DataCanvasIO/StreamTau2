@@ -21,12 +21,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.runtime.schema.RtSchema;
 import com.zetyun.streamtau.runtime.schema.RtSchemaDict;
+import com.zetyun.streamtau.runtime.schema.RtSchemaSingle;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTypes;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 @JsonTypeName("object")
 @JsonPropertyOrder({"type", "properties"})
@@ -40,9 +41,10 @@ public final class SchemaSpecObject extends SchemaSpec {
     private Boolean additionalProperties;
 
     @Override
-    public @NotNull RtSchema createRtSchema() {
+    @Nonnull
+    public RtSchema createRtSchema() {
         if (additionalProperties == null || additionalProperties) {
-            return new RtSchema(RtSchemaTypes.MAP);
+            return new RtSchemaSingle(RtSchemaTypes.MAP);
         }
         Map<String, RtSchema> children = new HashMap<>(properties.size());
         for (Map.Entry<String, SchemaSpec> entry : properties.entrySet()) {

@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import javax.annotation.Nonnull;
 
 public class SchemaArrayItemsDeserializer extends StdDeserializer<SchemaArrayItems> {
     private static final long serialVersionUID = 5780462898172671343L;
@@ -35,7 +35,7 @@ public class SchemaArrayItemsDeserializer extends StdDeserializer<SchemaArrayIte
 
     @Override
     public SchemaArrayItems deserialize(
-        @NotNull JsonParser parser,
+        @Nonnull JsonParser parser,
         DeserializationContext ctx
     ) throws IOException {
         JsonNode jsonNode = parser.readValueAsTree();

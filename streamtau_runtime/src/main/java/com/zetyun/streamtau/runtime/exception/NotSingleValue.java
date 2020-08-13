@@ -19,13 +19,15 @@ package com.zetyun.streamtau.runtime.exception;
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class NotSingleValue extends RuntimeException {
     private static final long serialVersionUID = -3358746522758589369L;
 
     @Getter
     private final RtEvent event;
 
-    public NotSingleValue(RtEvent event) {
+    public NotSingleValue(@Nonnull RtEvent event) {
         super(
             "Event is not a single value:\n" + event
         );

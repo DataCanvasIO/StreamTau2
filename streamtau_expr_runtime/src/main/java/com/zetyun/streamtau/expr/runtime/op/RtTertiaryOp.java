@@ -17,21 +17,22 @@
 package com.zetyun.streamtau.expr.runtime.op;
 
 import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.expr.runtime.evaluator.tertiary.TertiaryEvaluator;
-import com.zetyun.streamtau.runtime.context.ExecContext;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class RtTertiaryOp implements RtExpr {
-    private static final long serialVersionUID = -4277159169097503270L;
+import javax.annotation.Nonnull;
 
-    private final TertiaryEvaluator evaluator;
-    private final RtExpr para0;
-    private final RtExpr para1;
-    private final RtExpr para2;
+public abstract class RtTertiaryOp implements RtExpr {
+    private static final long serialVersionUID = -5718978850684184891L;
 
-    @Override
-    public Object eval(ExecContext etx) {
-        return evaluator.eval(para0.eval(etx), para1.eval(etx), para2.eval(etx));
+    @Nonnull
+    protected final RtExpr para0;
+    @Nonnull
+    protected final RtExpr para1;
+    @Nonnull
+    protected final RtExpr para2;
+
+    protected RtTertiaryOp(@Nonnull RtExpr para0, @Nonnull RtExpr para1, @Nonnull RtExpr para2) {
+        this.para0 = para0;
+        this.para1 = para1;
+        this.para2 = para2;
     }
 }

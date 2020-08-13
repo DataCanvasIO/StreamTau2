@@ -48,7 +48,7 @@ public class LocalFileStorageService implements StorageService {
     }
 
     @Override
-    public String createFile(String extension) throws IOException {
+    public String createFile(String extension) {
         return UUID.randomUUID().toString().replace('-', '_') + "." + extension;
     }
 

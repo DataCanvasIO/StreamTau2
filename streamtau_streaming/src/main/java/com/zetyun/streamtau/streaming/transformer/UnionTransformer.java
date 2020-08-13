@@ -23,10 +23,13 @@ import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.List;
+import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class UnionTransformer implements Transformer {
+    @Nonnull
     @Override
-    public StreamNode transform(Operator operator, TransformContext context) {
+    public StreamNode transform(@Nonnull Operator operator, @Nonnull TransformContext context) {
         List<StreamNode> nodes = context.getUpstreamNodes(operator);
         String schemaId = null;
         DataStream<RtEvent> dataStream = null;
@@ -47,6 +50,6 @@ public class UnionTransformer implements Transformer {
         }
         operator.setName(name.toString());
         operator.setSchemaId(schemaId);
-        return StreamNode.of(dataStream);
+        return StreamNode.of(Objects.requireNonNull(dataStream));
     }
 }

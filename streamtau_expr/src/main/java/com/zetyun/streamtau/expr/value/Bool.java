@@ -20,15 +20,19 @@ import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import javax.annotation.Nonnull;
+
 @RequiredArgsConstructor
 public class Bool extends Value {
     @Getter
     private final Boolean value;
 
+    @Nonnull
     public static Bool fromString(String text) {
         return new Bool(Boolean.parseBoolean(text));
     }
 
+    @Nonnull
     @Override
     public Class<?> calcType(CompileContext ctx) {
         return Boolean.class;

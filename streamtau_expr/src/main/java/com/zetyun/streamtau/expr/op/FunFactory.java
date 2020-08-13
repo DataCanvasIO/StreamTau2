@@ -29,12 +29,15 @@ import com.zetyun.streamtau.expr.runtime.evaluator.unary.mathematical.SinhEvalua
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.mathematical.TanEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.mathematical.TanhEvaluatorFactory;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
-public class FunFactory {
-    @Contract("_ -> new")
-    public static @NotNull UnaryOp getUnary(@NotNull String funName) {
+import javax.annotation.Nonnull;
+
+public final class FunFactory {
+    private FunFactory() {
+    }
+
+    @Nonnull
+    public static UnaryOp getUnary(@Nonnull String funName) {
         switch (funName) {
             case "abs":
                 return new UnaryOp(AbsEvaluatorFactory.INS);

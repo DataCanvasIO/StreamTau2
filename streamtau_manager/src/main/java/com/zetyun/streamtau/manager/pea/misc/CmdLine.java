@@ -25,7 +25,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @JsonTypeName("CmdLine")
 @EqualsAndHashCode(callSuper = true)
@@ -40,12 +41,12 @@ public class CmdLine extends AssetPea {
     private String cmd;
 
     @Override
-    public void mapFrom(@NotNull Asset model) {
+    public void mapFrom(@Nonnull Asset model) {
         cmd = model.getScript();
     }
 
     @Override
-    public void mapTo(@NotNull Asset model) {
+    public void mapTo(@Nonnull Asset model) {
         model.setScriptFormat(ScriptFormat.TEXT_PLAIN);
         model.setScript(cmd);
     }

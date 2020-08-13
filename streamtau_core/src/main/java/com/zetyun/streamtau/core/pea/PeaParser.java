@@ -30,14 +30,13 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PeaParser {
@@ -45,8 +44,7 @@ public class PeaParser {
     public static final PeaParser YAML = createYamlPeaParser();
     private final ObjectMapper mapper;
 
-    @Contract(pure = true)
-    public static PeaParser get(@NotNull ScriptFormat format) {
+    public static PeaParser get(@Nonnull ScriptFormat format) {
         switch (format) {
             case APPLICATION_JSON:
                 return JSON;
@@ -57,13 +55,14 @@ public class PeaParser {
         }
     }
 
-    private static @NotNull PeaParser createJsonPeaParser() {
+    @Nonnull
+    private static PeaParser createJsonPeaParser() {
         JsonMapper mapper = new JsonMapper();
         return new PeaParser(mapperWithCommonProperties(mapper));
     }
 
-    @Contract(" -> new")
-    private static @NotNull PeaParser createYamlPeaParser() {
+    @Nonnull
+    private static PeaParser createYamlPeaParser() {
         ObjectMapper mapper;
         YAMLFactory yamlFactory = new YAMLFactory()
             .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
@@ -71,12 +70,13 @@ public class PeaParser {
         return new PeaParser(mapperWithCommonProperties(mapper));
     }
 
-    private static ObjectMapper mapperWithCommonProperties(@NotNull ObjectMapper mapper) {
+    private static ObjectMapper mapperWithCommonProperties(@Nonnull ObjectMapper mapper) {
         return mapper
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
     }
 
+    @Nonnull
     public static Map<String, Class<?>> getSubtypeClasses(Class<?> clazz) {
         DeserializationConfig config = JSON.mapper.getDeserializationConfig();
         AnnotationIntrospector annotationIntrospector = config.getAnnotationIntrospector();

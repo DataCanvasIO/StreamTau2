@@ -17,21 +17,27 @@
 package com.zetyun.streamtau.streaming.transformer;
 
 import com.zetyun.streamtau.core.schema.SchemaSpec;
+import com.zetyun.streamtau.runtime.context.RtEvent;
+import com.zetyun.streamtau.runtime.schema.RtSchemaParser;
 import com.zetyun.streamtau.runtime.schema.RtSchemaRoot;
 import com.zetyun.streamtau.streaming.exception.InvalidNodeId;
+import com.zetyun.streamtau.streaming.exception.UnsupportedOperator;
 import com.zetyun.streamtau.streaming.model.Dag;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.model.UnionOperator;
+import com.zetyun.streamtau.streaming.runtime.mapper.SchemaStringfyFunction;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import com.zetyun.streamtau.streaming.transformer.node.UnionNodeId;
 import lombok.Getter;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class TransformContext {
     @Getter
@@ -44,7 +50,7 @@ public final class TransformContext {
     // Map of schema id to RtSchemaRoot
     private final Map<String, RtSchemaRoot> schemaMap;
 
-    public TransformContext(StreamExecutionEnvironment env, Dag dag) {
+    public TransformContext(@Nonnull StreamExecutionEnvironment env, @Nonnull Dag dag) {
         this.env = env;
         this.dag = dag;
         nodeMap = new HashMap<>(dag.getOperators().size() + 5);
@@ -52,29 +58,46 @@ public final class TransformContext {
         schemaMap = new HashMap<>(schemas == null ? 0 : schemas.size());
     }
 
-    public static void transform(StreamExecutionEnvironment env, Dag dag) {
+    public static void transform(@Nonnull StreamExecutionEnvironment env, @Nonnull Dag dag) {
+        env.setParallelism(dag.getValidParallelism());
         TransformContext context = new TransformContext(env, dag);
         context.transformDag();
     }
 
-    private StreamNode transformNode(Object nodeId) {
-        if (nodeId instanceof String) {
-            return TransformerFactory.get().transform(
-                nodeId,
-                dag.getOperator((String) nodeId),
-                this
-            );
-        } else if (nodeId instanceof UnionNodeId) {
-            return TransformerFactory.get().transform(
-                nodeId,
-                new UnionOperator((UnionNodeId) nodeId),
-                this
-            );
+    private void transformDag() {
+        for (String sinkId : dag.getSinkIds()) {
+            getStreamNode(sinkId);
         }
-        throw new InvalidNodeId(nodeId);
     }
 
-    private RtSchemaRoot getSchema(@NotNull String schemaId) {
+    @Nonnull
+    private StreamNode doTransform(Object nodeId, @Nonnull Operator operator) {
+        Transformer transformer = TransformerFactory.INS.getTransformer(operator.getFid());
+        if (transformer != null) {
+            StreamNode node = transformer.transform(operator, this);
+            node.setName(operator.getName());
+            node.setSchemaId(operator.getSchemaId());
+            nodeMap.put(nodeId, node);
+            return node;
+        }
+        throw new UnsupportedOperator(operator);
+    }
+
+    @Nonnull
+    private StreamNode transformNode(Object nodeId) {
+        Operator operator;
+        if (nodeId instanceof String) {
+            operator = dag.getOperator((String) nodeId);
+        } else if (nodeId instanceof UnionNodeId) {
+            operator = new UnionOperator((UnionNodeId) nodeId);
+        } else {
+            throw new InvalidNodeId(nodeId);
+        }
+        return doTransform(nodeId, operator);
+    }
+
+    @Nonnull
+    private RtSchemaRoot getSchema(@Nonnull String schemaId) {
         RtSchemaRoot schema = schemaMap.get(schemaId);
         if (schema == null) {
             SchemaSpec spec = dag.getSchema(schemaId);
@@ -84,11 +107,8 @@ public final class TransformContext {
         return schema;
     }
 
-    public void registerStreamNode(Object nodeId, StreamNode node) {
-        nodeMap.put(nodeId, node);
-    }
-
-    public StreamNode getStreamNode(@NotNull Object nodeId) {
+    @Nonnull
+    public StreamNode getStreamNode(@Nonnull Object nodeId) {
         StreamNode node = nodeMap.get(nodeId);
         if (node == null) {
             node = transformNode(nodeId);
@@ -97,24 +117,27 @@ public final class TransformContext {
         return node;
     }
 
-    public RtSchemaRoot getSchemaOf(@NotNull Operator operator) {
+    @Nullable
+    public RtSchemaRoot getSchemaOf(@Nonnull Operator operator) {
         String schemaId = operator.getSchemaId();
         return schemaId != null ? getSchema(schemaId) : null;
     }
 
-    public RtSchemaRoot getSchemaOf(@NotNull StreamNode node) {
+    @Nullable
+    public RtSchemaRoot getSchemaOf(@Nonnull StreamNode node) {
         String schemaId = node.getSchemaId();
         return schemaId != null ? getSchema(node.getSchemaId()) : null;
     }
 
-    public List<StreamNode> getUpstreamNodes(Operator operator) {
+    public List<StreamNode> getUpstreamNodes(@Nonnull Operator operator) {
         List<String> dependencies = operator.getValidDependencies();
         return dependencies.stream()
             .map(this::getStreamNode)
             .collect(Collectors.toList());
     }
 
-    public StreamNode getUnionizedUpstreamNode(Operator operator) {
+    @Nonnull
+    public StreamNode getUnionizedUpstreamNode(@Nonnull Operator operator) {
         List<String> dependencies = operator.getValidDependencies();
         if (dependencies.size() == 1) {
             return getStreamNode(dependencies.get(0));
@@ -123,13 +146,20 @@ public final class TransformContext {
         return getStreamNode(unionNodeId);
     }
 
-    public RtSchemaRoot getInputSchema(@NotNull Operator operator) {
+    @Nullable
+    public RtSchemaRoot getInputSchema(@Nonnull Operator operator) {
         return getSchemaOf(getUnionizedUpstreamNode(operator));
     }
 
-    private void transformDag() {
-        for (String sinkId : dag.getSinkIds()) {
-            getStreamNode(sinkId);
+    // TODO: if the new node should be registered to context
+    public DataStream<RtEvent> toSingleValueStream(StreamNode node) {
+        RtSchemaRoot schema = getSchemaOf(node);
+        if (schema == null) {
+            return node.asDataStream();
         }
+        final RtSchemaParser parser = RtSchemaParser.createJsonEventParser(schema);
+        return node.asDataStream()
+            .map(new SchemaStringfyFunction(parser))
+            .setParallelism(node.getParallelism());
     }
 }

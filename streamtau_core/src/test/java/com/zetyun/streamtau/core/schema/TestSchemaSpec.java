@@ -20,7 +20,6 @@ import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.runtime.schema.RtSchema;
 import com.zetyun.streamtau.runtime.schema.RtSchemaDict;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTuple;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -30,10 +29,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TestSchemaSpec {
-    @BeforeClass
-    public static void setupClass() {
-    }
-
     @Test
     public void testCreateIndex() throws IOException {
         SchemaSpec spec = PeaParser.YAML.parse(

@@ -19,13 +19,15 @@ package com.zetyun.streamtau.streaming.exception;
 import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class UnsupportedOperator extends RuntimeException {
     private static final long serialVersionUID = 7527987106409162477L;
 
     @Getter
     private final Operator operator;
 
-    public UnsupportedOperator(Operator operator) {
+    public UnsupportedOperator(@Nonnull Operator operator) {
         super(
             "Cannot transform operator with fid \"" + operator.getFid() + "\"."
         );

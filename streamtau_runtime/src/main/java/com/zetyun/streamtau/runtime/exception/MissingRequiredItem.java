@@ -19,6 +19,8 @@ package com.zetyun.streamtau.runtime.exception;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class MissingRequiredItem extends RuntimeException {
     private static final long serialVersionUID = 903768026611818763L;
 
@@ -27,7 +29,7 @@ public class MissingRequiredItem extends RuntimeException {
     @Getter
     private final int index;
 
-    public MissingRequiredItem(JsonNode jsonNode, int index) {
+    public MissingRequiredItem(@Nonnull JsonNode jsonNode, int index) {
         super(
             "Missing required item at index \"" + index + "\" in json node: " + jsonNode
         );

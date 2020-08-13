@@ -18,6 +18,7 @@ package com.zetyun.streamtau.expr.runtime.evaluator.binary;
 
 import java.io.Serializable;
 
+@FunctionalInterface
 public interface BinaryEvaluator extends Serializable {
     Object eval(Object value0, Object value1);
 }

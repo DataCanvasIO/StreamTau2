@@ -20,18 +20,20 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 public abstract class EvaluatorFactory<EvaluatorT> implements Serializable {
     private static final long serialVersionUID = -1064698862664341357L;
 
-    protected Map<String, EvaluatorT> lookup = new HashMap<>();
-    protected Map<String, Class<?>> types = new HashMap<>();
+    protected final Map<String, EvaluatorT> lookup;
+    protected final Map<String, Class<?>> types;
 
     protected EvaluatorFactory() {
         lookup = new HashMap<>();
         types = new HashMap<>();
     }
 
+    @Nonnull
     protected static String paraId(Class<?> paraType) {
         if (List.class.isAssignableFrom(paraType)) {
             return "List";

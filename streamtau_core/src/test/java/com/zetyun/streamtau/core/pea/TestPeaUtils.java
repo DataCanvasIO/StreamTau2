@@ -19,7 +19,6 @@ package com.zetyun.streamtau.core.pea;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import lombok.Setter;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -35,10 +34,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TestPeaUtils {
-    @Before
-    public void setup() {
-    }
-
     @Test
     public void testCollectPeaIdsSimple() {
         ClassA objA = new ClassA();

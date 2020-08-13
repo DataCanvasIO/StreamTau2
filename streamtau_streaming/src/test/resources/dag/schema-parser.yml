@@ -1,11 +1,9 @@
 operators:
   TheSource:
-    fid: prelude.in-place-source
-    name: ElementsSource
-    description: Source of some integers.
+    fid: prelude.local-file-source
+    name: LocalFileSource
     parallelism: 1
-    elements:
-      - '{name: Alice, gender: F, scores: {maths: 100, english: 80}}'
+    path: 'classpath:/data/name-gender-scores.txt'
   TheParser:
     fid: prelude.schema-parser
     name: SchemaParser

@@ -19,13 +19,15 @@ package com.zetyun.streamtau.streaming.exception;
 import com.zetyun.streamtau.streaming.model.Operator;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class OperatorHasNoSchema extends RuntimeException {
     private static final long serialVersionUID = -3575957181634403237L;
 
     @Getter
     private final Operator operator;
 
-    public OperatorHasNoSchema(Operator operator) {
+    public OperatorHasNoSchema(@Nonnull Operator operator) {
         super(
             "Must specify output schema for operator \"" + operator.getName() + "\"."
         );

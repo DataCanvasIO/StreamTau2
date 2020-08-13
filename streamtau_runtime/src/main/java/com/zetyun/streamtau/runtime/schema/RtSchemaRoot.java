@@ -19,6 +19,7 @@ package com.zetyun.streamtau.runtime.schema;
 import lombok.Getter;
 
 import java.io.Serializable;
+import javax.annotation.Nonnull;
 
 public class RtSchemaRoot implements Serializable {
     private static final long serialVersionUID = -5075934637295240308L;
@@ -28,7 +29,7 @@ public class RtSchemaRoot implements Serializable {
     @Getter
     private final int maxIndex;
 
-    public RtSchemaRoot(RtSchema root) {
+    public RtSchemaRoot(@Nonnull RtSchema root) {
         this.root = root;
         this.maxIndex = root.createIndex(0);
     }

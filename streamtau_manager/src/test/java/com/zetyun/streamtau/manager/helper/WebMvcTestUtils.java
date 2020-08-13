@@ -20,18 +20,24 @@ import com.zetyun.streamtau.manager.controller.advise.StreamTauResponse;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import javax.annotation.Nonnull;
+
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class WebMvcTestUtils {
+public final class WebMvcTestUtils {
+    private WebMvcTestUtils() {
+    }
+
     /**
      * Define 'success' for WebMvcTest.
      *
      * @return what 'success' means.
      */
+    @Nonnull
     public static ResultMatcher success() {
         return ResultMatcher.matchAll(
             status().isOk(),
@@ -46,6 +52,7 @@ public class WebMvcTestUtils {
      *
      * @return what 'errorCode' means.
      */
+    @Nonnull
     public static ResultMatcher errorCode(String code) {
         return ResultMatcher.matchAll(
             status().isOk(),

@@ -28,7 +28,6 @@ import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.impl.AssetServiceImpl;
 import com.zetyun.streamtau.runtime.ScriptFormat;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,10 +82,6 @@ public class TestAssetServiceImpl {
         cmdLineAsset.setAssetDescription("The first asset.");
         cmdLineAsset.setScriptFormat(ScriptFormat.TEXT_PLAIN);
         cmdLineAsset.setScript("ls");
-    }
-
-    @Before
-    public void setup() {
     }
 
     @Test

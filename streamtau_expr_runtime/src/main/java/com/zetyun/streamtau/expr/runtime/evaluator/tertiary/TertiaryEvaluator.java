@@ -18,6 +18,7 @@ package com.zetyun.streamtau.expr.runtime.evaluator.tertiary;
 
 import java.io.Serializable;
 
+@FunctionalInterface
 public interface TertiaryEvaluator extends Serializable {
     Object eval(Object value0, Object value1, Object value2);
 }

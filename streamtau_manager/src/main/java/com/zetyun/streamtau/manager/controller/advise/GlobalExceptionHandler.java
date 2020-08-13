@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,7 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 public class GlobalExceptionHandler {
     private static ResourceBundle errorMessages = null;
 
-    private static StreamTauResponse getApiResponse(String errorCode, Object[] args) {
+    @Nonnull
+    private static StreamTauResponse getApiResponse(String errorCode, @Nullable Object[] args) {
         loadMeassages();
         String message;
         try {
@@ -52,9 +55,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public StreamTauResponse requestExceptionHandler(
-        HttpServletRequest request,
+        @SuppressWarnings("unused") HttpServletRequest request,
         Exception exception,
-        HttpServletResponse response
+        @SuppressWarnings("unused") HttpServletResponse response
     ) {
         log.error("Exception thrown: ", exception);
         loadMeassages();
@@ -63,9 +66,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {StreamTauException.class})
     public StreamTauResponse streamTauExceptionHandler(
-        HttpServletRequest request,
+        @SuppressWarnings("unused") HttpServletRequest request,
         Exception exception,
-        HttpServletResponse response
+        @SuppressWarnings("unused") HttpServletResponse response
     ) {
         String errorCode = ((StreamTauException) exception).getErrorCode();
         Object[] args = ((StreamTauException) exception).getArgs();
@@ -74,9 +77,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class})
     public StreamTauResponse globalExceptionHandler(
-        HttpServletRequest request,
+        @SuppressWarnings("unused") HttpServletRequest request,
         Exception exception,
-        HttpServletResponse response
+        @SuppressWarnings("unused") HttpServletResponse response
     ) {
         log.error("Exception thrown: ", exception);
         return getApiResponse("100000", null);

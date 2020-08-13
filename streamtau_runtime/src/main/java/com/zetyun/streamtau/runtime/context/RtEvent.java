@@ -18,6 +18,9 @@ package com.zetyun.streamtau.runtime.context;
 
 import com.zetyun.streamtau.runtime.exception.NotSingleValue;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class RtEvent implements ExecContext {
     private static final long serialVersionUID = 4296554739886078865L;
 
@@ -27,6 +30,7 @@ public class RtEvent implements ExecContext {
         indexedVars = new Object[numIndexedVars];
     }
 
+    @Nonnull
     public static RtEvent singleValue(Object value) {
         RtEvent event = new RtEvent(1);
         event.set(0, value);
@@ -46,7 +50,7 @@ public class RtEvent implements ExecContext {
     }
 
     @Override
-    public void set(int index, Object value) {
+    public void set(int index, @Nullable Object value) {
         indexedVars[index] = value;
     }
 

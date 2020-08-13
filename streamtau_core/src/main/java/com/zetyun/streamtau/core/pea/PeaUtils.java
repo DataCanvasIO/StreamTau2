@@ -23,7 +23,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-public class PeaUtils {
+public final class PeaUtils {
+    private PeaUtils() {
+    }
+
     @SuppressWarnings("unchecked")
     public static <I> void replacePeaIds(Object obj, Function<I, I> replaceFun) {
         if (obj == null) {

@@ -27,8 +27,6 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -39,6 +37,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
@@ -65,18 +65,21 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     private static final String TYPES_VAR_NAME = "types";
     private static final String INSTANCE_VAR_NAME = "INS";
 
-    private static @NotNull String getSimpleName(@NotNull TypeName type) {
+    @Nonnull
+    private static String getSimpleName(@Nonnull TypeName type) {
         String name = type.toString()
             .replaceAll("<.*>", "")
             .replace("[]", "Array");
         return name.substring(name.lastIndexOf('.') + 1);
     }
 
-    private static @NotNull String getClassName(String name, String suffix) {
+    @Nonnull
+    private static String getClassName(String name, String suffix) {
         return StringUtils.capitalize(name) + suffix;
     }
 
-    private static @NotNull String getSubPackageName(@NotNull Element element) {
+    @Nonnull
+    private static String getSubPackageName(@Nonnull Element element) {
         String name = element.getSimpleName().toString();
         int pos = name.indexOf("Evaluators");
         if (pos > 0) {
@@ -85,18 +88,18 @@ public class EvaluatorsProcessor extends AbstractProcessor {
         return name.toLowerCase();
     }
 
-    private static TypeName getBoxedType(@NotNull TypeName type) {
+    private static TypeName getBoxedType(@Nonnull TypeName type) {
         return type.isPrimitive() ? type.box() : type;
     }
 
-    private static List<String> getParaNameList(@NotNull ExecutableElement element) {
+    private static List<String> getParaNameList(@Nonnull ExecutableElement element) {
         return element.getParameters().stream()
             .map(VariableElement::getSimpleName)
             .map(Name::toString)
             .collect(Collectors.toList());
     }
 
-    private static List<TypeName> getParaTypeList(@NotNull ExecutableElement element) {
+    private static List<TypeName> getParaTypeList(@Nonnull ExecutableElement element) {
         return element.getParameters().stream()
             .map(VariableElement::asType)
             .map(TypeName::get)
@@ -104,7 +107,8 @@ public class EvaluatorsProcessor extends AbstractProcessor {
             .collect(Collectors.toList());
     }
 
-    private static @NotNull String getEvaluatorId(List<TypeName> paraTypes) {
+    @Nonnull
+    private static String getEvaluatorId(@Nullable List<TypeName> paraTypes) {
         StringBuilder b = new StringBuilder();
         if (paraTypes != null) {
             for (TypeName type : paraTypes) {
@@ -115,7 +119,8 @@ public class EvaluatorsProcessor extends AbstractProcessor {
         return "Universal";
     }
 
-    private static @NotNull FieldSpec serialVersionUid() {
+    @Nonnull
+    private static FieldSpec serialVersionUid() {
         return FieldSpec.builder(
             TypeName.LONG,
             "serialVersionUID",
@@ -161,7 +166,7 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     private static void codeConvertParas(
         CodeBlock.Builder codeBuilder,
         List<String> paraNames,
-        @NotNull List<TypeName> paras,
+        @Nonnull List<TypeName> paras,
         List<TypeName> newParas
     ) {
         boolean addComma = false;
@@ -174,10 +179,11 @@ public class EvaluatorsProcessor extends AbstractProcessor {
         }
     }
 
-    private static @Nullable ExecutableElement getMethodByNameAndParaTypes(
-        @NotNull TypeElement element,
+    @Nullable
+    private static ExecutableElement getMethodByNameAndParaTypes(
+        @Nonnull TypeElement element,
         String name,
-        List<TypeName> paraTypes
+        @Nullable List<TypeName> paraTypes
     ) {
         List<ExecutableElement> methods = ElementFilter.methodsIn(element.getEnclosedElements());
         for (ExecutableElement m : methods) {
@@ -196,6 +202,7 @@ public class EvaluatorsProcessor extends AbstractProcessor {
         return null;
     }
 
+    @Nullable
     private static ExecutableElement getMethodByName(
         TypeElement element,
         String name
@@ -203,7 +210,8 @@ public class EvaluatorsProcessor extends AbstractProcessor {
         return getMethodByNameAndParaTypes(element, name, null);
     }
 
-    private @Nullable AnnotationMirror getAnnotationMirror(Element element, Class<?> annotationClass) {
+    @Nullable
+    private AnnotationMirror getAnnotationMirror(Element element, Class<?> annotationClass) {
         for (AnnotationMirror am : processingEnv.getElementUtils().getAllAnnotationMirrors(element)) {
             if (am.getAnnotationType().toString().equals(annotationClass.getName())) {
                 return am;
@@ -213,7 +221,8 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     }
 
     // Helper to get annotation value of type `Class<?>`
-    private @Nullable AnnotationValue getAnnotationValue(AnnotationMirror annotationMirror, String methodName) {
+    @Nullable
+    private AnnotationValue getAnnotationValue(AnnotationMirror annotationMirror, String methodName) {
         if (annotationMirror != null) {
             for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry
                 : annotationMirror.getElementValues().entrySet()) {
@@ -237,7 +246,8 @@ public class EvaluatorsProcessor extends AbstractProcessor {
         super.init(processingEnv);
     }
 
-    private @Nullable TypeElement getTypeElementFromAnnotation(
+    @Nullable
+    private TypeElement getTypeElementFromAnnotation(
         AnnotationMirror annotationMirror,
         String methodName
     ) {
@@ -257,22 +267,22 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     }
 
     @Override
-    public boolean process(@NotNull Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    public boolean process(@Nonnull Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         for (TypeElement annotation : annotations) {
             if (annotation.getQualifiedName().contentEquals(Evaluators.class.getCanonicalName())) {
                 Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
                 for (Element element : elements) {
                     AnnotationMirror annotationMirror = getAnnotationMirror(element, Evaluators.class);
                     TypeElement evaluatorInterface = getTypeElementFromAnnotation(
-                        annotationMirror,
+                        Objects.requireNonNull(annotationMirror),
                         "evaluatorInterface"
                     );
                     TypeElement evaluatorFactory = getTypeElementFromAnnotation(
-                        annotationMirror,
+                        Objects.requireNonNull(annotationMirror),
                         "evaluatorFactory"
                     );
                     TypeElement universalEvaluator = getTypeElementFromAnnotation(
-                        annotationMirror,
+                        Objects.requireNonNull(annotationMirror),
                         "universalEvaluator"
                     );
                     if (evaluatorInterface == null
@@ -304,7 +314,7 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     }
 
     private void generateEvaluatorClassFile(
-        @NotNull EvaluatorInfo info,
+        @Nonnull EvaluatorInfo info,
         String className,
         MethodSpec evalSpec
     ) {
@@ -321,9 +331,9 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     }
 
     private void generateEvaluator(
-        @NotNull ExecutableElement element,
-        @NotNull EvaluatorInfo info,
-        List<TypeName> newParas
+        @Nonnull ExecutableElement element,
+        @Nonnull EvaluatorInfo info,
+        @Nullable List<TypeName> newParas
     ) {
         String methodName = element.getSimpleName().toString();
         Map<String, TypeName> evaluatorMap = info.getEvaluatorMap()
@@ -364,7 +374,7 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     private void tryDescentType(
         ExecutableElement element,
         EvaluatorInfo info,
-        @NotNull List<TypeName> newParas,
+        @Nonnull List<TypeName> newParas,
         int pos,
         TypeName newTypeName
     ) {
@@ -377,7 +387,7 @@ public class EvaluatorsProcessor extends AbstractProcessor {
     private void induceEvaluatorsRecursive(
         ExecutableElement element,
         EvaluatorInfo info,
-        @NotNull List<TypeName> newParas,
+        @Nonnull List<TypeName> newParas,
         int pos
     ) {
         if (pos >= newParas.size()) {
@@ -398,7 +408,7 @@ public class EvaluatorsProcessor extends AbstractProcessor {
         }
     }
 
-    private void generateEvaluatorFactories(@NotNull EvaluatorInfo info) {
+    private void generateEvaluatorFactories(@Nonnull EvaluatorInfo info) {
         String packageName = info.getPackageName();
         TypeElement evaluatorFactory = info.getEvaluatorFactory();
         TypeElement universalEvaluator = info.getUniversalEvaluator();
@@ -446,7 +456,7 @@ public class EvaluatorsProcessor extends AbstractProcessor {
         }
     }
 
-    private void generateEvaluators(@NotNull Element element, EvaluatorInfo info) {
+    private void generateEvaluators(@Nonnull Element element, EvaluatorInfo info) {
         Element pkg = element.getEnclosingElement();
         if (pkg.getKind() != ElementKind.PACKAGE) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,

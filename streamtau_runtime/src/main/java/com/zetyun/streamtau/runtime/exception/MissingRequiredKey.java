@@ -19,6 +19,8 @@ package com.zetyun.streamtau.runtime.exception;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+
 public class MissingRequiredKey extends RuntimeException {
     private static final long serialVersionUID = -2228793478298384868L;
 
@@ -27,7 +29,7 @@ public class MissingRequiredKey extends RuntimeException {
     @Getter
     private final String key;
 
-    public MissingRequiredKey(JsonNode jsonNode, String key) {
+    public MissingRequiredKey(@Nonnull JsonNode jsonNode, @Nonnull String key) {
         super(
             "Missing required key \"" + key + "\" in json node: " + jsonNode
         );

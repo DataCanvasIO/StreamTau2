@@ -20,6 +20,7 @@ import com.zetyun.streamtau.runtime.context.RtEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 @RequiredArgsConstructor
 public final class DataStreamNode extends StreamNode {
@@ -29,5 +30,15 @@ public final class DataStreamNode extends StreamNode {
     @Override
     public DataStream<RtEvent> asDataStream() {
         return dataStream;
+    }
+
+    @Override
+    public int getParallelism() {
+        return dataStream.getParallelism();
+    }
+
+    @Override
+    public StreamExecutionEnvironment getEnv() {
+        return dataStream.getExecutionEnvironment();
     }
 }

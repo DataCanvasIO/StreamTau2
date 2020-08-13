@@ -18,7 +18,8 @@ package com.zetyun.streamtau.runtime.exception;
 
 import com.zetyun.streamtau.runtime.schema.RtSchema;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class UnsupportedSchemaType extends RuntimeException {
     private static final long serialVersionUID = 1019312589286975591L;
@@ -26,7 +27,7 @@ public class UnsupportedSchemaType extends RuntimeException {
     @Getter
     private final RtSchema schemaNode;
 
-    public UnsupportedSchemaType(@NotNull RtSchema schemaNode) {
+    public UnsupportedSchemaType(@Nonnull RtSchema schemaNode) {
         super(
             "Unsupported schema type \"" + schemaNode.getType() + "\"."
         );

@@ -28,7 +28,10 @@ import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.JSON_MAPPER;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class Assets {
+public final class Assets {
+    private Assets() {
+    }
+
     public static String idVarName(String id) {
         return "asset_id" + "_" + id;
     }

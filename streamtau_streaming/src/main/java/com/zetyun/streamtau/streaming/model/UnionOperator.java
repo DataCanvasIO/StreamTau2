@@ -20,10 +20,12 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.streaming.transformer.node.UnionNodeId;
 import lombok.ToString;
 
+import javax.annotation.Nonnull;
+
 @JsonTypeName("internal.union")
 @ToString(callSuper = true)
 public class UnionOperator extends Operator {
-    public UnionOperator(UnionNodeId nodeId) {
+    public UnionOperator(@Nonnull UnionNodeId nodeId) {
         setDependencies(nodeId.getIdList());
     }
 }

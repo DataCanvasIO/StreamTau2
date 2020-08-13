@@ -22,10 +22,12 @@ import com.zetyun.streamtau.expr.runtime.RtConst;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.UnaryEvaluator;
 import com.zetyun.streamtau.expr.runtime.evaluator.unary.UnaryEvaluatorFactory;
-import com.zetyun.streamtau.expr.runtime.op.RtUnaryOp;
+import com.zetyun.streamtau.expr.runtime.op.RtUnaryOpWithEvaluator;
 import com.zetyun.streamtau.runtime.context.CompileContext;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
+import javax.annotation.Nonnull;
 
 @RequiredArgsConstructor
 public class UnaryOp extends AbstractExpr {
@@ -33,17 +35,19 @@ public class UnaryOp extends AbstractExpr {
     @Setter
     protected Expr expr;
 
+    @Nonnull
     @Override
     public RtExpr compileIn(CompileContext ctx) {
         RtExpr rtExpr = expr.compileIn(ctx);
         UnaryEvaluator evaluator = factory.getEvaluator(expr.typeIn(ctx));
-        RtUnaryOp rt = new RtUnaryOp(evaluator, rtExpr);
+        RtUnaryOpWithEvaluator rt = new RtUnaryOpWithEvaluator(evaluator, rtExpr);
         if (rtExpr instanceof RtConst) {
             return new RtConst(rt.eval(null));
         }
         return rt;
     }
 
+    @Nonnull
     @Override
     public Class<?> calcType(CompileContext ctx) {
         return factory.getType(expr.typeIn(ctx));

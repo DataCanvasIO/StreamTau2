@@ -19,7 +19,8 @@ package com.zetyun.streamtau.expr.runtime.evaluator.binary;
 import com.zetyun.streamtau.expr.runtime.exception.FailGetBinaryEvaluator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,7 +30,7 @@ public class BinaryUniversalEvaluator implements BinaryEvaluator {
     private final BinaryEvaluatorFactory factory;
 
     @Override
-    public Object eval(@NotNull Object value0, @NotNull Object value1) {
+    public Object eval(@Nonnull Object value0, @Nonnull Object value1) {
         Class<?> paraType0 = value0.getClass();
         Class<?> paraType1 = value1.getClass();
         BinaryEvaluator evaluator = factory.getEvaluator(paraType0, paraType1);

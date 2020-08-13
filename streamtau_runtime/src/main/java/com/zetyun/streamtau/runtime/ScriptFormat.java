@@ -18,7 +18,8 @@ package com.zetyun.streamtau.runtime;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @Getter
 public enum ScriptFormat {
@@ -33,7 +34,8 @@ public enum ScriptFormat {
         this.value = value;
     }
 
-    public static @NotNull ScriptFormat fromString(String str) {
+    @Nonnull
+    public static ScriptFormat fromString(String str) {
         for (ScriptFormat scriptFormat : ScriptFormat.values()) {
             if (str.equals(scriptFormat.getValue())) {
                 return scriptFormat;

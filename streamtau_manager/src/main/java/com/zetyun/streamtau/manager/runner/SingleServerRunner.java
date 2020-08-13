@@ -29,11 +29,12 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.annotation.Nonnull;
 
 @Slf4j
 public class SingleServerRunner implements Runner {
     @Override
-    public void run(Job job, Runnable onFinish) throws IOException {
+    public void run(@Nonnull Job job, Runnable onFinish) throws IOException {
         JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
         SingleServerApp app = (SingleServerApp) pod.getApp();
         Server server = (Server) pod.load(app.getServer());

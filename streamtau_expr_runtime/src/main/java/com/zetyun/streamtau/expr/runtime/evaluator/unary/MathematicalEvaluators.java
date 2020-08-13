@@ -23,7 +23,10 @@ import com.zetyun.streamtau.expr.annotation.Evaluators;
     evaluatorFactory = UnaryEvaluatorFactory.class,
     universalEvaluator = UnaryUniversalEvaluator.class
 )
-public class MathematicalEvaluators {
+public final class MathematicalEvaluators {
+    private MathematicalEvaluators() {
+    }
+
     public static int abs(int num) {
         return Math.abs(num);
     }

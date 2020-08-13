@@ -37,6 +37,9 @@ public class Dag {
     @JsonProperty("schemas")
     @Getter
     private Map<String, SchemaSpec> schemas;
+    @JsonProperty("parallelism")
+    @Getter
+    private Integer parallelism;
 
     @Override
     public String toString() {
@@ -74,5 +77,10 @@ public class Dag {
             throw new MissingSchema(schemaId);
         }
         return schemas.get(schemaId);
+    }
+
+    @JsonIgnore
+    public int getValidParallelism() {
+        return parallelism != null ? parallelism : 1;
     }
 }
