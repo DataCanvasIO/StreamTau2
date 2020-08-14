@@ -1,0 +1,8 @@
+{"gender":"F","name":"Alice","selectedScore":80,"selectedSubject":"English"}
+{"gender":"M","name":"Bob","selectedScore":70,"selectedSubject":"English"}
+{"gender":"M","name":"Cooper","selectedScore":78,"selectedSubject":"English"}
+{"gender":"F","name":"Daisy","selectedScore":94,"selectedSubject":"English"}
+{"gender":"F","name":"Alice","selectedScore":100,"selectedSubject":"Maths"}
+{"gender":"M","name":"Bob","selectedScore":90,"selectedSubject":"Maths"}
+{"gender":"M","name":"Cooper","selectedScore":62,"selectedSubject":"Maths"}
+{"gender":"F","name":"Daisy","selectedScore":75,"selectedSubject":"Maths"}

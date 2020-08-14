@@ -1,2 +1,4 @@
 {name: Alice, gender: F, scores: {maths: 100, english: 80}}
 {name: Bob, gender: M, scores: {maths: 90, english: 70}}
+{name: Cooper, gender: M, scores: {maths: 62, english: 78}}
+{name: Daisy, gender: F, scores: {maths: 75, english: 94}}

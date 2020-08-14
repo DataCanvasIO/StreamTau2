@@ -115,8 +115,12 @@ public class TestRun {
     @Test
     public void testSchemaMapper() throws Exception {
         runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-mapper.yml");
-        List<RtEvent> values = TestCollectSinkFunction.getValues();
-        assertThat(values.get(0).getSingleValue(),
-            is("{\"gender\":\"F\",\"name\":\"Alice\",\"totalScore\":180}"));
+        checkCollectSinkAgainstFile("/result/name-gender-total-score.json.txt");
+    }
+
+    @Test
+    public void testSchemaMapperUnion() throws Exception {
+        runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-mapper-union.yml");
+        checkCollectSinkAgainstFile("/result/name-gender-selected-score.json.txt");
     }
 }

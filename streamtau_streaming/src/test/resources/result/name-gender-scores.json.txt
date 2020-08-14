@@ -1,2 +1,4 @@
 {"gender":"F","name":"Alice","scores":{"english":80,"maths":100}}
 {"gender":"M","name":"Bob","scores":{"english":70,"maths":90}}
+{"gender":"M","name":"Cooper","scores":{"english":78,"maths":62}}
+{"gender":"F","name":"Daisy","scores":{"english":94,"maths":75}}

@@ -8,7 +8,6 @@ operators:
     fid: prelude.schema-parser
     name: SchemaParser
     description: Parsing event according schema.
-    parallelism: 1
     dependencies:
       - TheSource
     schemaId: A
@@ -17,7 +16,6 @@ operators:
     fid: test.collect-sink
     name: CollectSink
     description: Sink to collect the result.
-    parallelism: 1
     dependencies:
       - TheParser
 schemas:

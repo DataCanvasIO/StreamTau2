@@ -1,0 +1,4 @@
+{"gender":"F","name":"Alice","totalScore":180}
+{"gender":"M","name":"Bob","totalScore":160}
+{"gender":"M","name":"Cooper","totalScore":140}
+{"gender":"F","name":"Daisy","totalScore":169}

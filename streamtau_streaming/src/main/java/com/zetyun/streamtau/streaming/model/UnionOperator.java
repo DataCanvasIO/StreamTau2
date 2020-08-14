@@ -26,6 +26,8 @@ import javax.annotation.Nonnull;
 @ToString(callSuper = true)
 public class UnionOperator extends Operator {
     public UnionOperator(@Nonnull UnionNodeId nodeId) {
+        super();
+        setFid("internal.union");
         setDependencies(nodeId.getIdList());
     }
 }

@@ -12,10 +12,9 @@ operators:
       - TheSource
     schemaId: A
     format: application/yaml
-  TheMapper:
+  TheMapperMaths:
     fid: prelude.schema-mapper
     name: ScheamMapper
-    description: Map event from one schema to another schema.
     dependencies:
       - TheParser
     schemaId: B
@@ -24,14 +23,32 @@ operators:
         value: name
       - target: gender
         value: gender
-      - target: totalScore
-        value: scores.maths + scores.english
+      - target: selectedSubject
+        value: '"Maths"'
+      - target: selectedScore
+        value: scores.maths
+  TheMapperEnglish:
+    fid: prelude.schema-mapper
+    name: ScheamMapper
+    dependencies:
+      - TheParser
+    schemaId: B
+    mappings:
+      - target: name
+        value: name
+      - target: gender
+        value: gender
+      - target: selectedSubject
+        value: '"English"'
+      - target: selectedScore
+        value: scores.english
   TheSink:
     fid: test.collect-sink
     name: CollectSink
     description: Sink to collect the result.
     dependencies:
-      - TheMapper
+      - TheMapperMaths
+      - TheMapperEnglish
 schemas:
   A:
     type: object
@@ -57,5 +74,7 @@ schemas:
         type: string
       gender:
         type: string
-      totalScore:
+      selectedSubject:
+        type: string
+      selectedScore:
         type: integer

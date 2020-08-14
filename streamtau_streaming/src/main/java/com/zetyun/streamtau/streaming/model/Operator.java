@@ -58,6 +58,7 @@ import javax.annotation.Nullable;
 public abstract class Operator {
     @JsonProperty("fid")
     @Getter
+    @Setter
     private String fid;
     @JsonProperty("name")
     @Getter
