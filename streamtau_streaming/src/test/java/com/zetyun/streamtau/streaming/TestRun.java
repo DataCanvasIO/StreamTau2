@@ -123,4 +123,10 @@ public class TestRun {
         runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-mapper-union.yml");
         checkCollectSinkAgainstFile("/result/name-gender-selected-score.json.txt");
     }
+
+    @Test
+    public void testExprFilter() throws Exception {
+        runCase(ScriptFormat.APPLICATION_YAML, "/dag/expr-filter.yml");
+        checkCollectSinkAgainstFile("/result/name-gender-scores-filtered.json.txt");
+    }
 }

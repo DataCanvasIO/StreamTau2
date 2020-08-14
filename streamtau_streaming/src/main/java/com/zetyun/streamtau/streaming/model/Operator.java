@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.streaming.exception.OperatorHasNoDependency;
+import com.zetyun.streamtau.streaming.model.filter.ExprFilter;
 import com.zetyun.streamtau.streaming.model.mapper.SchemaMapper;
 import com.zetyun.streamtau.streaming.model.mapper.SchemaParser;
 import com.zetyun.streamtau.streaming.model.mapper.SchemaStringfy;
@@ -51,6 +52,8 @@ import javax.annotation.Nullable;
     @JsonSubTypes.Type(SchemaParser.class),
     @JsonSubTypes.Type(SchemaStringfy.class),
     @JsonSubTypes.Type(SchemaMapper.class),
+    // Filters
+    @JsonSubTypes.Type(ExprFilter.class),
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ToString

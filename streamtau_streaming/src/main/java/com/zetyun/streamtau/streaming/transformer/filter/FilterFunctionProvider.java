@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.sink;
+package com.zetyun.streamtau.streaming.transformer.filter;
 
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
-import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
-import org.apache.flink.streaming.api.datastream.DataStreamSink;
+import org.apache.flink.api.common.functions.FilterFunction;
 
-import javax.annotation.Nonnull;
+import java.util.function.BiFunction;
 
-public class PrintSinkTransformer implements GeneralSinkTransformer {
-    @Nonnull
-    @Override
-    public DataStreamSink<RtEvent> transformNode(
-        @Nonnull StreamNode node,
-        @Nonnull Operator operator,
-        @Nonnull TransformContext context
-    ) {
-        return context.toSingleValueStream(node)
-            .print();
-    }
+@FunctionalInterface
+public interface FilterFunctionProvider extends BiFunction<
+    Operator,
+    TransformContext,
+    FilterFunction<RtEvent>
+    > {
 }

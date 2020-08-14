@@ -14,25 +14,33 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.sink;
+package com.zetyun.streamtau.streaming.transformer.filter;
 
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
+import com.zetyun.streamtau.streaming.transformer.SingleOutputTransformer;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
-import org.apache.flink.streaming.api.datastream.DataStreamSink;
+import lombok.RequiredArgsConstructor;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 
 import javax.annotation.Nonnull;
 
-public class PrintSinkTransformer implements GeneralSinkTransformer {
+@RequiredArgsConstructor
+public class FilterTransformer implements SingleOutputTransformer {
+    private final FilterFunctionProvider filterFunctionProvider;
+
     @Nonnull
     @Override
-    public DataStreamSink<RtEvent> transformNode(
+    public SingleOutputStreamOperator<RtEvent> transformNode(
         @Nonnull StreamNode node,
         @Nonnull Operator operator,
         @Nonnull TransformContext context
     ) {
-        return context.toSingleValueStream(node)
-            .print();
+        if (operator.getSchemaId() == null) {
+            operator.setSchemaId(node.getSchemaId());
+        }
+        return node.asDataStream()
+            .filter(filterFunctionProvider.apply(operator, context));
     }
 }

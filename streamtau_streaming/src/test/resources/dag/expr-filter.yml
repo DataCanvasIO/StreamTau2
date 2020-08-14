@@ -1,0 +1,45 @@
+parallelism: 1
+operators:
+  TheSource:
+    fid: prelude.local-file-source
+    name: LocalFileSource
+    path: 'classpath:/data/name-gender-scores.txt'
+  TheParser:
+    fid: prelude.schema-parser
+    name: SchemaParser
+    description: Parsing event according schema.
+    dependencies:
+      - TheSource
+    schemaId: A
+    format: application/yaml
+  TheFilter:
+    fid: prelude.expr-filter
+    name: ExprFilter
+    description: Filter in events.
+    dependencies:
+      - TheParser
+    expr:
+      scores.maths + scores.english > 160
+  TheSink:
+    fid: test.collect-sink
+    name: CollectSink
+    description: Sink to collect the result.
+    dependencies:
+      - TheFilter
+schemas:
+  A:
+    type: object
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      gender:
+        type: string
+      scores:
+        type: object
+        additionalProperties: false
+        properties:
+          maths:
+            type: integer
+          english:
+            type: integer

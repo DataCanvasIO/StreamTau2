@@ -16,6 +16,8 @@
 
 package com.zetyun.streamtau.streaming.transformer;
 
+import com.zetyun.streamtau.streaming.transformer.filter.ExprFilterFunctionProvider;
+import com.zetyun.streamtau.streaming.transformer.filter.FilterTransformer;
 import com.zetyun.streamtau.streaming.transformer.mapper.MapperTransformer;
 import com.zetyun.streamtau.streaming.transformer.mapper.SchemaMapperFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.mapper.SchemaParserFunctionProvider;
@@ -58,6 +60,9 @@ public class TransformerFactory {
             new MapperTransformer(new SchemaStringfyFunctionProvider()));
         registerTransformer("prelude.schema-mapper",
             new MapperTransformer(new SchemaMapperFunctionProvider()));
+        // Filters
+        registerTransformer("prelude.expr-filter",
+            new FilterTransformer(new ExprFilterFunctionProvider()));
     }
 
     private void registerTransformer(String type, Transformer transformer) {

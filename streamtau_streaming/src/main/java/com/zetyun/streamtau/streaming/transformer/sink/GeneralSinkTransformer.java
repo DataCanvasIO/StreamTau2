@@ -19,20 +19,28 @@ package com.zetyun.streamtau.streaming.transformer.sink;
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
+import com.zetyun.streamtau.streaming.transformer.Transformer;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 
 import javax.annotation.Nonnull;
 
-public class PrintSinkTransformer implements GeneralSinkTransformer {
+@FunctionalInterface
+public interface GeneralSinkTransformer extends Transformer {
     @Nonnull
-    @Override
-    public DataStreamSink<RtEvent> transformNode(
+    DataStreamSink<RtEvent> transformNode(
         @Nonnull StreamNode node,
         @Nonnull Operator operator,
         @Nonnull TransformContext context
-    ) {
-        return context.toSingleValueStream(node)
-            .print();
+    );
+
+    @Nonnull
+    @Override
+    default StreamNode transform(@Nonnull Operator operator, @Nonnull TransformContext context) {
+        StreamNode node = context.getUnionizedUpstreamNode(operator);
+        DataStreamSink<RtEvent> stream = transformNode(node, operator, context);
+        Integer parallelism = operator.getParallelism();
+        stream.setParallelism(parallelism == null ? node.getParallelism() : parallelism);
+        return StreamNode.of(stream);
     }
 }
