@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.runtime;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
@@ -34,6 +35,7 @@ public enum ScriptFormat {
         this.value = value;
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     @Nonnull
     public static ScriptFormat fromString(String str) {
         for (ScriptFormat scriptFormat : ScriptFormat.values()) {

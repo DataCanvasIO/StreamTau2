@@ -38,7 +38,7 @@ public class JobDefPod extends MapPod<String, String, AssetPea> {
         this.appId = appId;
     }
 
-    @JsonCreator
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public JobDefPod(
         @JsonProperty(value = "appId", required = true) String appId,
         @JsonProperty(value = "map", required = true) Map<String, AssetPea> peaMap

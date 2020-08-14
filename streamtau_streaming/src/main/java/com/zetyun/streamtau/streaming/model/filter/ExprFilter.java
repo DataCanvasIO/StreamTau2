@@ -18,6 +18,7 @@ package com.zetyun.streamtau.streaming.model.filter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.expr.core.Expr;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -26,5 +27,5 @@ import lombok.ToString;
 public class ExprFilter extends Filter {
     @JsonProperty("expr")
     @Getter
-    private String expr;
+    private Expr expr;
 }

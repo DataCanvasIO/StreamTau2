@@ -17,6 +17,7 @@
 package com.zetyun.streamtau.streaming.model.mapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zetyun.streamtau.expr.core.Expr;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -24,8 +25,8 @@ import lombok.ToString;
 public class SchemaMapping {
     @JsonProperty("target")
     @Getter
-    private String target;
+    private Expr target;
     @JsonProperty
     @Getter
-    private String value;
+    private Expr value;
 }

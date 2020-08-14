@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.streaming.exception;
 
+import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.runtime.schema.RtSchemaRoot;
 import lombok.Getter;
 
@@ -23,11 +24,11 @@ public class InvalidMappingTarget extends RuntimeException {
     private static final long serialVersionUID = 7222701441123124786L;
 
     @Getter
-    private final String target;
+    private final Expr target;
     @Getter
     private final RtSchemaRoot schema;
 
-    public InvalidMappingTarget(String target, RtSchemaRoot schema) {
+    public InvalidMappingTarget(Expr target, RtSchemaRoot schema) {
         super(
             "Mapping target \"" + target + "\" must be a var in the following schema:\n" + schema
         );

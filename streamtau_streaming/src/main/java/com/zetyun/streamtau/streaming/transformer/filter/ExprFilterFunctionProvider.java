@@ -17,7 +17,6 @@
 package com.zetyun.streamtau.streaming.transformer.filter;
 
 import com.zetyun.streamtau.expr.core.Expr;
-import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.runtime.schema.RtSchemaRoot;
 import com.zetyun.streamtau.streaming.exception.MissingInputSchema;
@@ -36,7 +35,7 @@ public class ExprFilterFunctionProvider implements FilterFunctionProvider {
         if (inputSchema == null) {
             throw new MissingInputSchema(operator);
         }
-        Expr expr = StreamtauExprCompiler.INS.parse(((ExprFilter) operator).getExpr());
+        Expr expr = ((ExprFilter) operator).getExpr();
         return new ExprFilterFunction(expr.compileIn(inputSchema.getRoot()));
     }
 }

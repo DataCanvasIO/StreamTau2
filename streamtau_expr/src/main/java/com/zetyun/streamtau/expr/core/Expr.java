@@ -16,12 +16,15 @@
 
 package com.zetyun.streamtau.expr.core;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.zetyun.streamtau.expr.ExprJsonDeserializer;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.runtime.context.CompileContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@JsonDeserialize(using = ExprJsonDeserializer.class)
 public interface Expr {
     @Nonnull
     Class<?> typeIn(@Nullable CompileContext ctx);
