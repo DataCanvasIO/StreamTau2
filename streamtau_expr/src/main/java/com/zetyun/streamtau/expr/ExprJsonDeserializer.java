@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.zetyun.streamtau.expr.core.Expr;
-import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
+import com.zetyun.streamtau.expr.parser.StreamTauExprCompiler;
 
 import java.io.IOException;
 import javax.annotation.Nonnull;
@@ -38,6 +38,6 @@ public class ExprJsonDeserializer extends StdDeserializer<Expr> {
         DeserializationContext ctx
     ) throws IOException {
         String src = parser.getText();
-        return StreamtauExprCompiler.INS.parse(src);
+        return StreamTauExprCompiler.INS.parse(src);
     }
 }

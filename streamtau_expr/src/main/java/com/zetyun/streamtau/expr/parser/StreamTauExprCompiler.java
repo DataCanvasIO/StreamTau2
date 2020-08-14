@@ -16,8 +16,8 @@
 
 package com.zetyun.streamtau.expr.parser;
 
-import com.zetyun.streamtau.expr.antlr4.StreamtauExprLexer;
-import com.zetyun.streamtau.expr.antlr4.StreamtauExprParser;
+import com.zetyun.streamtau.expr.antlr4.StreamTauExprLexer;
+import com.zetyun.streamtau.expr.antlr4.StreamTauExprParser;
 import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.exception.ExprSyntaxError;
 import org.antlr.v4.runtime.CharStream;
@@ -28,23 +28,23 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class StreamtauExprCompiler {
-    public static final StreamtauExprCompiler INS = new StreamtauExprCompiler();
+public class StreamTauExprCompiler {
+    public static final StreamTauExprCompiler INS = new StreamTauExprCompiler();
 
-    private final StreamtauExprErrorListener errorListener;
-    private final StreamtauExprVisitorImpl visitor;
+    private final StreamTauExprErrorListener errorListener;
+    private final StreamTauExprVisitorImpl visitor;
 
-    private StreamtauExprCompiler() {
-        errorListener = new StreamtauExprErrorListener();
-        visitor = new StreamtauExprVisitorImpl();
+    private StreamTauExprCompiler() {
+        errorListener = new StreamTauExprErrorListener();
+        visitor = new StreamTauExprVisitorImpl();
     }
 
     @Nonnull
-    private StreamtauExprParser getParser(String input) {
+    private StreamTauExprParser getParser(String input) {
         CharStream stream = CharStreams.fromString(input);
-        StreamtauExprLexer lexer = new StreamtauExprLexer(stream);
+        StreamTauExprLexer lexer = new StreamTauExprLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        StreamtauExprParser parser = new StreamtauExprParser(tokens);
+        StreamTauExprParser parser = new StreamTauExprParser(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
         return parser;
@@ -58,7 +58,7 @@ public class StreamtauExprCompiler {
     }
 
     public Expr parse(String input) {
-        StreamtauExprParser parser = getParser(input);
+        StreamTauExprParser parser = getParser(input);
         ParseTree tree = parser.expr();
         collectParseError();
         return visitor.visit(tree);

@@ -1,4 +1,4 @@
-lexer grammar StreamtauExprLexer;
+lexer grammar StreamTauExprLexer;
 
 @header {
 package com.zetyun.streamtau.expr.antlr4;

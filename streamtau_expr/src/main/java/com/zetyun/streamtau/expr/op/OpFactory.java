@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.expr.op;
 
-import com.zetyun.streamtau.expr.antlr4.StreamtauExprParser;
+import com.zetyun.streamtau.expr.antlr4.StreamTauExprParser;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.arithmetic.AddEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.arithmetic.DivEvaluatorFactory;
 import com.zetyun.streamtau.expr.runtime.evaluator.binary.arithmetic.MulEvaluatorFactory;
@@ -42,11 +42,11 @@ public final class OpFactory {
     @Nonnull
     public static UnaryOp getUnary(int type) {
         switch (type) {
-            case StreamtauExprParser.ADD:
+            case StreamTauExprParser.ADD:
                 return new UnaryOp(PosEvaluatorFactory.INS);
-            case StreamtauExprParser.SUB:
+            case StreamTauExprParser.SUB:
                 return new UnaryOp(NegEvaluatorFactory.INS);
-            case StreamtauExprParser.NOT:
+            case StreamTauExprParser.NOT:
                 return new NotOp();
             default:
                 throw new ParseCancellationException("Invalid operator type: " + type);
@@ -56,33 +56,33 @@ public final class OpFactory {
     @Nonnull
     public static BinaryOp getBinary(int type) {
         switch (type) {
-            case StreamtauExprParser.ADD:
+            case StreamTauExprParser.ADD:
                 return new BinaryOp(AddEvaluatorFactory.INS);
-            case StreamtauExprParser.SUB:
+            case StreamTauExprParser.SUB:
                 return new BinaryOp(SubEvaluatorFactory.INS);
-            case StreamtauExprParser.MUL:
+            case StreamTauExprParser.MUL:
                 return new BinaryOp(MulEvaluatorFactory.INS);
-            case StreamtauExprParser.DIV:
+            case StreamTauExprParser.DIV:
                 return new BinaryOp(DivEvaluatorFactory.INS);
-            case StreamtauExprParser.LT:
+            case StreamTauExprParser.LT:
                 return new BinaryOp(LtEvaluatorFactory.INS);
-            case StreamtauExprParser.LE:
+            case StreamTauExprParser.LE:
                 return new BinaryOp(LeEvaluatorFactory.INS);
-            case StreamtauExprParser.EQ:
+            case StreamTauExprParser.EQ:
                 return new BinaryOp(EqEvaluatorFactory.INS);
-            case StreamtauExprParser.GT:
+            case StreamTauExprParser.GT:
                 return new BinaryOp(GtEvaluatorFactory.INS);
-            case StreamtauExprParser.GE:
+            case StreamTauExprParser.GE:
                 return new BinaryOp(GeEvaluatorFactory.INS);
-            case StreamtauExprParser.NE:
+            case StreamTauExprParser.NE:
                 return new BinaryOp(NeEvaluatorFactory.INS);
-            case StreamtauExprParser.AND:
+            case StreamTauExprParser.AND:
                 return new AndOp();
-            case StreamtauExprParser.OR:
+            case StreamTauExprParser.OR:
                 return new OrOp();
-            case StreamtauExprParser.STARTSWITH:
+            case StreamTauExprParser.STARTSWITH:
                 return new BinaryOp(StartsWithEvaluatorFactory.INS);
-            case StreamtauExprParser.ENDSWITH:
+            case StreamTauExprParser.ENDSWITH:
                 return new BinaryOp(EndsWithEvaluatorFactory.INS);
             default:
                 throw new ParseCancellationException("Invalid operator type: " + type);

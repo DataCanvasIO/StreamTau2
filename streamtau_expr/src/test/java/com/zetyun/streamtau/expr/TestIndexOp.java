@@ -17,7 +17,7 @@
 package com.zetyun.streamtau.expr;
 
 import com.zetyun.streamtau.expr.core.Expr;
-import com.zetyun.streamtau.expr.parser.StreamtauExprCompiler;
+import com.zetyun.streamtau.expr.parser.StreamTauExprCompiler;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import lombok.RequiredArgsConstructor;
 import org.junit.ClassRule;
@@ -79,7 +79,7 @@ public class TestIndexOp {
 
     @Test
     public void test() {
-        Expr expr = StreamtauExprCompiler.INS.parse(exprString);
+        Expr expr = StreamTauExprCompiler.INS.parse(exprString);
         RtExpr rtExpr = expr.compileIn(res.getCtx());
         assertThat(rtExpr.eval(res.getEtx(0)), is(value0));
         assertThat(rtExpr.eval(res.getEtx(1)), is(value1));

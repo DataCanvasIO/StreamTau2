@@ -24,7 +24,7 @@ import org.antlr.v4.runtime.Recognizer;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StreamtauExprErrorListener extends BaseErrorListener {
+public class StreamTauExprErrorListener extends BaseErrorListener {
     @Getter
     private final List<String> errorMessages = new LinkedList<>();
 

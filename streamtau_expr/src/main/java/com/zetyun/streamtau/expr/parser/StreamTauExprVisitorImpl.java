@@ -16,8 +16,8 @@
 
 package com.zetyun.streamtau.expr.parser;
 
-import com.zetyun.streamtau.expr.antlr4.StreamtauExprParser;
-import com.zetyun.streamtau.expr.antlr4.StreamtauExprParserBaseVisitor;
+import com.zetyun.streamtau.expr.antlr4.StreamTauExprParser;
+import com.zetyun.streamtau.expr.antlr4.StreamTauExprParserBaseVisitor;
 import com.zetyun.streamtau.expr.core.Expr;
 import com.zetyun.streamtau.expr.op.BinaryOp;
 import com.zetyun.streamtau.expr.op.FunFactory;
@@ -35,11 +35,11 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Expr> {
+public class StreamTauExprVisitorImpl extends StreamTauExprParserBaseVisitor<Expr> {
     @Nonnull
     private Expr internalVisitBinaryOp(
         int type,
-        @Nonnull List<StreamtauExprParser.ExprContext> exprList
+        @Nonnull List<StreamTauExprParser.ExprContext> exprList
     ) {
         BinaryOp op = OpFactory.getBinary(type);
         op.setExpr0(visit(exprList.get(0)));
@@ -50,7 +50,7 @@ public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Exp
     @Nonnull
     private Expr internalVisitUnaryOp(
         int type,
-        StreamtauExprParser.ExprContext expr
+        StreamTauExprParser.ExprContext expr
     ) {
         UnaryOp op = OpFactory.getUnary(type);
         op.setExpr(visit(expr));
@@ -58,73 +58,73 @@ public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Exp
     }
 
     @Override
-    public Expr visitInt(@Nonnull StreamtauExprParser.IntContext ctx) {
+    public Expr visitInt(@Nonnull StreamTauExprParser.IntContext ctx) {
         return Int.fromString(ctx.INT().getText());
     }
 
     @Override
-    public Expr visitReal(@Nonnull StreamtauExprParser.RealContext ctx) {
+    public Expr visitReal(@Nonnull StreamTauExprParser.RealContext ctx) {
         return Real.fromString(ctx.REAL().getText());
     }
 
     @Override
-    public Expr visitStr(@Nonnull StreamtauExprParser.StrContext ctx) {
+    public Expr visitStr(@Nonnull StreamTauExprParser.StrContext ctx) {
         String str = ctx.STR().getText();
         return Str.fromString(StringEscapeUtils.unescapeJson(str.substring(1, str.length() - 1)));
     }
 
     @Override
-    public Expr visitBool(@Nonnull StreamtauExprParser.BoolContext ctx) {
+    public Expr visitBool(@Nonnull StreamTauExprParser.BoolContext ctx) {
         return Bool.fromString(ctx.BOOL().getText());
     }
 
     @Override
-    public Expr visitVar(@Nonnull StreamtauExprParser.VarContext ctx) {
+    public Expr visitVar(@Nonnull StreamTauExprParser.VarContext ctx) {
         return new Var(ctx.ID().getText());
     }
 
     @Override
-    public Expr visitPars(@Nonnull StreamtauExprParser.ParsContext ctx) {
+    public Expr visitPars(@Nonnull StreamTauExprParser.ParsContext ctx) {
         return visit(ctx.expr());
     }
 
     @Override
-    public Expr visitPosNeg(@Nonnull StreamtauExprParser.PosNegContext ctx) {
+    public Expr visitPosNeg(@Nonnull StreamTauExprParser.PosNegContext ctx) {
         return internalVisitUnaryOp(ctx.op.getType(), ctx.expr());
     }
 
     @Override
-    public Expr visitMulDiv(@Nonnull StreamtauExprParser.MulDivContext ctx) {
+    public Expr visitMulDiv(@Nonnull StreamTauExprParser.MulDivContext ctx) {
         return internalVisitBinaryOp(ctx.op.getType(), ctx.expr());
     }
 
     @Override
-    public Expr visitAddSub(@Nonnull StreamtauExprParser.AddSubContext ctx) {
+    public Expr visitAddSub(@Nonnull StreamTauExprParser.AddSubContext ctx) {
         return internalVisitBinaryOp(ctx.op.getType(), ctx.expr());
     }
 
     @Override
-    public Expr visitRelation(@Nonnull StreamtauExprParser.RelationContext ctx) {
+    public Expr visitRelation(@Nonnull StreamTauExprParser.RelationContext ctx) {
         return internalVisitBinaryOp(ctx.op.getType(), ctx.expr());
     }
 
     @Override
-    public Expr visitNot(@Nonnull StreamtauExprParser.NotContext ctx) {
+    public Expr visitNot(@Nonnull StreamTauExprParser.NotContext ctx) {
         return internalVisitUnaryOp(ctx.op.getType(), ctx.expr());
     }
 
     @Override
-    public Expr visitAnd(@Nonnull StreamtauExprParser.AndContext ctx) {
+    public Expr visitAnd(@Nonnull StreamTauExprParser.AndContext ctx) {
         return internalVisitBinaryOp(ctx.op.getType(), ctx.expr());
     }
 
     @Override
-    public Expr visitOr(@Nonnull StreamtauExprParser.OrContext ctx) {
+    public Expr visitOr(@Nonnull StreamTauExprParser.OrContext ctx) {
         return internalVisitBinaryOp(ctx.op.getType(), ctx.expr());
     }
 
     @Override
-    public Expr visitIndex(@Nonnull StreamtauExprParser.IndexContext ctx) {
+    public Expr visitIndex(@Nonnull StreamTauExprParser.IndexContext ctx) {
         BinaryOp op = new IndexOp();
         op.setExpr0(visit(ctx.expr().get(0)));
         op.setExpr1(visit(ctx.expr().get(1)));
@@ -132,7 +132,7 @@ public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Exp
     }
 
     @Override
-    public Expr visitStrIndex(@Nonnull StreamtauExprParser.StrIndexContext ctx) {
+    public Expr visitStrIndex(@Nonnull StreamTauExprParser.StrIndexContext ctx) {
         BinaryOp op = new IndexOp();
         op.setExpr0(visit(ctx.expr()));
         op.setExpr1(new Str(ctx.ID().getText()));
@@ -140,12 +140,12 @@ public class StreamtauExprVisitorImpl extends StreamtauExprParserBaseVisitor<Exp
     }
 
     @Override
-    public Expr visitStringOp(@Nonnull StreamtauExprParser.StringOpContext ctx) {
+    public Expr visitStringOp(@Nonnull StreamTauExprParser.StringOpContext ctx) {
         return internalVisitBinaryOp(ctx.op.getType(), ctx.expr());
     }
 
     @Override
-    public Expr visitFun(@Nonnull StreamtauExprParser.FunContext ctx) {
+    public Expr visitFun(@Nonnull StreamTauExprParser.FunContext ctx) {
         int paraNum = ctx.expr().size();
         String funName = ctx.ID().getText();
         if (paraNum == 1) {

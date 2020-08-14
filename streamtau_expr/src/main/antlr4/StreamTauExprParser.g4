@@ -1,6 +1,6 @@
-parser grammar StreamtauExprParser;
+parser grammar StreamTauExprParser;
 
-options { tokenVocab=StreamtauExprLexer; }
+options { tokenVocab=StreamTauExprLexer; }
 
 @header {
 package com.zetyun.streamtau.expr.antlr4;
