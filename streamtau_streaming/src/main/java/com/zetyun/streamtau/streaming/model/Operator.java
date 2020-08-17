@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.core.pea.PeaId;
 import com.zetyun.streamtau.streaming.exception.OperatorHasNoDependency;
 import com.zetyun.streamtau.streaming.model.filter.ExprFilter;
 import com.zetyun.streamtau.streaming.model.mapper.SchemaMapper;
@@ -80,6 +81,7 @@ public abstract class Operator {
     @JsonProperty("schemaId")
     @Getter
     @Setter
+    @PeaId
     private String schemaId;
 
     @JsonIgnore

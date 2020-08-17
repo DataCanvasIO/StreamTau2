@@ -16,71 +16,37 @@
 
 package com.zetyun.streamtau.streaming.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.core.schema.SchemaSpec;
 import com.zetyun.streamtau.streaming.exception.MissingOperator;
-import com.zetyun.streamtau.streaming.exception.MissingSchema;
 import com.zetyun.streamtau.streaming.model.sink.Sink;
-import lombok.Getter;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Dag {
-    @JsonProperty("operators")
-    @Getter
-    private Map<String, Operator> operators;
-    @JsonProperty("schemas")
-    @Getter
-    private Map<String, SchemaSpec> schemas;
-    @JsonProperty("parallelism")
-    @Getter
-    private Integer parallelism;
+public interface Dag {
+    Map<String, Operator> getOperators();
 
-    @Override
-    public String toString() {
-        try {
-            return PeaParser.YAML.stringShowAll(this);
-        } catch (IOException e) {
-            e.printStackTrace();
+    SchemaSpec getSchema(String schemaId);
+
+    int getParallelism();
+
+    default Operator getOperator(String operatorId) {
+        Map<String, Operator> operators = getOperators();
+        if (operators.containsKey(operatorId)) {
+            return operators.get(operatorId);
         }
-        return "";
+        throw new MissingOperator(operatorId);
     }
 
-    @JsonIgnore
-    public Set<String> getSinkIds() {
+    default Set<String> getSinkIds() {
         Set<String> sinkIds = new HashSet<>();
-        for (Map.Entry<String, Operator> entry : operators.entrySet()) {
+        for (Map.Entry<String, Operator> entry : getOperators().entrySet()) {
             Operator operator = entry.getValue();
             if (operator instanceof Sink) {
                 sinkIds.add(entry.getKey());
             }
         }
         return sinkIds;
-    }
-
-    @JsonIgnore
-    public Operator getOperator(String operatorId) {
-        if (!operators.containsKey(operatorId)) {
-            throw new MissingOperator(operatorId);
-        }
-        return operators.get(operatorId);
-    }
-
-    @JsonIgnore
-    public SchemaSpec getSchema(String schemaId) {
-        if (!schemas.containsKey(schemaId)) {
-            throw new MissingSchema(schemaId);
-        }
-        return schemas.get(schemaId);
-    }
-
-    @JsonIgnore
-    public int getValidParallelism() {
-        return parallelism != null ? parallelism : 1;
     }
 }

@@ -1,0 +1,11 @@
+type: Schema
+schema:
+  type: object
+  additionalProperties: false
+  properties:
+    name:
+      type: string
+    gender:
+      type: string
+    totalScore:
+      type: integer

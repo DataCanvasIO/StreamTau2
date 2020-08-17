@@ -1,3 +1,4 @@
+type: Pipeline
 operators:
   TheSource:
     fid: prelude.in-place-source
@@ -13,7 +14,7 @@ operators:
     parallelism: 1
     dependencies:
       - TheSource
-    schemaId: A
+    schemaId: 'schemas/student-scores.yml'
     format: application/yaml
   TheStringfy:
     fid: prelude.schema-stringfy
@@ -30,20 +31,3 @@ operators:
     parallelism: 1
     dependencies:
       - TheStringfy
-schemas:
-  A:
-    type: object
-    additionalProperties: false
-    properties:
-      name:
-        type: string
-      gender:
-        type: string
-      scores:
-        type: object
-        additionalProperties: false
-        properties:
-          maths:
-            type: integer
-          english:
-            type: integer

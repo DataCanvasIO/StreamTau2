@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming;
+package com.zetyun.streamtau.streaming.run;
 
-import com.zetyun.streamtau.core.pea.PeaParser;
-import com.zetyun.streamtau.runtime.ScriptFormat;
 import com.zetyun.streamtau.runtime.context.RtEvent;
-import com.zetyun.streamtau.streaming.model.Dag;
-import com.zetyun.streamtau.streaming.model.TestDag;
 import com.zetyun.streamtau.streaming.runtime.sink.TestCollectSinkFunction;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import org.apache.flink.runtime.testutils.MiniClusterResourceConfiguration;
@@ -33,6 +29,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -61,13 +58,11 @@ public class TestRun {
         TestCollectSinkFunction.clear();
     }
 
-    private void runCase(ScriptFormat format, String dagFile) throws Exception {
-        Dag dag = PeaParser.get(format).parse(
-            TestDag.class.getResourceAsStream(dagFile),
-            Dag.class
-        );
+    private void runCase(String pipelineFile) throws Exception {
+        URL res = getClass().getResource("/dag/");
+        DagFilePod filePod = new DagFilePod(res.toString(), pipelineFile);
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        TransformContext.transform(env, dag);
+        TransformContext.transform(env, filePod);
         env.execute();
     }
 
@@ -91,7 +86,7 @@ public class TestRun {
 
     @Test
     public void testInPlaceCollect() throws Exception {
-        runCase(ScriptFormat.APPLICATION_JSON, "/dag/in-place-collect.json");
+        runCase("in-place-collect.json");
         List<Object> values = TestCollectSinkFunction.getValues().stream()
             .map(x -> (Integer) x.getSingleValue())
             .collect(Collectors.toList());
@@ -100,13 +95,13 @@ public class TestRun {
 
     @Test
     public void testSchemaParser() throws Exception {
-        runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-parser.yml");
+        runCase("schema-parser.yml");
         checkCollectSinkAgainstFile("/result/name-gender-scores.json.txt");
     }
 
     @Test
     public void testSchemaStringfy() throws Exception {
-        runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-stringfy.yml");
+        runCase("schema-stringfy.yml");
         List<RtEvent> values = TestCollectSinkFunction.getValues();
         assertThat(values.get(0).getSingleValue(),
             is("---\ngender: F\nname: Alice\nscores:\n  english: 80\n  maths: 100\n"));
@@ -114,19 +109,19 @@ public class TestRun {
 
     @Test
     public void testSchemaMapper() throws Exception {
-        runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-mapper.yml");
+        runCase("schema-mapper.yml");
         checkCollectSinkAgainstFile("/result/name-gender-total-score.json.txt");
     }
 
     @Test
     public void testSchemaMapperUnion() throws Exception {
-        runCase(ScriptFormat.APPLICATION_YAML, "/dag/schema-mapper-union.yml");
+        runCase("schema-mapper-union.yml");
         checkCollectSinkAgainstFile("/result/name-gender-selected-score.json.txt");
     }
 
     @Test
     public void testExprFilter() throws Exception {
-        runCase(ScriptFormat.APPLICATION_YAML, "/dag/expr-filter.yml");
+        runCase("expr-filter.yml");
         checkCollectSinkAgainstFile("/result/name-gender-scores-filtered.json.txt");
     }
 }

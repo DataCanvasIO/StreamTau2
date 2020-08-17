@@ -1,4 +1,4 @@
-parallelism: 1
+type: Pipeline
 operators:
   TheSource:
     fid: prelude.local-file-source
@@ -10,14 +10,14 @@ operators:
     description: Parsing event according schema.
     dependencies:
       - TheSource
-    schemaId: A
+    schemaId: 'schemas/student-scores.yml'
     format: application/yaml
   TheMapperMaths:
     fid: prelude.schema-mapper
     name: ScheamMapper
     dependencies:
       - TheParser
-    schemaId: B
+    schemaId: 'schemas/student-selected-score.yml'
     mappings:
       - target: name
         value: name
@@ -32,7 +32,7 @@ operators:
     name: ScheamMapper
     dependencies:
       - TheParser
-    schemaId: B
+    schemaId: 'schemas/student-selected-score.yml'
     mappings:
       - target: name
         value: name
@@ -49,32 +49,3 @@ operators:
     dependencies:
       - TheMapperMaths
       - TheMapperEnglish
-schemas:
-  A:
-    type: object
-    additionalProperties: false
-    properties:
-      name:
-        type: string
-      gender:
-        type: string
-      scores:
-        type: object
-        additionalProperties: false
-        properties:
-          maths:
-            type: integer
-          english:
-            type: integer
-  B:
-    type: object
-    additionalProperties: false
-    properties:
-      name:
-        type: string
-      gender:
-        type: string
-      selectedSubject:
-        type: string
-      selectedScore:
-        type: integer

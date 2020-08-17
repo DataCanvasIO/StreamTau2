@@ -1,4 +1,5 @@
 {
+  "type": "Pipeline",
   "operators": {
     "TheSource": {
       "fid": "prelude.in-place-source",

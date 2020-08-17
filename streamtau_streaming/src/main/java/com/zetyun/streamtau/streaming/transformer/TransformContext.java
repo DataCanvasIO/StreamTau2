@@ -42,7 +42,6 @@ import javax.annotation.Nullable;
 public final class TransformContext {
     @Getter
     private final StreamExecutionEnvironment env;
-    @Getter
     private final Dag dag;
 
     // Map of operator id to StreamNode
@@ -50,16 +49,18 @@ public final class TransformContext {
     // Map of schema id to RtSchemaRoot
     private final Map<String, RtSchemaRoot> schemaMap;
 
-    public TransformContext(@Nonnull StreamExecutionEnvironment env, @Nonnull Dag dag) {
+    public TransformContext(
+        @Nonnull StreamExecutionEnvironment env,
+        @Nonnull Dag dag
+    ) {
         this.env = env;
         this.dag = dag;
-        nodeMap = new HashMap<>(dag.getOperators().size() + 5);
-        Map<String, SchemaSpec> schemas = dag.getSchemas();
-        schemaMap = new HashMap<>(schemas == null ? 0 : schemas.size());
+        nodeMap = new HashMap<>();
+        schemaMap = new HashMap<>();
     }
 
     public static void transform(@Nonnull StreamExecutionEnvironment env, @Nonnull Dag dag) {
-        env.setParallelism(dag.getValidParallelism());
+        env.setParallelism(dag.getParallelism());
         TransformContext context = new TransformContext(env, dag);
         context.transformDag();
     }
