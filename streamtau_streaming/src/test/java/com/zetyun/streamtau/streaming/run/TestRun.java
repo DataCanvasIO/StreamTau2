@@ -60,7 +60,7 @@ public class TestRun {
 
     private void runCase(String pipelineFile) throws Exception {
         URL res = getClass().getResource("/dag/");
-        DagFilePod filePod = new DagFilePod(res.toString(), pipelineFile);
+        FilePodDag filePod = new FilePodDag(res.toString(), pipelineFile);
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         TransformContext.transform(env, filePod);
         env.execute();

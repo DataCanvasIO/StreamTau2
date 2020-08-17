@@ -37,6 +37,7 @@ public class RunnerFactory {
         registerRunner("CmdLineApp", new CmdLineRunner());
         registerRunner("JavaJarApp", new JavaJarRunner());
         registerRunner("FlinkJarApp", new FlinkJarRunner());
+        registerRunner("FlinkPipelineApp", new FlinkPipelineRunner());
     }
 
     public static RunnerFactory get() {

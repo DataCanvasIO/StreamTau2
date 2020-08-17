@@ -37,6 +37,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import javax.annotation.Nullable;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -134,8 +135,8 @@ public class FlinkMiniClusterInstance extends ServerInstance {
 
     public FlinkMiniClusterEnvironment getExecutionEnv(
         int parallelism,
-        Collection<Path> jarFiles,
-        Collection<URL> classPaths
+        @Nullable Collection<Path> jarFiles,
+        @Nullable Collection<URL> classPaths
     ) {
         start();
         return new FlinkMiniClusterEnvironment(miniCluster, parallelism, jarFiles, classPaths);

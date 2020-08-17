@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class FlinkMiniClusterEnvironment extends StreamExecutionEnvironment {
     private final JobExecutor jobExecutor;
@@ -39,8 +40,8 @@ public class FlinkMiniClusterEnvironment extends StreamExecutionEnvironment {
     public FlinkMiniClusterEnvironment(
         JobExecutor jobExecutor,
         int parallelism,
-        Collection<Path> jarFiles,
-        Collection<URL> classPaths
+        @Nullable Collection<Path> jarFiles,
+        @Nullable Collection<URL> classPaths
     ) {
         this.jobExecutor = jobExecutor;
         this.jarFiles = jarFiles;

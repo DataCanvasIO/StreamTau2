@@ -27,15 +27,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DagFilePod extends FilePod<String, DagPea> implements Dag {
+public class FilePodDag implements Dag {
+    private final FilePod<String, DagPea> pod;
+
     @Getter
     private final Map<String, Operator> operators;
     private final Map<String, SchemaSpec> schemas = new HashMap<>();
 
-    public DagFilePod(String baseUrl, String pipelineFile) {
-        super(baseUrl, DagPea.class);
+    public FilePodDag(String baseUrl, String pipelineFile) {
+        pod = new FilePod<>(baseUrl, DagPea.class);
         try {
-            PipelinePea pipeline = (PipelinePea) load(pipelineFile);
+            PipelinePea pipeline = (PipelinePea) pod.load(pipelineFile);
             operators = pipeline.getOperators();
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,7 +49,7 @@ public class DagFilePod extends FilePod<String, DagPea> implements Dag {
         SchemaSpec schema = schemas.get(schemaId);
         if (schema == null) {
             try {
-                SchemaPea schemaPea = (SchemaPea) load(schemaId);
+                SchemaPea schemaPea = (SchemaPea) pod.load(schemaId);
                 schema = schemaPea.getSchema();
                 schemas.put(schemaId, schema);
             } catch (IOException e) {

@@ -30,11 +30,14 @@ import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.pea.app.FlinkJarApp;
+import com.zetyun.streamtau.manager.pea.app.FlinkPipelineApp;
 import com.zetyun.streamtau.manager.pea.app.JavaJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.pea.file.TxtFile;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
+import com.zetyun.streamtau.manager.pea.misc.Pipeline;
+import com.zetyun.streamtau.manager.pea.misc.SchemaPea;
 import com.zetyun.streamtau.manager.pea.server.Executor;
 import com.zetyun.streamtau.manager.pea.server.FlinkMiniCluster;
 import com.zetyun.streamtau.runtime.ScriptFormat;
@@ -59,6 +62,8 @@ import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
         FlinkJarApp.class,
         CmdLine.class,
         Host.class,
+        Pipeline.class,
+        SchemaPea.class,
         JarFile.class,
         TxtFile.class,
         Executor.class,
@@ -72,9 +77,12 @@ import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
     @JsonSubTypes.Type(CmdLineApp.class),
     @JsonSubTypes.Type(JavaJarApp.class),
     @JsonSubTypes.Type(FlinkJarApp.class),
+    @JsonSubTypes.Type(FlinkPipelineApp.class),
     // Misc
     @JsonSubTypes.Type(CmdLine.class),
     @JsonSubTypes.Type(Host.class),
+    @JsonSubTypes.Type(Pipeline.class),
+    @JsonSubTypes.Type(SchemaPea.class),
     // File
     @JsonSubTypes.Type(JarFile.class),
     @JsonSubTypes.Type(TxtFile.class),
@@ -96,12 +104,19 @@ public abstract class AssetPea implements Pea<String, String> {
     @Getter
     @Setter
     private String id;
-    @Schema(description = "The name of the asset.", example = "Some name", required = true)
+    @Schema(
+        description = "The name of the asset.",
+        example = "Some name",
+        required = true
+    )
     @JsonView({PeaParser.Show.class, PeaParser.Public.class})
     @Getter
     @Setter
     private String name;
-    @Schema(description = "The description of the asset.", example = "blah blah...")
+    @Schema(
+        description = "The description of the asset.",
+        example = "blah blah..."
+    )
     @JsonView({PeaParser.Show.class, PeaParser.Public.class})
     @Getter
     @Setter
@@ -110,7 +125,9 @@ public abstract class AssetPea implements Pea<String, String> {
     // In controller response, the `type` from the class of pea is missing, so make it explicit.
     // However, for internal use, the `type` is generated from the class of pea, jackson will
     // generate an additional `type` field if this field is seen.
-    @Schema(description = "The type of the asset, determines the other fields.")
+    @Schema(
+        description = "The type of the asset, determines the other fields."
+    )
     @JsonView({PeaParser.Public.class})
     public String getType() {
         JsonTypeName name = getClass().getAnnotation(JsonTypeName.class);

@@ -22,11 +22,9 @@ import com.zetyun.streamtau.core.pea.PeaId;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,15 +38,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-@RunWith(MockitoJUnitRunner.class)
 public class TestFilePod {
-    @Spy
-    private static FilePod<String, FilePea> filePod;
+    private FilePod<String, FilePea> filePod;
 
-    @BeforeClass
-    public static void setupClass() {
+    @Before
+    public void setup() {
         URL res = TestFilePod.class.getResource("/pod/");
-        filePod = new FilePod<>(res.toString(), FilePea.class);
+        filePod = Mockito.spy(new FilePod<>(res.toString(), FilePea.class));
     }
 
     @Test
