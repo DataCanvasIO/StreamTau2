@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.core.pea;
+package com.zetyun.streamtau.core.pod;
+
+import com.zetyun.streamtau.core.pea.Pea;
+import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
+@ToString
 public class MapPod<I, T, P extends Pea<I, T>> implements Pod<I, T, P> {
     protected final Map<I, P> peaMap;
 
@@ -31,14 +36,12 @@ public class MapPod<I, T, P extends Pea<I, T>> implements Pod<I, T, P> {
     }
 
     @Override
-    public P load(I id) {
-        P pea = peaMap.get(id);
-        pea.setId(id);
-        return pea;
+    public P load(@Nonnull I id) {
+        return peaMap.get(id);
     }
 
     @Override
-    public void save(P pea) {
+    public void save(@Nonnull P pea) {
         peaMap.put(pea.getId(), pea);
     }
 }

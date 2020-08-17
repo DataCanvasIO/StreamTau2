@@ -47,6 +47,19 @@ public enum ScriptFormat {
             + str + "\" for enum type \"" + ScriptFormat.class.getSimpleName() + "\".");
     }
 
+    @Nonnull
+    public static ScriptFormat fromExtension(@Nonnull String fileName) {
+        if (fileName.endsWith(".yml") || fileName.endsWith(".yaml")) {
+            return APPLICATION_YAML;
+        } else if (fileName.endsWith(".json")) {
+            return APPLICATION_JSON;
+        } else if (fileName.endsWith(".txt")) {
+            return TEXT_PLAIN;
+        }
+        throw new IllegalArgumentException("Invalid extension of file name \""
+            + fileName + "\" for enum type \"" + ScriptFormat.class.getSimpleName() + "\".");
+    }
+
     @Override
     public String toString() {
         return value;

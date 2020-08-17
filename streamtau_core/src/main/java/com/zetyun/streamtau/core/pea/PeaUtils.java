@@ -39,6 +39,9 @@ public final class PeaUtils {
                     Class<?> fieldType = field.getType();
                     field.setAccessible(true);
                     Object value = field.get(obj);
+                    if (value == null) {
+                        continue;
+                    }
                     if (field.isAnnotationPresent(PeaId.class)) {
                         if (fieldType.isArray()) {
                             for (int i = 0; i < Array.getLength(value); i++) {
@@ -103,11 +106,15 @@ public final class PeaUtils {
         }
         try {
             for (Class<?> clazz = obj.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
+                Class<?> superClass = clazz.getSuperclass();
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field field : fields) {
                     Class<?> fieldType = field.getType();
                     field.setAccessible(true);
                     Object value = field.get(obj);
+                    if (value == null) {
+                        continue;
+                    }
                     if (field.isAnnotationPresent(PeaId.class)) {
                         if (fieldType.isArray()) {
                             for (int i = 0; i < Array.getLength(value); i++) {

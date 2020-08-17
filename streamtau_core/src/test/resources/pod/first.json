@@ -1,0 +1,8 @@
+{
+  "name": "The first file pea",
+  "type": "FilePea",
+  "children": [
+    "second.yml",
+    "third.yml"
+  ]
+}

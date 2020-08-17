@@ -17,6 +17,8 @@
 package com.zetyun.streamtau.core.pea;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public interface Pea<I, T> {
     I getId();
@@ -25,7 +27,11 @@ public interface Pea<I, T> {
 
     T getType();
 
-    Collection<I> children();
+    default Collection<I> children() {
+        Set<I> set = new HashSet<>();
+        PeaUtils.collectPeaIds(set, this);
+        return set;
+    }
 
     default boolean reference(I id) {
         return children().contains(id);

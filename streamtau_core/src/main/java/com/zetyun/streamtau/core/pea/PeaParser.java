@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +110,10 @@ public class PeaParser {
 
     public String stringShowAll(Object pea) throws IOException {
         return mapper.writerWithView(Show.class).writeValueAsString(pea);
+    }
+
+    public void writeAll(OutputStream os, Object pea) throws IOException {
+        mapper.writerWithView(Show.class).writeValue(os, pea);
     }
 
     public String stringHideSome(Object pea) throws IOException {

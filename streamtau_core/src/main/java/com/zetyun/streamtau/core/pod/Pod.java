@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.core.pea;
+package com.zetyun.streamtau.core.pod;
+
+import com.zetyun.streamtau.core.pea.Pea;
 
 import java.io.IOException;
+import java.util.Collection;
+import javax.annotation.Nonnull;
 
 public interface Pod<I, T, P extends Pea<I, T>> {
-    P load(I id) throws IOException;
+    P load(@Nonnull I id) throws IOException;
 
-    void save(P pea) throws IOException;
+    void save(@Nonnull P pea) throws IOException;
 
-    default void transfer(I id, Pod<I, T, P> pod) throws IOException {
+    default void transfer(I id, @Nonnull Pod<I, T, P> pod) throws IOException {
         P pea = load(id);
         pea.transferAnnex();
         pod.save(pea);
-        for (I cid : pea.children()) {
+        Collection<I> children = pea.children();
+        for (I cid : children) {
             transfer(cid, pod);
         }
     }
