@@ -152,7 +152,7 @@ public final class TransformContext {
         return getSchemaOf(getUnionizedUpstreamNode(operator));
     }
 
-    // TODO: if the new node should be registered to context
+    // TODO: if the new node should be registered to context?
     public DataStream<RtEvent> toSingleValueStream(StreamNode node) {
         RtSchemaRoot schema = getSchemaOf(node);
         if (schema == null) {

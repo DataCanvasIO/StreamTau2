@@ -19,6 +19,7 @@ package com.zetyun.streamtau.manager.pea;
 import com.zetyun.streamtau.core.pod.Pod;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
+import com.zetyun.streamtau.manager.exception.StreamTauException;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -52,14 +53,28 @@ public class AssetPod implements Pod<String, String, AssetPea> {
     }
 
     @Override
-    public AssetPea load(@Nonnull String id) throws IOException {
+    public AssetPea load(@Nonnull String id) {
         Asset model = assetMapper.findByIdInProject(projectId, id);
-        return fromModel(model);
+        if (model == null) {
+            throw new StreamTauException("10002", id);
+        }
+        try {
+            return fromModel(model);
+        } catch (IOException e) {
+            throw new StreamTauException("10401", id);
+
+        }
     }
 
     @Override
-    public void save(@Nonnull AssetPea pea) throws IOException {
-        Asset model = toModel(pea);
-        assetMapper.insert(model);
+    public String save(@Nonnull AssetPea pea) {
+        try {
+            Asset model = toModel(pea);
+            assetMapper.insert(model);
+        } catch (IOException e) {
+            throw new StreamTauException("10402", pea.getId());
+        }
+        // TODO: if the id should be changed?
+        return pea.getId();
     }
 }

@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class PeaFactory<I, T, P extends Pea<I, T>> {
+public class PeaFactory<I, T, P extends Pea<I, T, P>> {
     private final Map<T, Supplier<P>> peaSupplierMap = new LinkedHashMap<>(64);
 
     public P make(T type) {

@@ -70,7 +70,7 @@ public class TestFilePod {
     }
 
     @ToString
-    public static class FilePea implements Pea<String, String> {
+    public static class FilePea implements Pea<String, String, FilePea> {
         @Getter
         @Setter
         private String id;

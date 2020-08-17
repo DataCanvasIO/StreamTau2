@@ -18,22 +18,15 @@ package com.zetyun.streamtau.core.pod;
 
 import com.zetyun.streamtau.core.pea.Pea;
 
-import java.io.IOException;
-import java.util.Collection;
 import javax.annotation.Nonnull;
 
-public interface Pod<I, T, P extends Pea<I, T>> {
-    P load(@Nonnull I id) throws IOException;
+public interface Pod<I, T, P extends Pea<I, T, P>> {
+    P load(@Nonnull I id);
 
-    void save(@Nonnull P pea) throws IOException;
+    I save(@Nonnull P pea);
 
-    default void transfer(I id, @Nonnull Pod<I, T, P> pod) throws IOException {
+    default I transfer(@Nonnull I id, @Nonnull Pod<I, T, P> pod) {
         P pea = load(id);
-        pea.transferAnnex();
-        pod.save(pea);
-        Collection<I> children = pea.children();
-        for (I cid : children) {
-            transfer(cid, pod);
-        }
+        return pea.transfer(this, pod);
     }
 }

@@ -31,25 +31,30 @@ import javax.annotation.Nonnull;
 
 @ToString
 @RequiredArgsConstructor
-public class FilePod<T, P extends Pea<String, T>> implements Pod<String, T, P> {
+public class FilePod<T, P extends Pea<String, T, P>> implements Pod<String, T, P> {
     @Getter
     private final String baseUrl;
     @Getter
     private final Class<P> clazz;
 
     @Override
-    public P load(@Nonnull String id) throws IOException {
+    public P load(@Nonnull String id) {
         try (InputStream inputStream = new URL(baseUrl + id).openStream()) {
             P pea = PeaParser.get(ScriptFormat.fromExtension(id)).parse(inputStream, clazz);
             pea.setId(id);
             return pea;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load pea from URL \"" + baseUrl + id + "\".", e);
         }
     }
 
     @Override
-    public void save(@Nonnull P pea) throws IOException {
+    public String save(@Nonnull P pea) {
         try (OutputStream os = new URL(baseUrl + pea.getId()).openConnection().getOutputStream()) {
             PeaParser.get(ScriptFormat.fromExtension(pea.getId())).writeAll(os, pea);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save pea to URL \"" + baseUrl + pea.getId() + "\".", e);
         }
+        return pea.getId();
     }
 }

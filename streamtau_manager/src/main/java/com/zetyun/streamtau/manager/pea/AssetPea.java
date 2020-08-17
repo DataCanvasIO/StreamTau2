@@ -16,7 +16,6 @@
 
 package com.zetyun.streamtau.manager.pea;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -47,12 +46,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import javax.annotation.Nonnull;
-
-import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
 
 @Schema(
     type = "object",
@@ -92,10 +86,7 @@ import static com.zetyun.streamtau.core.pea.PeaUtils.collectPeaIds;
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @EqualsAndHashCode
-public abstract class AssetPea implements Pea<String, String> {
-    @JsonIgnore
-    private transient Set<String> childrenCache;
-
+public abstract class AssetPea implements Pea<String, String, AssetPea> {
     @Schema(
         description = "The id of the asset in the project.",
         example = "EFF8318B-91BE-4325-9F1D-4EC192D43B82"
@@ -148,16 +139,6 @@ public abstract class AssetPea implements Pea<String, String> {
         model.setScriptFormat(ScriptFormat.APPLICATION_JSON);
         PeaParser parser = PeaParser.get(model.getScriptFormat());
         model.setScript(parser.stringHideSome(this));
-    }
-
-    @JsonIgnore
-    @Override
-    public Collection<String> children() {
-        if (childrenCache == null) {
-            childrenCache = new HashSet<>();
-            collectPeaIds(childrenCache, this);
-        }
-        return childrenCache;
     }
 
     @Override

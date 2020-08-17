@@ -26,17 +26,12 @@ import com.zetyun.streamtau.manager.citrus.behavior.Projects;
 import com.zetyun.streamtau.manager.controller.protocol.JobRequest;
 import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
-import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 import javax.annotation.Nonnull;
 
-import static com.zetyun.streamtau.manager.citrus.CitrusCommon.createPeasInList;
-import static com.zetyun.streamtau.manager.citrus.CitrusCommon.deletePeasInList;
-import static com.zetyun.streamtau.manager.citrus.CitrusCommon.getSortedAssetList;
 import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJobDef;
 
@@ -50,14 +45,13 @@ public class CmdLineAppIT extends JUnit4CitrusTest {
             new ProjectRequest("test", "for citrus", "CONTAINER")
         ));
         JobDefPod pod = readJobDef("/jobdef/cmdline/cmd_ls.json");
-        List<AssetPea> peaList = getSortedAssetList(pod.getPeaMap());
-        createPeasInList(designer, peaList, projectId);
+        RestPod restPod = new RestPod(designer, projectId);
+        pod.transfer(pod.getAppId(), restPod);
         designer.applyBehavior(new Jobs.Create(
             projectId,
             "job",
             new JobRequest("test", varRef(Assets.idVarName(pod.getAppId())), JobStatus.READY)
         ));
-        deletePeasInList(designer, peaList, projectId);
         designer.applyBehavior(new Projects.Delete(projectId));
     }
 }

@@ -24,7 +24,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 @ToString
-public class MapPod<I, T, P extends Pea<I, T>> implements Pod<I, T, P> {
+public class MapPod<I, T, P extends Pea<I, T, P>> implements Pod<I, T, P> {
     protected final Map<I, P> peaMap;
 
     public MapPod() {
@@ -41,7 +41,8 @@ public class MapPod<I, T, P extends Pea<I, T>> implements Pod<I, T, P> {
     }
 
     @Override
-    public void save(@Nonnull P pea) {
+    public I save(@Nonnull P pea) {
         peaMap.put(pea.getId(), pea);
+        return pea.getId();
     }
 }

@@ -20,7 +20,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 public final class PeaUtils {
@@ -36,13 +35,13 @@ public final class PeaUtils {
             for (Class<?> clazz = obj.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field field : fields) {
-                    Class<?> fieldType = field.getType();
-                    field.setAccessible(true);
-                    Object value = field.get(obj);
-                    if (value == null) {
-                        continue;
-                    }
                     if (field.isAnnotationPresent(PeaId.class)) {
+                        field.setAccessible(true);
+                        Object value = field.get(obj);
+                        if (value == null) {
+                            continue;
+                        }
+                        Class<?> fieldType = field.getType();
                         if (fieldType.isArray()) {
                             for (int i = 0; i < Array.getLength(value); i++) {
                                 I oldValue = (I) Array.get(value, i);
@@ -76,6 +75,12 @@ public final class PeaUtils {
                             }
                         }
                     } else if (field.isAnnotationPresent(PeaId.InIt.class)) {
+                        field.setAccessible(true);
+                        Object value = field.get(obj);
+                        if (value == null) {
+                            continue;
+                        }
+                        Class<?> fieldType = field.getType();
                         if (fieldType.isArray()) {
                             for (int i = 0; i < Array.getLength(value); i++) {
                                 replacePeaIds(Array.get(value, i), replaceFun);
@@ -96,58 +101,6 @@ public final class PeaUtils {
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException("PANIC in PeaUtils::replacePeaIds.");
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <I> void collectPeaIds(Set<I> set, Object obj) {
-        if (obj == null) {
-            return;
-        }
-        try {
-            for (Class<?> clazz = obj.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
-                Class<?> superClass = clazz.getSuperclass();
-                Field[] fields = clazz.getDeclaredFields();
-                for (Field field : fields) {
-                    Class<?> fieldType = field.getType();
-                    field.setAccessible(true);
-                    Object value = field.get(obj);
-                    if (value == null) {
-                        continue;
-                    }
-                    if (field.isAnnotationPresent(PeaId.class)) {
-                        if (fieldType.isArray()) {
-                            for (int i = 0; i < Array.getLength(value); i++) {
-                                set.add((I) Array.get(value, i));
-                            }
-                        } else if (Collection.class.isAssignableFrom(fieldType)) {
-                            set.addAll((Collection<I>) value);
-                        } else if (Map.class.isAssignableFrom(fieldType)) {
-                            set.addAll(((Map<?, I>) value).values());
-                        } else {
-                            set.add((I) value);
-                        }
-                    } else if (field.isAnnotationPresent(PeaId.InIt.class)) {
-                        if (fieldType.isArray()) {
-                            for (int i = 0; i < Array.getLength(value); i++) {
-                                collectPeaIds(set, Array.get(value, i));
-                            }
-                        } else if (Collection.class.isAssignableFrom(fieldType)) {
-                            for (Object o : (Collection<Object>) value) {
-                                collectPeaIds(set, o);
-                            }
-                        } else if (Map.class.isAssignableFrom(fieldType)) {
-                            for (Object o : ((Map<?, Object>) value).values()) {
-                                collectPeaIds(set, o);
-                            }
-                        } else {
-                            collectPeaIds(set, value);
-                        }
-                    }
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("PANIC in PeaUtils::collectPeaIds.");
         }
     }
 }

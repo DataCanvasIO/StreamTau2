@@ -21,9 +21,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.ImmutableMap;
 import com.zetyun.streamtau.core.pea.PeaParser;
+import com.zetyun.streamtau.core.pod.Pod;
 import com.zetyun.streamtau.manager.db.model.Asset;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
+import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.AssetPod;
+import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import com.zetyun.streamtau.runtime.ScriptFormat;
@@ -78,16 +82,22 @@ public abstract class File extends AssetPea {
     }
 
     @Override
-    public void transferAnnex() {
-        StorageService storageService = ApplicationContextProvider.getStorageService();
-        int index = path.lastIndexOf('.');
-        String ext = (index == -1) ? "" : path.substring(index + 1);
-        try {
-            String newPath = storageService.createFile(ext);
-            storageService.copyFile(path, newPath);
-            setPath(newPath);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public String transfer(
+        @Nonnull Pod<String, String, AssetPea> pod0,
+        @Nonnull Pod<String, String, AssetPea> pod1
+    ) {
+        if (pod0 instanceof AssetPod && pod1 instanceof JobDefPod) {
+            StorageService storageService = ApplicationContextProvider.getStorageService();
+            int index = path.lastIndexOf('.');
+            String ext = (index == -1) ? "" : path.substring(index + 1);
+            try {
+                String newPath = storageService.createFile(ext);
+                storageService.copyFile(path, newPath);
+                setPath(newPath);
+            } catch (IOException e) {
+                throw new StreamTauException("10501", getId(), getPath());
+            }
         }
+        return super.transfer(pod0, pod1);
     }
 }

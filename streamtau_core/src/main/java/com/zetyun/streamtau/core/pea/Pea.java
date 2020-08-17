@@ -16,27 +16,23 @@
 
 package com.zetyun.streamtau.core.pea;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import com.zetyun.streamtau.core.pod.Pod;
 
-public interface Pea<I, T> {
+import javax.annotation.Nonnull;
+
+public interface Pea<I, T, P extends Pea<I, T, P>> {
     I getId();
 
     void setId(I id);
 
     T getType();
 
-    default Collection<I> children() {
-        Set<I> set = new HashSet<>();
-        PeaUtils.collectPeaIds(set, this);
-        return set;
-    }
-
-    default boolean reference(I id) {
-        return children().contains(id);
-    }
-
-    default void transferAnnex() {
+    @SuppressWarnings("unchecked")
+    default I transfer(
+        @Nonnull Pod<I, T, P> pod0,
+        @Nonnull Pod<I, T, P> pod1
+    ) {
+        PeaUtils.replacePeaIds(this, (I i) -> pod0.transfer(i, pod1));
+        return pod1.save((P) this);
     }
 }

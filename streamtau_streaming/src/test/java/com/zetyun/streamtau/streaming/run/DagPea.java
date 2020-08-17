@@ -27,7 +27,7 @@ import lombok.Setter;
     @JsonSubTypes.Type(PipelinePea.class),
     @JsonSubTypes.Type(SchemaPea.class),
 })
-public abstract class DagPea implements Pea<String, String> {
+public abstract class DagPea implements Pea<String, String, DagPea> {
     @Getter
     @Setter
     private String id;

@@ -36,26 +36,16 @@ public class FilePodDag implements Dag {
 
     public FilePodDag(String baseUrl, String pipelineFile) {
         pod = new FilePod<>(baseUrl, DagPea.class);
-        try {
-            PipelinePea pipeline = (PipelinePea) pod.load(pipelineFile);
-            operators = pipeline.getOperators();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Read file \"" + pipelineFile + "\" error!");
-        }
+        PipelinePea pipeline = (PipelinePea) pod.load(pipelineFile);
+        operators = pipeline.getOperators();
     }
 
     public SchemaSpec getSchema(String schemaId) {
         SchemaSpec schema = schemas.get(schemaId);
         if (schema == null) {
-            try {
-                SchemaPea schemaPea = (SchemaPea) pod.load(schemaId);
-                schema = schemaPea.getSchema();
-                schemas.put(schemaId, schema);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Read file \"" + schemaId + "\" error!");
-            }
+            SchemaPea schemaPea = (SchemaPea) pod.load(schemaId);
+            schema = schemaPea.getSchema();
+            schemas.put(schemaId, schema);
         }
         return schema;
     }
