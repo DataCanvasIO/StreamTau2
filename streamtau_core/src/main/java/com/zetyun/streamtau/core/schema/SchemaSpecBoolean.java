@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.streaming.transformer.source;
+package com.zetyun.streamtau.core.schema;
 
-import com.zetyun.streamtau.streaming.model.Operator;
-import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
-import com.zetyun.streamtau.streaming.transformer.TransformContext;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.zetyun.streamtau.runtime.schema.RtSchema;
+import com.zetyun.streamtau.runtime.schema.RtSchemaSingle;
+import com.zetyun.streamtau.runtime.schema.RtSchemaTypes;
 
 import javax.annotation.Nonnull;
 
-public class InPlaceSourceTransformer implements GeneralSourceTransformer {
-    @Nonnull
+@JsonTypeName("boolean")
+public final class SchemaSpecBoolean extends SchemaSpec {
     @Override
-    public DataStreamSource<?> transformSource(
-        @Nonnull Operator operator,
-        @Nonnull TransformContext context
-    ) {
-        return context.getEnv()
-            .fromCollection(((InPlaceSource) operator).getElements());
+    @Nonnull
+    public RtSchema createRtSchema() {
+        return new RtSchemaSingle(RtSchemaTypes.BOOL);
     }
 }

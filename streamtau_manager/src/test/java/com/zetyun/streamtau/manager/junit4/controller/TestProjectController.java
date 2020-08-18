@@ -154,6 +154,16 @@ public class TestProjectController {
             .andExpect(errorCode("100000"));
     }
 
+    @Test
+    public void testValidation() throws Exception {
+        mvc.perform(
+            post("/projects")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"\"}")
+        )
+            .andDo(print());
+    }
+
     // Mock application
     @Configuration
     @EnableAutoConfiguration

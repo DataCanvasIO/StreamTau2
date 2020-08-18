@@ -164,11 +164,11 @@ public class TestAssetServiceImpl {
 
     @Test
     public void testSynthesizeJobDef() throws IOException {
-        List<Asset> assets = readObjectFromCsv("/jobdef/cmdline/cmd_ls.csv", Asset.class);
+        List<Asset> assets = readObjectFromCsv("/jobdef/cmd_line/cmd_ls.csv", Asset.class);
         for (Asset asset : assets) {
             when(assetMapper.findByIdInProject(2L, asset.getProjectAssetId())).thenReturn(asset);
         }
         JobDefPod jobDefPod = assetService.synthesizeJobDef(2L, "APP");
-        assertThat(jobDefPod.toJobDefinition(), is(readJsonCompact("/jobdef/cmdline/cmd_ls.json")));
+        assertThat(jobDefPod.toJobDefinition(), is(readJsonCompact("/jobdef/cmd_line/cmd_ls.json")));
     }
 }

@@ -93,7 +93,6 @@ public class TestRun {
 
     @Test
     public void testSchemaParser() throws Exception {
-        System.out.println(System.getProperty("user.dir"));
         runCase("schema-parser.yml");
         checkCollectSinkAgainstFile("/result/name-gender-scores.json.txt");
     }

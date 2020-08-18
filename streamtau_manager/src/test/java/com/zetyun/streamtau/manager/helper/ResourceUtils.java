@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
+import com.zetyun.streamtau.runtime.ScriptFormat;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +38,10 @@ public final class ResourceUtils {
 
     @Nonnull
     public static JobDefPod readJobDef(String classPath) throws IOException {
-        return JobDefPod.fromJobDefinition(ResourceUtils.class.getResourceAsStream(classPath));
+        return JobDefPod.fromJobDefinition(
+            ScriptFormat.fromExtension(classPath),
+            ResourceUtils.class.getResourceAsStream(classPath)
+        );
     }
 
     public static String readJsonCompact(String classPath) throws IOException {

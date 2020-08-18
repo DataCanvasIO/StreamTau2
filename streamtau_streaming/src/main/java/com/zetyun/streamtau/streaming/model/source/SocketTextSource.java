@@ -14,30 +14,20 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.misc;
+package com.zetyun.streamtau.streaming.model.source;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.zetyun.streamtau.core.pea.PeaId;
-import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.streaming.model.Operator;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.ToString;
 
-import java.util.Map;
-
-@JsonTypeName("Pipeline")
-@EqualsAndHashCode(callSuper = true)
-public class Pipeline extends AssetPea {
-    @Schema(
-        description = "Specify the pipeline of a stream app.",
-        example = "{\"A\": {\"fid\": \"source\"}, \"B\": {\"fid\": \"sink\", \"dependencies\": [\"A\"]}}"
-    )
-    @JsonProperty("operators")
+@JsonTypeName("prelude.socket-text-source")
+@ToString(callSuper = true)
+public class SocketTextSource extends Source {
+    @JsonProperty("host")
     @Getter
-    @Setter
-    @PeaId.InIt
-    private Map<String, Operator> operators;
+    private String host;
+    @JsonProperty("port")
+    @Getter
+    private Integer port;
 }

@@ -44,7 +44,7 @@ public class CmdLineAppIT extends JUnit4CitrusTest {
             projectId,
             new ProjectRequest("test", "for citrus", "CONTAINER")
         ));
-        JobDefPod pod = readJobDef("/jobdef/cmdline/cmd_ls.json");
+        JobDefPod pod = readJobDef("/jobdef/cmd_line/cmd_ls.json");
         RestPod restPod = new RestPod(designer, projectId);
         pod.transfer(pod.getAppId(), restPod);
         designer.applyBehavior(new Jobs.Create(

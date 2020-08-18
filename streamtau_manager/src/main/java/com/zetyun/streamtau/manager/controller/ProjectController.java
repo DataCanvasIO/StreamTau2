@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import javax.validation.Valid;
 
 @Tag(name = "Project APIs")
 @RestController
@@ -53,7 +54,7 @@ public class ProjectController {
 
     @Operation(summary = "Create a new project.")
     @PostMapping("")
-    public ProjectDto create(@RequestBody ProjectRequest request) {
+    public ProjectDto create(@Valid @RequestBody ProjectRequest request) {
         return projectService.create(ProjectRequestMapper.MAPPER.toDto(request));
     }
 
@@ -62,7 +63,7 @@ public class ProjectController {
     public ProjectDto update(
         @Parameter(description = "The id of the project.")
         @PathVariable("id") String id,
-        @RequestBody ProjectRequest request) {
+        @Valid @RequestBody ProjectRequest request) {
         ProjectDto dto = ProjectRequestMapper.MAPPER.toDto(request);
         dto.setId(id);
         return projectService.update(dto);

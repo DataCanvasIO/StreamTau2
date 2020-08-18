@@ -27,6 +27,7 @@ import com.zetyun.streamtau.streaming.transformer.sink.SinkTransformer;
 import com.zetyun.streamtau.streaming.transformer.sink.TestCollectSinkFunctionProvider;
 import com.zetyun.streamtau.streaming.transformer.source.InPlaceSourceTransformer;
 import com.zetyun.streamtau.streaming.transformer.source.LocalFileSourceTransformer;
+import com.zetyun.streamtau.streaming.transformer.source.SocketTextSourceTransformer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedHashMap;
@@ -48,6 +49,8 @@ public class TransformerFactory {
             new InPlaceSourceTransformer());
         registerTransformer("prelude.local-file-source",
             new LocalFileSourceTransformer());
+        registerTransformer("prelude.socket-text-source",
+            new SocketTextSourceTransformer());
         // Sinks
         registerTransformer("prelude.print-sink",
             new PrintSinkTransformer());

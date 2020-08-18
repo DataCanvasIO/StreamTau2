@@ -17,20 +17,21 @@
 package com.zetyun.streamtau.streaming.transformer.source;
 
 import com.zetyun.streamtau.streaming.model.Operator;
-import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
+import com.zetyun.streamtau.streaming.model.source.SocketTextSource;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 
 import javax.annotation.Nonnull;
 
-public class InPlaceSourceTransformer implements GeneralSourceTransformer {
+public class SocketTextSourceTransformer implements GeneralSourceTransformer {
     @Nonnull
     @Override
     public DataStreamSource<?> transformSource(
         @Nonnull Operator operator,
         @Nonnull TransformContext context
     ) {
+        SocketTextSource socketTextSource = (SocketTextSource) operator;
         return context.getEnv()
-            .fromCollection(((InPlaceSource) operator).getElements());
+            .socketTextStream(socketTextSource.getHost(), socketTextSource.getPort());
     }
 }

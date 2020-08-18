@@ -91,4 +91,19 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <testResources>
+            <testResource>
+                <directory>${build.testSourceDirectory}/../resources</directory>
+                <targetPath>${build.testOutputDirectory}</targetPath>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>${build.testSourceDirectory}/../resources/dag</directory>
+                <targetPath>${build.testOutputDirectory}/dag</targetPath>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+    </build>
+
 </project>

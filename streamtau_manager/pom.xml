@@ -48,6 +48,16 @@
             <artifactId>springdoc-openapi-ui</artifactId>
         </dependency>
 
+        <!-- hibernate -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator-annotation-processor</artifactId>
+        </dependency>
+
         <!-- db -->
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -152,6 +162,18 @@
     </dependencies>
 
     <build>
+        <testResources>
+            <testResource>
+                <directory>${build.testSourceDirectory}/../resources</directory>
+                <targetPath>${build.testOutputDirectory}</targetPath>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>${build.testSourceDirectory}/../resources/jobdef</directory>
+                <targetPath>${build.testOutputDirectory}/jobdef</targetPath>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

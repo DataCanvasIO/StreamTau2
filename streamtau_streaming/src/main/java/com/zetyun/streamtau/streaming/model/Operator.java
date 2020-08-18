@@ -32,6 +32,7 @@ import com.zetyun.streamtau.streaming.model.sink.PrintSink;
 import com.zetyun.streamtau.streaming.model.sink.TestCollectSink;
 import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
 import com.zetyun.streamtau.streaming.model.source.LocalFileSource;
+import com.zetyun.streamtau.streaming.model.source.SocketTextSource;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,6 +47,7 @@ import javax.annotation.Nullable;
     // Sources
     @JsonSubTypes.Type(InPlaceSource.class),
     @JsonSubTypes.Type(LocalFileSource.class),
+    @JsonSubTypes.Type(SocketTextSource.class),
     // Sinks
     @JsonSubTypes.Type(PrintSink.class),
     @JsonSubTypes.Type(TestCollectSink.class),

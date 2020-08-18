@@ -46,7 +46,7 @@ public class FlinkJarAppIT extends JUnit4CitrusTest {
             projectId,
             new ProjectRequest("test", "for citrus", "CONTAINER")
         ));
-        JobDefPod pod = readJobDef("/jobdef/flinkjar/flink_jar_app.json");
+        JobDefPod pod = readJobDef("/jobdef/flink_jar/flink_jar_app.json");
         RestPod restPod = new RestPod(designer, projectId);
         pod.transfer(pod.getAppId(), restPod);
         designer.applyBehavior(new Files.Upload(

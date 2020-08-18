@@ -3,7 +3,7 @@ operators:
   TheSource:
     fid: prelude.local-file-source
     name: LocalFileSource
-    path: './src/test/resources/data/name-gender-scores.txt'
+    path: '${build.testOutputDirectory}/data/name-gender-scores.txt'
   TheParser:
     fid: prelude.schema-parser
     name: SchemaParser

@@ -16,31 +16,26 @@
 
 package com.zetyun.streamtau.streaming.transformer.source;
 
-import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
 import com.zetyun.streamtau.streaming.model.source.LocalFileSource;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
-import com.zetyun.streamtau.streaming.transformer.Transformer;
-import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 
 import javax.annotation.Nonnull;
 
-public class LocalFileSourceTransformer implements Transformer {
+@Slf4j
+public class LocalFileSourceTransformer implements GeneralSourceTransformer {
     @Nonnull
     @Override
-    public StreamNode transform(@Nonnull Operator operator, @Nonnull TransformContext context) {
-        DataStreamSource<String> stream0 = context.getEnv()
+    public DataStreamSource<?> transformSource(
+        @Nonnull Operator operator,
+        @Nonnull TransformContext context
+    ) {
+        if (log.isInfoEnabled()) {
+            log.info("Current working directory: {}", System.getProperty("user.dir"));
+        }
+        return context.getEnv()
             .readTextFile(((LocalFileSource) operator).getPath());
-        Integer parallelism = operator.getParallelism();
-        if (parallelism != null) {
-            stream0.setParallelism(parallelism);
-        }
-        SingleOutputStreamOperator<RtEvent> stream = stream0.map(RtEvent::singleValue);
-        if (parallelism != null) {
-            stream.setParallelism(parallelism);
-        }
-        return StreamNode.of(stream);
     }
 }

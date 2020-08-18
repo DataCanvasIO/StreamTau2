@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.core.pod.MapPod;
+import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -48,17 +49,27 @@ public class JobDefPod extends MapPod<String, String, AssetPea> {
     }
 
     @Nonnull
-    public static JobDefPod fromJobDefinition(String json) throws IOException {
-        JobDefPod pod = PeaParser.JSON.parse(json, JobDefPod.class);
+    public static JobDefPod fromJobDefinition(ScriptFormat format, String text) throws IOException {
+        JobDefPod pod = PeaParser.get(format).parse(text, JobDefPod.class);
         pod.setPeaIdsFromKey();
         return pod;
     }
 
     @Nonnull
-    public static JobDefPod fromJobDefinition(InputStream json) throws IOException {
-        JobDefPod pod = PeaParser.JSON.parse(json, JobDefPod.class);
+    public static JobDefPod fromJobDefinition(ScriptFormat format, InputStream text) throws IOException {
+        JobDefPod pod = PeaParser.get(format).parse(text, JobDefPod.class);
         pod.setPeaIdsFromKey();
         return pod;
+    }
+
+    @Nonnull
+    public static JobDefPod fromJobDefinition(String text) throws IOException {
+        return fromJobDefinition(ScriptFormat.APPLICATION_JSON, text);
+    }
+
+    @Nonnull
+    public static JobDefPod fromJobDefinition(InputStream text) throws IOException {
+        return fromJobDefinition(ScriptFormat.APPLICATION_JSON, text);
     }
 
     private void setPeaIdsFromKey() {

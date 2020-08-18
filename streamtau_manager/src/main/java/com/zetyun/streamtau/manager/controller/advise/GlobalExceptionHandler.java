@@ -19,6 +19,9 @@ package com.zetyun.streamtau.manager.controller.advise;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -53,14 +56,34 @@ public class GlobalExceptionHandler {
         }
     }
 
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    public StreamTauResponse validationExceptionHandler(
+        @SuppressWarnings("unused") HttpServletRequest request,
+        Exception exception,
+        @SuppressWarnings("unused") HttpServletResponse response
+    ) {
+        if (log.isWarnEnabled()) {
+            log.warn("Exception thrown: ", exception);
+        }
+        // TODO: more friendly messages.
+        BindingResult result = ((MethodArgumentNotValidException) exception).getBindingResult();
+        for (ObjectError error : result.getAllErrors()) {
+            if (log.isWarnEnabled()) {
+                log.warn("Error: {}", error);
+            }
+        }
+        return getApiResponse("10201", null);
+    }
+
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public StreamTauResponse requestExceptionHandler(
         @SuppressWarnings("unused") HttpServletRequest request,
         Exception exception,
         @SuppressWarnings("unused") HttpServletResponse response
     ) {
-        log.error("Exception thrown: ", exception);
-        loadMeassages();
+        if (log.isErrorEnabled()) {
+            log.error("Exception thrown: ", exception);
+        }
         return getApiResponse("10201", null);
     }
 
@@ -81,7 +104,9 @@ public class GlobalExceptionHandler {
         Exception exception,
         @SuppressWarnings("unused") HttpServletResponse response
     ) {
-        log.error("Exception thrown: ", exception);
+        if (log.isErrorEnabled()) {
+            log.error("Exception thrown: ", exception);
+        }
         return getApiResponse("100000", null);
     }
 }

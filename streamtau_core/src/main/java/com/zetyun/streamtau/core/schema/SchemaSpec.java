@@ -25,16 +25,18 @@ import lombok.Getter;
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     property = "type",
-    visible = true,
-    defaultImpl = SchemaSpecScalar.class
+    visible = true
 )
 @JsonSubTypes({
-    @JsonSubTypes.Type(SchemaSpecScalar.class),
+    @JsonSubTypes.Type(SchemaSpecInteger.class),
+    @JsonSubTypes.Type(SchemaSpecNumber.class),
+    @JsonSubTypes.Type(SchemaSpecString.class),
+    @JsonSubTypes.Type(SchemaSpecBoolean.class),
     @JsonSubTypes.Type(SchemaSpecObject.class),
     @JsonSubTypes.Type(SchemaSpecArray.class),
 })
 public abstract class SchemaSpec {
-    @JsonProperty("type")
+    @JsonProperty(value = "type", access = JsonProperty.Access.WRITE_ONLY)
     @Getter
     private Types type;
 

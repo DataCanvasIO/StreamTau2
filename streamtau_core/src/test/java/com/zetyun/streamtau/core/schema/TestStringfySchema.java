@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.junit4.pea;
+package com.zetyun.streamtau.core.schema;
 
-import com.zetyun.streamtau.manager.helper.ResourceUtils;
-import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.JobDefPod;
+import com.zetyun.streamtau.core.pea.PeaParser;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-public class TestJobDefPod {
+public class TestStringfySchema {
     @Test
-    public void testFromJobDefinition() throws IOException {
-        JobDefPod pod = ResourceUtils.readJobDef("/jobdef/cmd_line/cmd_ls.json");
-        for (Map.Entry<String, AssetPea> entry : pod.getPeaMap().entrySet()) {
-            assertThat(entry.getValue().getId(), is(entry.getKey()));
-        }
+    public void testScalar() throws IOException {
+        String str = "{type: string}";
+        SchemaSpec spec = new SchemaSpecInteger();
+        System.out.println(PeaParser.JSON.stringShowAll(spec));
     }
 }

@@ -30,9 +30,7 @@ public class TestParsingSchemaSpec {
     public void testScalar() throws IOException {
         String str = "{type: string}";
         SchemaSpec spec = PeaParser.YAML.parse(str, SchemaSpec.class);
-        assertThat(spec, instanceOf(SchemaSpecScalar.class));
-        SchemaSpecScalar scalar = (SchemaSpecScalar) spec;
-        assertThat(scalar.getType(), is(Types.STRING));
+        assertThat(spec, instanceOf(SchemaSpecString.class));
     }
 
     @Test
@@ -41,7 +39,6 @@ public class TestParsingSchemaSpec {
         SchemaSpec spec = PeaParser.YAML.parse(str, SchemaSpec.class);
         assertThat(spec, instanceOf(SchemaSpecObject.class));
         SchemaSpecObject dict = (SchemaSpecObject) spec;
-        assertThat(dict.getType(), is(Types.OBJECT));
         assertThat(dict.getProperties().get("a").getType(), is(Types.INTEGER));
         assertThat(dict.getProperties().get("b").getType(), is(Types.NUMBER));
     }

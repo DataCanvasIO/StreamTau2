@@ -1,0 +1,81 @@
+appId: APP
+map:
+  APP:
+    type: FlinkPipelineApp
+    category: APPLICATION
+    name: Flink pipeline app
+    pipeline: PIPE
+    server: COMMON_FLINK_MINI_CLUSTER
+  COMMON_FLINK_MINI_CLUSTER:
+    type: FlinkMiniCluster
+    category: SERVER
+    description: Flink mini cluster to run flink job.
+    name: Common Flink mini cluster
+  PIPE:
+    type: Pipeline
+    name: Pipeline
+    operators:
+      TheSource:
+        fid: prelude.local-file-source
+        name: Source
+        path: ${build.testOutputDirectory}/data/name-gender-scores.txt
+      TheParser:
+        fid: prelude.schema-parser
+        name: SchemaParser
+        description: Parsing event according schema.
+        dependencies:
+          - TheSource
+        schemaId: SCHEMA_A
+        format: application/yaml
+      TheMapper:
+        fid: prelude.schema-mapper
+        name: ScheamMapper
+        description: Map event from one schema to another schema.
+        dependencies:
+          - TheParser
+        schemaId: SCHEMA_B
+        mappings:
+          - target: name
+            value: name
+          - target: gender
+            value: gender
+          - target: totalScore
+            value: scores.maths + scores.english
+      TheSink:
+        fid: prelude.print-sink
+        name: Sink
+        description: Sink to collect the result.
+        dependencies:
+          - TheMapper
+  SCHEMA_A:
+    type: Schema
+    name: Student scores
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        scores:
+          type: object
+          additionalProperties: false
+          properties:
+            maths:
+              type: integer
+            english:
+              type: integer
+  SCHEMA_B:
+    type: Schema
+    name: Student total score
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        totalScore:
+          type: integer

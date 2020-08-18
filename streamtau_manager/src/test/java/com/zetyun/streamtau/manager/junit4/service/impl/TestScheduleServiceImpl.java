@@ -68,7 +68,7 @@ public class TestScheduleServiceImpl {
         job.setAppId("CMD");
         job.setVersion(1);
         job.setJobStatus(JobStatus.READY);
-        job.setJobDefinition(readJsonCompact("/jobdef/cmdline/cmd_ls.json"));
+        job.setJobDefinition(readJsonCompact("/jobdef/cmd_line/cmd_ls.json"));
         when(jobMapper.findJobOfStatus(JobStatus.READY)).thenReturn(Collections.singletonList(job));
         ExecutorInstance executorInstance = new ExecutorInstance(new Executor());
         when(serverService.getInstance(2L, "COMMON_EXECUTOR")).thenReturn(executorInstance);

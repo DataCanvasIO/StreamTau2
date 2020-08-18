@@ -16,21 +16,36 @@
 
 package com.zetyun.streamtau.streaming.transformer.source;
 
+import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
-import com.zetyun.streamtau.streaming.model.source.InPlaceSource;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
+import com.zetyun.streamtau.streaming.transformer.Transformer;
+import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 
 import javax.annotation.Nonnull;
 
-public class InPlaceSourceTransformer implements GeneralSourceTransformer {
+@FunctionalInterface
+public interface GeneralSourceTransformer extends Transformer {
     @Nonnull
-    @Override
-    public DataStreamSource<?> transformSource(
+    DataStreamSource<?> transformSource(
         @Nonnull Operator operator,
         @Nonnull TransformContext context
-    ) {
-        return context.getEnv()
-            .fromCollection(((InPlaceSource) operator).getElements());
+    );
+
+    @Nonnull
+    @Override
+    default StreamNode transform(@Nonnull Operator operator, @Nonnull TransformContext context) {
+        DataStreamSource<?> source = transformSource(operator, context);
+        Integer parallelism = operator.getParallelism();
+        if (parallelism != null) {
+            source.setParallelism(parallelism);
+        }
+        SingleOutputStreamOperator<RtEvent> stream = source.map(RtEvent::singleValue);
+        if (parallelism != null) {
+            stream.setParallelism(parallelism);
+        }
+        return StreamNode.of(stream);
     }
 }

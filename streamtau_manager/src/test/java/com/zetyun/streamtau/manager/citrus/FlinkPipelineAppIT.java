@@ -21,7 +21,6 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.junit.JUnit4CitrusTest;
 import com.zetyun.streamtau.manager.citrus.behavior.Assets;
-import com.zetyun.streamtau.manager.citrus.behavior.Files;
 import com.zetyun.streamtau.manager.citrus.behavior.Jobs;
 import com.zetyun.streamtau.manager.citrus.behavior.Projects;
 import com.zetyun.streamtau.manager.controller.protocol.JobRequest;
@@ -29,7 +28,6 @@ import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import javax.annotation.Nonnull;
@@ -37,7 +35,7 @@ import javax.annotation.Nonnull;
 import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJobDef;
 
-public class JavaJarAppIT extends JUnit4CitrusTest {
+public class FlinkPipelineAppIT extends JUnit4CitrusTest {
     @Test
     @CitrusTest
     public void testRun(@CitrusResource @Nonnull TestDesigner designer) throws IOException {
@@ -46,14 +44,9 @@ public class JavaJarAppIT extends JUnit4CitrusTest {
             projectId,
             new ProjectRequest("test", "for citrus", "CONTAINER")
         ));
-        JobDefPod pod = readJobDef("/jobdef/java_jar/jar_app.json");
+        JobDefPod pod = readJobDef("/jobdef/flink_pipeline/flink_pipeline_app.yml");
         RestPod restPod = new RestPod(designer, projectId);
         pod.transfer(pod.getAppId(), restPod);
-        designer.applyBehavior(new Files.Upload(
-            projectId,
-            "JAR",
-            new ClassPathResource("streamtau-test-hello-world.jar")
-        ));
         designer.applyBehavior(new Jobs.Create(
             projectId,
             "job",

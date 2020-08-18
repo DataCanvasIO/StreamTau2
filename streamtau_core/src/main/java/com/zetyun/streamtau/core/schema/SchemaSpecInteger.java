@@ -16,28 +16,18 @@
 
 package com.zetyun.streamtau.core.schema;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.zetyun.streamtau.runtime.schema.RtSchema;
 import com.zetyun.streamtau.runtime.schema.RtSchemaSingle;
 import com.zetyun.streamtau.runtime.schema.RtSchemaTypes;
 
 import javax.annotation.Nonnull;
 
-public final class SchemaSpecScalar extends SchemaSpec {
+@JsonTypeName("integer")
+public final class SchemaSpecInteger extends SchemaSpec {
     @Override
     @Nonnull
     public RtSchema createRtSchema() {
-        Types type = getType();
-        switch (type) {
-            case INTEGER:
-                return new RtSchemaSingle(RtSchemaTypes.INT);
-            case NUMBER:
-                return new RtSchemaSingle(RtSchemaTypes.REAL);
-            case STRING:
-                return new RtSchemaSingle(RtSchemaTypes.STR);
-            case BOOLEAN:
-                return new RtSchemaSingle(RtSchemaTypes.BOOL);
-            default:
-                throw new IllegalArgumentException("Invalid schema type \"" + type + "\".");
-        }
+        return new RtSchemaSingle(RtSchemaTypes.INT);
     }
 }
