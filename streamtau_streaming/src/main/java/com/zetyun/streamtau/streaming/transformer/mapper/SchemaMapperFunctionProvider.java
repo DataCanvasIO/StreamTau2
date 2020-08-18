@@ -17,6 +17,7 @@
 package com.zetyun.streamtau.streaming.transformer.mapper;
 
 import com.zetyun.streamtau.expr.core.Expr;
+import com.zetyun.streamtau.expr.parser.StreamTauExprCompiler;
 import com.zetyun.streamtau.expr.runtime.RtExpr;
 import com.zetyun.streamtau.expr.runtime.var.RtVar;
 import com.zetyun.streamtau.runtime.context.RtEvent;
@@ -49,12 +50,13 @@ public class SchemaMapperFunctionProvider implements MapFunctionProvider {
         RtSchemaMapping[] rtSchemaMappings = new RtSchemaMapping[schemaMappings.length];
         int i = 0;
         for (SchemaMapping mapping : ((SchemaMapper) operator).getMappings()) {
-            Expr target = mapping.getTarget();
+            Expr target = StreamTauExprCompiler.INS.parse(mapping.getTarget());
             RtExpr rtTarget = target.compileIn(outputSchema.getRoot());
             if (!(rtTarget instanceof RtVar)) {
                 throw new InvalidMappingTarget(target, outputSchema);
             }
-            RtExpr rtValue = mapping.getValue().compileIn(inputSchema.getRoot());
+            RtExpr rtValue = StreamTauExprCompiler.INS.parse(mapping.getValue())
+                .compileIn(inputSchema.getRoot());
             rtSchemaMappings[i++] = new RtSchemaMapping((RtVar) rtTarget, rtValue);
         }
         return new SchemaMapperFunction(rtSchemaMappings, outputSchema.getMaxIndex());

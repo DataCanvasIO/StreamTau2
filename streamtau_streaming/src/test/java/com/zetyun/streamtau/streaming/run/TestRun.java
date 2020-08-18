@@ -24,7 +24,6 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.test.util.MiniClusterWithClientResource;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,7 +41,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-@FixMethodOrder()
 public class TestRun {
     @ClassRule
     public static MiniClusterWithClientResource cluster =
@@ -95,6 +93,7 @@ public class TestRun {
 
     @Test
     public void testSchemaParser() throws Exception {
+        System.out.println(System.getProperty("user.dir"));
         runCase("schema-parser.yml");
         checkCollectSinkAgainstFile("/result/name-gender-scores.json.txt");
     }
