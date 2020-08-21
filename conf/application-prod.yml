@@ -23,8 +23,10 @@ spring:
     cache: false
 mybatis:
   config-location: 'classpath:/db/mybatis-config.xml'
-file:
+streamtau:
   storage:
     type: local
     local:
       dir: ~
+  streaming:
+    lib-path: lib/

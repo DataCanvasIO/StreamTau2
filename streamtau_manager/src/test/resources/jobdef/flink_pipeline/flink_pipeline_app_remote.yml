@@ -5,20 +5,25 @@ map:
     category: APPLICATION
     name: Flink pipeline app
     pipeline: PIPE
-    server: COMMON_FLINK_MINI_CLUSTER
-  COMMON_FLINK_MINI_CLUSTER:
-    type: FlinkMiniCluster
+    server: FLINK_CLUSTER
+  FLINK_CLUSTER:
+    type: FlinkRemoteCluster
     category: SERVER
-    description: Flink mini cluster to run flink job.
-    name: Common Flink mini cluster
+    host: 172.20.3.73
+    name: Flink cluster
   PIPE:
     type: Pipeline
     name: Pipeline
     operators:
       TheSource:
-        fid: prelude.local-file-source
+        fid: prelude.in-place-source
         name: Source
-        path: '${project.build.testOutputDirectory}/data/name-gender-scores.txt'
+        parallelism: 1
+        elements:
+          - '{name: Alice, gender: F, scores: {maths: 100, english: 80}}'
+          - '{name: Bob, gender: M, scores: {maths: 90, english: 70}}'
+          - '{name: Cooper, gender: M, scores: {maths: 62, english: 78}}'
+          - '{name: Daisy, gender: F, scores: {maths: 75, english: 94}}'
       TheParser:
         fid: prelude.schema-parser
         name: SchemaParser

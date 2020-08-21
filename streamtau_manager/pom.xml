@@ -32,6 +32,12 @@
     <artifactId>streamtau-manager</artifactId>
     <packaging>war</packaging>
 
+    <properties>
+        <lib-path>${project.parent.basedir}/lib</lib-path>
+        <streaming.lib-path>${lib-path}/streaming</streaming.lib-path>
+        <streaming.runtime.path>${streaming.lib-path}/runtime</streaming.runtime.path>
+    </properties>
+
     <dependencies>
         <!-- spring -->
         <dependency>
@@ -88,6 +94,10 @@
         <!-- flink -->
         <dependency>
             <groupId>org.apache.flink</groupId>
+            <artifactId>flink-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
             <artifactId>flink-streaming-java_2.12</artifactId>
         </dependency>
         <dependency>
@@ -96,10 +106,22 @@
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
+            <artifactId>flink-runtime_2.12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
             <artifactId>flink-runtime-web_2.12</artifactId>
         </dependency>
 
         <!-- jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-csv</artifactId>
@@ -130,6 +152,23 @@
             <artifactId>commons-io</artifactId>
         </dependency>
 
+        <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- citrus -->
         <dependency>
             <groupId>com.consol.citrus</groupId>
@@ -147,6 +186,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
         <!-- static check -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -157,20 +202,58 @@
         <!-- this project -->
         <dependency>
             <groupId>com.zetyun.streamtau</groupId>
+            <artifactId>streamtau-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zetyun.streamtau</groupId>
+            <artifactId>streamtau-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zetyun.streamtau</groupId>
             <artifactId>streamtau-streaming</artifactId>
         </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>${project.build.outputDirectory}</targetPath>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>application-dev.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>${project.build.outputDirectory}</targetPath>
+                <filtering>true</filtering>
+                <includes>
+                    <include>application-dev.yml</include>
+                </includes>
+            </resource>
+        </resources>
         <testResources>
             <testResource>
-                <directory>${build.testSourceDirectory}/../resources</directory>
-                <targetPath>${build.testOutputDirectory}</targetPath>
+                <directory>src/test/resources</directory>
+                <targetPath>${project.build.testOutputDirectory}</targetPath>
                 <filtering>false</filtering>
+                <excludes>
+                    <exclude>application-test.yml</exclude>
+                    <exclude>jobdef</exclude>
+                </excludes>
             </testResource>
             <testResource>
-                <directory>${build.testSourceDirectory}/../resources/jobdef</directory>
-                <targetPath>${build.testOutputDirectory}/jobdef</targetPath>
+                <directory>src/test/resources</directory>
+                <targetPath>${project.build.testOutputDirectory}</targetPath>
+                <filtering>true</filtering>
+                <includes>
+                    <include>application-test.yml</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources/jobdef</directory>
+                <targetPath>${project.build.testOutputDirectory}/jobdef</targetPath>
                 <filtering>true</filtering>
             </testResource>
         </testResources>
@@ -262,6 +345,45 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>
+                                streamtau-streaming-runtime,
+                                jackson-core,
+                                jackson-databind,
+                                jackson-annotations,
+                                jackson-dataformat-yaml,
+                                snakeyaml,
+                            </includeArtifactIds>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>${streaming.runtime.path}</outputDirectory>
+                    <overWriteReleases>false</overWriteReleases>
+                    <overWriteSnapshots>true</overWriteSnapshots>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${lib-path}</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
         </plugins>
     </build>

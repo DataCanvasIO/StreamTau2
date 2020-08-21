@@ -28,9 +28,10 @@ public interface ProjectRequestMapper {
     ProjectRequestMapper MAPPER = Mappers.getMapper(ProjectRequestMapper.class);
 
     @Mappings({
+        @Mapping(target = "id", ignore = true),
         @Mapping(source = "name", target = "name"),
         @Mapping(source = "description", target = "description"),
-        @Mapping(source = "type", target = "type")
+        @Mapping(source = "type", target = "type"),
     })
     ProjectDto toDto(ProjectRequest projectRequest);
 }

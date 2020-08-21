@@ -17,6 +17,8 @@
 package com.zetyun.streamtau.runtime.context;
 
 import com.zetyun.streamtau.runtime.exception.NotSingleValue;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +26,12 @@ import javax.annotation.Nullable;
 public class RtEvent implements ExecContext {
     private static final long serialVersionUID = 4296554739886078865L;
 
-    private final Object[] indexedVars;
+    @Getter
+    @Setter
+    private Object[] indexedVars;
+
+    public RtEvent() {
+    }
 
     public RtEvent(int numIndexedVars) {
         indexedVars = new Object[numIndexedVars];

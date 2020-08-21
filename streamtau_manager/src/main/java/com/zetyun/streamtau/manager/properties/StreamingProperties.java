@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.core;
+package com.zetyun.streamtau.manager.properties;
 
-import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.runtime.context.CompileContext;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
-public interface Expr {
-    @Nonnull
-    Class<?> typeIn(@Nullable CompileContext ctx);
+@Configuration
+@ConfigurationProperties("streamtau.streaming")
+@Getter
+@Setter
+public class StreamingProperties {
+    @NotNull
+    private String libPath;
 
-    @Nonnull
-    RtExpr compileIn(@Nullable CompileContext ctx);
+    public String getStreamingRuntimeLibPath() {
+        return libPath + "/runtime";
+    }
 }

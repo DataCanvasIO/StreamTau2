@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.service.impl;
 
+import com.zetyun.streamtau.manager.properties.LocalFileStorageProperties;
 import com.zetyun.streamtau.manager.service.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +30,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 
 @Service
-@ConditionalOnProperty(name = "file.storage.type", havingValue = "local", matchIfMissing = true)
+@ConditionalOnProperty(name = "streamtau.storage.type", havingValue = "local", matchIfMissing = true)
 @EnableConfigurationProperties(LocalFileStorageProperties.class)
 @Slf4j
 public class LocalFileStorageService implements StorageService {
     private final Path root;
 
     @Autowired
-    public LocalFileStorageService(LocalFileStorageProperties properties) {
+    public LocalFileStorageService(@Nonnull LocalFileStorageProperties properties) {
         String dir = properties.getDir();
         if (dir == null || dir.isEmpty()) {
             root = Paths.get(System.getProperty("java.io.tmpdir"), "StreamTau");

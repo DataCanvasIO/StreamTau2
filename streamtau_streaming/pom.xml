@@ -36,12 +36,22 @@
         <!-- flink -->
         <dependency>
             <groupId>org.apache.flink</groupId>
+            <artifactId>flink-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
             <artifactId>flink-streaming-java_2.12</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-clients_2.12</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-runtime_2.12</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -53,6 +63,12 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-test-utils_2.12</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
         </dependency>
 
         <!-- facilities -->
@@ -68,6 +84,17 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
         <!-- static check -->
         <dependency>
@@ -79,7 +106,15 @@
         <!-- this project -->
         <dependency>
             <groupId>com.zetyun.streamtau</groupId>
+            <artifactId>streamtau-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zetyun.streamtau</groupId>
             <artifactId>streamtau-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zetyun.streamtau</groupId>
+            <artifactId>streamtau-expr-runtime</artifactId>
         </dependency>
         <dependency>
             <groupId>com.zetyun.streamtau</groupId>
@@ -94,16 +129,30 @@
     <build>
         <testResources>
             <testResource>
-                <directory>${build.testSourceDirectory}/../resources</directory>
-                <targetPath>${build.testOutputDirectory}</targetPath>
+                <directory>src/test/resources</directory>
+                <targetPath>${project.build.testOutputDirectory}</targetPath>
                 <filtering>false</filtering>
+                <excludes>
+                    <exclude>dag</exclude>
+                </excludes>
             </testResource>
             <testResource>
-                <directory>${build.testSourceDirectory}/../resources/dag</directory>
-                <targetPath>${build.testOutputDirectory}/dag</targetPath>
+                <directory>src/test/resources/dag</directory>
+                <targetPath>${project.build.testOutputDirectory}/dag</targetPath>
                 <filtering>true</filtering>
             </testResource>
         </testResources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <parallel>classes</parallel>
+                    <perCoreThreadCount>true</perCoreThreadCount>
+                    <threadCount>1</threadCount>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

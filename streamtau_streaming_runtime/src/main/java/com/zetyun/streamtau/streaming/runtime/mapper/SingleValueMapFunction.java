@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service.impl;
+package com.zetyun.streamtau.streaming.runtime.mapper;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import com.zetyun.streamtau.runtime.context.RtEvent;
+import org.apache.flink.api.common.functions.MapFunction;
 
-@Getter
-@Setter
-@ConfigurationProperties("file.storage.local")
-public class LocalFileStorageProperties {
-    private String dir;
+public class SingleValueMapFunction<T> implements MapFunction<T, RtEvent> {
+    private static final long serialVersionUID = -7397388004461874061L;
+
+    @Override
+    public RtEvent map(T obj) {
+        return RtEvent.singleValue(obj);
+    }
 }

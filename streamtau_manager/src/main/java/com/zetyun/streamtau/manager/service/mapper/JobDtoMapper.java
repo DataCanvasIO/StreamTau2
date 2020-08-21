@@ -28,8 +28,12 @@ public interface JobDtoMapper {
     JobDtoMapper MAPPER = Mappers.getMapper(JobDtoMapper.class);
 
     @Mappings({
+        @Mapping(target = "jobId", ignore = true),
+        @Mapping(target = "projectId", ignore = true),
         @Mapping(source = "name", target = "jobName"),
         @Mapping(source = "appId", target = "appId"),
+        @Mapping(target = "version", ignore = true),
+        @Mapping(target = "jobDefinition", ignore = true),
         @Mapping(source = "jobStatus", target = "jobStatus"),
     })
     Job toModel(JobDto dto);

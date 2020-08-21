@@ -17,7 +17,7 @@
 package com.zetyun.streamtau.manager.runner;
 
 import com.zetyun.streamtau.manager.exception.StreamTauException;
-import com.zetyun.streamtau.manager.instance.server.FlinkMiniClusterInstance;
+import com.zetyun.streamtau.manager.instance.server.FlinkClusterInstance;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.FlinkJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 public class FlinkJarRunner extends SingleServerRunner {
     public void run(
         @Nonnull JobDefPod pod,
-        @Nonnull FlinkMiniClusterInstance flinkMiniClusterInstance,
+        @Nonnull FlinkClusterInstance flinkClusterInstance,
         Runnable onFinish
     ) {
         FlinkJarApp flinkJarApp = (FlinkJarApp) pod.getApp();
@@ -40,7 +40,7 @@ public class FlinkJarRunner extends SingleServerRunner {
         StorageService storageService = ApplicationContextProvider.getStorageService();
         String path = storageService.resolve(jarFile.getPath());
         try {
-            flinkMiniClusterInstance.runPackagedProgram(path);
+            flinkClusterInstance.runPackagedProgram(path);
         } catch (ProgramInvocationException e) {
             throw new StreamTauException("10301", flinkJarApp.getName());
         }

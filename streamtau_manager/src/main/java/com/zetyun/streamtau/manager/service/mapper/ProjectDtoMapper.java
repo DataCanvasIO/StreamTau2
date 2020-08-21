@@ -36,6 +36,7 @@ public interface ProjectDtoMapper {
     ProjectDto fromModel(Project model);
 
     @Mappings({
+        @Mapping(target = "projectId", ignore = true),
         @Mapping(source = "id", target = "userProjectId"),
         @Mapping(source = "name", target = "projectName"),
         @Mapping(source = "description", target = "projectDescription"),

@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.utils;
 
+import com.zetyun.streamtau.manager.properties.StreamingProperties;
 import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import org.springframework.beans.BeansException;
@@ -46,5 +47,10 @@ public class ApplicationContextProvider implements ApplicationContextAware {
     @Nonnull
     public static ServerService getServerService() {
         return context.getBean(ServerService.class);
+    }
+
+    @Nonnull
+    public static StreamingProperties getStreamingProperties() {
+        return context.getBean(StreamingProperties.class);
     }
 }

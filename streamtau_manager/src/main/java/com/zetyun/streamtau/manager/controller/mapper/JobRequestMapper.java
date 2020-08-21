@@ -28,8 +28,10 @@ public interface JobRequestMapper {
     JobRequestMapper MAPPER = Mappers.getMapper(JobRequestMapper.class);
 
     @Mappings({
+        @Mapping(target = "id", ignore = true),
         @Mapping(source = "name", target = "name"),
         @Mapping(source = "appId", target = "appId"),
+        @Mapping(target = "appType", ignore = true),
         @Mapping(source = "jobStatus", target = "jobStatus"),
     })
     JobDto toDto(JobRequest jobRequest);

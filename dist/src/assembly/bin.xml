@@ -32,6 +32,10 @@
             <outputDirectory>conf</outputDirectory>
         </fileSet>
         <fileSet>
+            <directory>../lib</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>../bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
@@ -46,7 +50,7 @@
         <moduleSet>
             <!-- This module set includes artifacts for directly deployment of StreamTau. -->
 
-            <!-- Enable access to all projects in the current multimodule build! -->
+            <!-- Enable access to all projects in the current multi module build! -->
             <useAllReactorProjects>true</useAllReactorProjects>
 
             <!-- Now, select which projects to include in this module-set. -->

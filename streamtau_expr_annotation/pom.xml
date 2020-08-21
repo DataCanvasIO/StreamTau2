@@ -30,6 +30,7 @@
     </parent>
 
     <artifactId>streamtau-expr-annotation</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- facilities -->
@@ -56,6 +57,13 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- static check -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

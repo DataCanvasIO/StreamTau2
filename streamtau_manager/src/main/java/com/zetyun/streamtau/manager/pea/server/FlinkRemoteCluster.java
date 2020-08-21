@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.core;
+package com.zetyun.streamtau.manager.pea.server;
 
-import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.runtime.context.CompileContext;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public interface Expr {
-    @Nonnull
-    Class<?> typeIn(@Nullable CompileContext ctx);
-
-    @Nonnull
-    RtExpr compileIn(@Nullable CompileContext ctx);
+@JsonTypeName("FlinkRemoteCluster")
+@EqualsAndHashCode(callSuper = true)
+public class FlinkRemoteCluster extends Server {
+    @JsonProperty("host")
+    @Getter
+    private String host;
+    @JsonProperty("port")
+    @Getter
+    @Setter
+    private Integer port;
 }

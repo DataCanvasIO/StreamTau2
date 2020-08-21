@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.expr.core;
+package com.zetyun.streamtau.manager.instance.server;
 
-import com.zetyun.streamtau.expr.runtime.RtExpr;
-import com.zetyun.streamtau.runtime.context.CompileContext;
+import org.apache.flink.client.program.ProgramInvocationException;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
+import java.net.URL;
+import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface Expr {
-    @Nonnull
-    Class<?> typeIn(@Nullable CompileContext ctx);
+public interface FlinkClusterInstance {
+    StreamExecutionEnvironment getExecutionEnv(
+        int parallelism,
+        @Nullable Collection<String> jarFiles,
+        @Nullable Collection<URL> classPaths
+    );
 
-    @Nonnull
-    RtExpr compileIn(@Nullable CompileContext ctx);
+    void runPackagedProgram(@Nonnull String path) throws ProgramInvocationException;
 }

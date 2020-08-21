@@ -1,0 +1,24 @@
+{
+  "appId": "APP",
+  "map": {
+    "APP": {
+      "type": "FlinkJarApp",
+      "category": "APPLICATION",
+      "jarFile": "JAR",
+      "name": "app",
+      "server": "FLINK_CLUSTER"
+    },
+    "FLINK_CLUSTER": {
+      "type": "FlinkRemoteCluster",
+      "category": "SERVER",
+      "host": "172.20.3.73",
+      "name": "Flink cluster"
+    },
+    "JAR": {
+      "type": "JarFile",
+      "category": "FILE",
+      "name": "jarFile",
+      "path": "FLINK_JAR_APP.jar"
+    }
+  }
+}

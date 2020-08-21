@@ -29,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 @Slf4j
@@ -44,7 +46,7 @@ public class SingleServerRunner implements Runner {
             server.getId()
         );
         try {
-            Method method = this.getClass().getDeclaredMethod(
+            Method method = getAppropriateMethod(
                 "run",
                 JobDefPod.class,
                 serverInstance.getClass(),
@@ -66,7 +68,39 @@ public class SingleServerRunner implements Runner {
         } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new StreamTauException("10102", app.getType(), server.getType());
         } catch (InvocationTargetException e) {
+            // TODO: throw exception
             e.printStackTrace();
         }
+    }
+
+    @Nonnull
+    private Method getAppropriateMethod(String name, Class<?>... paraTypes) throws NoSuchMethodException {
+        Method[] methods = this.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            if (!method.getName().equals(name)) {
+                continue;
+            }
+            Class<?>[] types = method.getParameterTypes();
+            if (types.length != paraTypes.length) {
+                continue;
+            }
+            int i;
+            for (i = 0; i < types.length; i++) {
+                if (!types[i].isAssignableFrom(paraTypes[i])) {
+                    break;
+                }
+            }
+            if (i == types.length) {
+                return method;
+            }
+        }
+        String b = "No method exists in class \""
+            + this.getClass().getSimpleName()
+            + "\" which can be called by \""
+            + name
+            + "\"("
+            + Arrays.stream(paraTypes).map(Class::getSimpleName).collect(Collectors.joining(", "))
+            + ").";
+        throw new NoSuchMethodException(b);
     }
 }

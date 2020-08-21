@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
+import javax.annotation.Nonnull;
 
 @Slf4j
 public class ServerInstanceFactory {
@@ -34,6 +35,7 @@ public class ServerInstanceFactory {
         instanceSupplierMap = new LinkedHashMap<>(10);
         registerServerInstance("Executor", ExecutorInstance::new);
         registerServerInstance("FlinkMiniCluster", FlinkMiniClusterInstance::new);
+        registerServerInstance("FlinkRemoteCluster", FlinkRemoteClusterInstance::new);
     }
 
     public static ServerInstanceFactory get() {
@@ -48,7 +50,7 @@ public class ServerInstanceFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public <S extends ServerInstance> S getServerInstance(Server server) {
+    public <S extends ServerInstance> S getServerInstance(@Nonnull Server server) {
         String type = server.getType();
         Function<Server, ServerInstance> supplier = instanceSupplierMap.get(type);
         if (supplier == null) {

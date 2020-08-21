@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.manager.runner;
 
-import com.zetyun.streamtau.manager.instance.server.FlinkMiniClusterInstance;
+import com.zetyun.streamtau.manager.instance.server.FlinkClusterInstance;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.JobDefPodDag;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
@@ -29,11 +29,11 @@ import javax.annotation.Nonnull;
 public class FlinkPipelineRunner extends SingleServerRunner {
     public void run(
         @Nonnull JobDefPod pod,
-        @Nonnull FlinkMiniClusterInstance flinkMiniClusterInstance,
+        @Nonnull FlinkClusterInstance flinkClusterInstance,
         Runnable onFinish
     ) {
         JobDefPodDag dag = new JobDefPodDag(pod);
-        StreamExecutionEnvironment env = flinkMiniClusterInstance.getExecutionEnv(
+        StreamExecutionEnvironment env = flinkClusterInstance.getExecutionEnv(
             dag.getParallelism(),
             null,
             null

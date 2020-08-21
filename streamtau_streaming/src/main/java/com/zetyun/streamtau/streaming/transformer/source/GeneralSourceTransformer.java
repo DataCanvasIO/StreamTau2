@@ -18,6 +18,7 @@ package com.zetyun.streamtau.streaming.transformer.source;
 
 import com.zetyun.streamtau.runtime.context.RtEvent;
 import com.zetyun.streamtau.streaming.model.Operator;
+import com.zetyun.streamtau.streaming.runtime.mapper.SingleValueMapFunction;
 import com.zetyun.streamtau.streaming.transformer.TransformContext;
 import com.zetyun.streamtau.streaming.transformer.Transformer;
 import com.zetyun.streamtau.streaming.transformer.node.StreamNode;
@@ -42,7 +43,7 @@ public interface GeneralSourceTransformer extends Transformer {
         if (parallelism != null) {
             source.setParallelism(parallelism);
         }
-        SingleOutputStreamOperator<RtEvent> stream = source.map(RtEvent::singleValue);
+        SingleOutputStreamOperator<RtEvent> stream = source.map(new SingleValueMapFunction<>());
         if (parallelism != null) {
             stream.setParallelism(parallelism);
         }

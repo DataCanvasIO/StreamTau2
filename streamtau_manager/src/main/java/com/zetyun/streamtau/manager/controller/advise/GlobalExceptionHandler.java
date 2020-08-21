@@ -93,6 +93,9 @@ public class GlobalExceptionHandler {
         Exception exception,
         @SuppressWarnings("unused") HttpServletResponse response
     ) {
+        if (log.isErrorEnabled()) {
+            log.error("Exception thrown: ", exception);
+        }
         String errorCode = ((StreamTauException) exception).getErrorCode();
         Object[] args = ((StreamTauException) exception).getArgs();
         return getApiResponse(errorCode, args);

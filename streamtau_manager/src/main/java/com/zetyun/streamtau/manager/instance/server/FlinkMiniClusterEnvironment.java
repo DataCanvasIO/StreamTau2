@@ -34,13 +34,13 @@ import javax.annotation.Nullable;
 
 public class FlinkMiniClusterEnvironment extends StreamExecutionEnvironment {
     private final JobExecutor jobExecutor;
-    private final Collection<Path> jarFiles;
+    private final Collection<String> jarFiles;
     private final Collection<URL> classPaths;
 
     public FlinkMiniClusterEnvironment(
         JobExecutor jobExecutor,
         int parallelism,
-        @Nullable Collection<Path> jarFiles,
+        @Nullable Collection<String> jarFiles,
         @Nullable Collection<URL> classPaths
     ) {
         this.jobExecutor = jobExecutor;
@@ -54,8 +54,9 @@ public class FlinkMiniClusterEnvironment extends StreamExecutionEnvironment {
     public static void setAsContext(
         final JobExecutor jobExecutor,
         int parallelism,
-        final Collection<Path> jarFiles,
-        final Collection<URL> classPaths) {
+        final Collection<String> jarFiles,
+        final Collection<URL> classPaths
+    ) {
         StreamExecutionEnvironmentFactory factory = () -> new FlinkMiniClusterEnvironment(
             jobExecutor,
             parallelism,
@@ -73,7 +74,7 @@ public class FlinkMiniClusterEnvironment extends StreamExecutionEnvironment {
     public JobExecutionResult execute(@Nonnull StreamGraph streamGraph) throws Exception {
         JobGraph jobGraph = streamGraph.getJobGraph();
         if (jarFiles != null) {
-            jarFiles.forEach(jobGraph::addJar);
+            jarFiles.forEach(f -> jobGraph.addJar(new Path(f)));
         }
         if (classPaths != null) {
             jobGraph.setClasspaths(new ArrayList<>(classPaths));

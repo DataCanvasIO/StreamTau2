@@ -39,6 +39,7 @@ import com.zetyun.streamtau.manager.pea.misc.Pipeline;
 import com.zetyun.streamtau.manager.pea.misc.SchemaPea;
 import com.zetyun.streamtau.manager.pea.server.Executor;
 import com.zetyun.streamtau.manager.pea.server.FlinkMiniCluster;
+import com.zetyun.streamtau.manager.pea.server.FlinkRemoteCluster;
 import com.zetyun.streamtau.runtime.ScriptFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
@@ -83,6 +84,7 @@ import javax.annotation.Nonnull;
     // Server
     @JsonSubTypes.Type(Executor.class),
     @JsonSubTypes.Type(FlinkMiniCluster.class),
+    @JsonSubTypes.Type(FlinkRemoteCluster.class),
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @EqualsAndHashCode

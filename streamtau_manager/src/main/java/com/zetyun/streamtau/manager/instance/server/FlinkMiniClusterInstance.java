@@ -22,14 +22,11 @@ import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.JobID;
 import org.apache.flink.client.program.MiniClusterClient;
 import org.apache.flink.client.program.PackagedProgram;
 import org.apache.flink.client.program.ProgramInvocationException;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
-import org.apache.flink.core.fs.Path;
-import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.apache.flink.runtime.minicluster.MiniCluster;
 import org.apache.flink.runtime.minicluster.MiniClusterConfiguration;
 
@@ -37,12 +34,13 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
-public class FlinkMiniClusterInstance extends ServerInstance {
+public class FlinkMiniClusterInstance extends ServerInstance implements FlinkClusterInstance {
     private MiniCluster miniCluster = null;
 
     public FlinkMiniClusterInstance(Server server) {
@@ -98,22 +96,11 @@ public class FlinkMiniClusterInstance extends ServerInstance {
         return miniCluster != null && miniCluster.isRunning() ? ServerStatus.ACTIVE : ServerStatus.INACTIVE;
     }
 
-    public void submitJobGraph(JobGraph jobGraph) {
+    public void runPackagedProgram(@Nonnull String path) throws ProgramInvocationException {
         start();
-        MiniClusterClient client = new MiniClusterClient(new Configuration(), miniCluster);
-        JobID jobID = client.submitJob(jobGraph).join();
-        if (log.isInfoEnabled()) {
-            log.info("Submitted job graph \"{}\" successfully. JobID = {}.",
-                jobGraph.getName(), jobID);
-        }
-    }
-
-    public void runPackagedProgram(String path) throws ProgramInvocationException {
-        File jarFile = new File(path);
         PackagedProgram program = PackagedProgram.newBuilder()
-            .setJarFile(jarFile)
+            .setJarFile(new File(path))
             .build();
-        start();
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(program.getUserCodeClassLoader());
@@ -121,7 +108,7 @@ public class FlinkMiniClusterInstance extends ServerInstance {
                 FlinkMiniClusterEnvironment.setAsContext(
                     miniCluster,
                     1,
-                    Collections.singleton(Path.fromLocalFile(jarFile)),
+                    Collections.singleton(path),
                     program.getClasspaths()
                 );
                 program.invokeInteractiveModeForExecution();
@@ -133,9 +120,10 @@ public class FlinkMiniClusterInstance extends ServerInstance {
         }
     }
 
+    @Override
     public FlinkMiniClusterEnvironment getExecutionEnv(
         int parallelism,
-        @Nullable Collection<Path> jarFiles,
+        @Nullable Collection<String> jarFiles,
         @Nullable Collection<URL> classPaths
     ) {
         start();
