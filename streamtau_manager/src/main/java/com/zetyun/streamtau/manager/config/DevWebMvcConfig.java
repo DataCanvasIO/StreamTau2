@@ -16,29 +16,20 @@
 
 package com.zetyun.streamtau.manager.config;
 
-import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.format.FormatterRegistry;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import javax.annotation.Nonnull;
 
 @Configuration
-@Profile("prod")
-public class WebMvcConfig implements WebMvcConfigurer {
+@Profile({"dev", "test"})
+public class DevWebMvcConfig extends WebMvcConfig {
     @Override
-    public void configurePathMatch(@Nonnull PathMatchConfigurer configurer) {
-        AntPathMatcher matcher = new AntPathMatcher();
-        matcher.setCaseSensitive(false);
-        configurer.setPathMatcher(matcher);
-    }
-
-    @Override
-    public void addFormatters(@Nonnull FormatterRegistry registry) {
-        // Convert string to enum ignoring case
-        ApplicationConversionService.configure(registry);
+    public void addCorsMappings(@Nonnull CorsRegistry registry) {
+        registry
+            .addMapping("/**")
+            .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            .allowedOrigins("*");
     }
 }
