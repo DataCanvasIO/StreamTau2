@@ -28,6 +28,7 @@ import com.zetyun.streamtau.manager.controller.protocol.JobRequest;
 import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
@@ -37,6 +38,7 @@ import javax.annotation.Nonnull;
 import static com.zetyun.streamtau.manager.citrus.CitrusCommon.varRef;
 import static com.zetyun.streamtau.manager.helper.ResourceUtils.readJobDef;
 
+@Ignore
 public class FlinkJarAppRemoteIT extends JUnit4CitrusTest {
     @Test
     @CitrusTest

@@ -31,6 +31,7 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.DeploymentOptions;
 import org.apache.flink.configuration.JobManagerOptions;
 import org.apache.flink.configuration.PipelineOptions;
+import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.core.execution.DefaultExecutorServiceLoader;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
@@ -73,8 +74,9 @@ public class FlinkRemoteClusterInstance extends ServerInstance implements FlinkC
         FlinkRemoteCluster cluster = (FlinkRemoteCluster) getServer();
         Configuration config = new Configuration();
         config.set(DeploymentOptions.TARGET, "remote");
-        config.setString(JobManagerOptions.ADDRESS, cluster.getHost());
-        config.setInteger(JobManagerOptions.PORT, cluster.getPort());
+        config.set(JobManagerOptions.ADDRESS, cluster.getHost());
+        config.set(JobManagerOptions.PORT, cluster.getPort());
+        config.set(RestOptions.PORT, cluster.getPort());
         try {
             config.set(
                 PipelineOptions.JARS,

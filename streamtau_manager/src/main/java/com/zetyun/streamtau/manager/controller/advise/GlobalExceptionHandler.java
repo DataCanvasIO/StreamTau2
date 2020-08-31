@@ -58,9 +58,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public StreamTauResponse validationExceptionHandler(
-        @SuppressWarnings("unused") HttpServletRequest request,
+        HttpServletRequest request,
         Exception exception,
-        @SuppressWarnings("unused") HttpServletResponse response
+        HttpServletResponse response
     ) {
         if (log.isWarnEnabled()) {
             log.warn("Exception thrown: ", exception);
@@ -77,9 +77,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public StreamTauResponse requestExceptionHandler(
-        @SuppressWarnings("unused") HttpServletRequest request,
+        HttpServletRequest request,
         Exception exception,
-        @SuppressWarnings("unused") HttpServletResponse response
+        HttpServletResponse response
     ) {
         if (log.isErrorEnabled()) {
             log.error("Exception thrown: ", exception);
@@ -89,9 +89,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {StreamTauException.class})
     public StreamTauResponse streamTauExceptionHandler(
-        @SuppressWarnings("unused") HttpServletRequest request,
+        HttpServletRequest request,
         Exception exception,
-        @SuppressWarnings("unused") HttpServletResponse response
+        HttpServletResponse response
     ) {
         if (log.isErrorEnabled()) {
             log.error("Exception thrown: ", exception);
@@ -103,9 +103,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class})
     public StreamTauResponse globalExceptionHandler(
-        @SuppressWarnings("unused") HttpServletRequest request,
+        HttpServletRequest request,
         Exception exception,
-        @SuppressWarnings("unused") HttpServletResponse response
+        HttpServletResponse response
     ) {
         if (log.isErrorEnabled()) {
             log.error("Exception thrown: ", exception);

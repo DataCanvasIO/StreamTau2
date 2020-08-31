@@ -26,7 +26,9 @@ import org.apache.flink.client.program.MiniClusterClient;
 import org.apache.flink.client.program.PackagedProgram;
 import org.apache.flink.client.program.ProgramInvocationException;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.MemorySize;
 import org.apache.flink.configuration.RestOptions;
+import org.apache.flink.configuration.TaskManagerOptions;
 import org.apache.flink.runtime.minicluster.MiniCluster;
 import org.apache.flink.runtime.minicluster.MiniClusterConfiguration;
 
@@ -54,11 +56,17 @@ public class FlinkMiniClusterInstance extends ServerInstance implements FlinkClu
         }
         if (miniCluster == null) {
             Configuration configuration = new Configuration();
+            configuration.set(TaskManagerOptions.CPU_CORES, 1.5);
+            configuration.set(TaskManagerOptions.TASK_HEAP_MEMORY, MemorySize.parse("1G"));
+            configuration.set(TaskManagerOptions.TASK_OFF_HEAP_MEMORY, MemorySize.parse("1G"));
+            configuration.set(TaskManagerOptions.NETWORK_MEMORY_MIN, MemorySize.parse("64M"));
+            configuration.set(TaskManagerOptions.NETWORK_MEMORY_MAX, MemorySize.parse("64M"));
+            configuration.set(TaskManagerOptions.MANAGED_MEMORY_SIZE, MemorySize.parse("128M"));
             Integer port = ((FlinkMiniCluster) getServer()).getRestPort();
             if (port == null) {
                 port = 8081;
             }
-            configuration.setInteger(RestOptions.PORT, port);
+            configuration.set(RestOptions.BIND_PORT, port.toString());
             MiniClusterConfiguration conf = new MiniClusterConfiguration.Builder()
                 .setConfiguration(configuration)
                 .setNumSlotsPerTaskManager(1024)
