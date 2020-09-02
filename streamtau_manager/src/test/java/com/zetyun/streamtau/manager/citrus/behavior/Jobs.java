@@ -42,7 +42,7 @@ public class Jobs {
         @Override
         public void apply() {
             http().client(SERVER_ID).send()
-                .post("/projects/" + varRef(Projects.idVarName(projectId)) + "/jobs/")
+                .post("/api/projects/" + varRef(Projects.idVarName(projectId)) + "/jobs/")
                 .accept(APPLICATION_JSON_VALUE)
                 .payload(request, JSON_MAPPER);
             http().client(SERVER_ID).receive()

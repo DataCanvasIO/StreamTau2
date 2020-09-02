@@ -42,7 +42,7 @@ public class Files {
             MultiValueMap<String, Object> payload = new LinkedMultiValueMap<>();
             payload.add("file", resource);
             http().client(SERVER_ID).send()
-                .post("/projects/" + varRef(Projects.idVarName(projectId))
+                .post("/api/projects/" + varRef(Projects.idVarName(projectId))
                     + "/assets/" + varRef(Assets.idVarName(assetId))
                     + "/file/")
                 .accept(APPLICATION_JSON_VALUE)

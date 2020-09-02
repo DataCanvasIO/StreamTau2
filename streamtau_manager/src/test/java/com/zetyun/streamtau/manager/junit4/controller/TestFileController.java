@@ -79,7 +79,7 @@ public class TestFileController {
             (byte[]) null
         );
         mvc.perform(
-            multipart("/projects/ABC/assets/AAA/file")
+            multipart("/api/projects/ABC/assets/AAA/file")
                 .file(file)
         )
             .andDo(print())

@@ -44,7 +44,7 @@ public final class Projects {
         @Override
         public void apply() {
             http().client(SERVER_ID).send()
-                .post("/projects/")
+                .post("/api/projects/")
                 .accept(APPLICATION_JSON_VALUE)
                 .payload(request, JSON_MAPPER);
             http().client(SERVER_ID).receive()
@@ -67,7 +67,7 @@ public final class Projects {
         @Override
         public void apply() {
             http().client(SERVER_ID).send()
-                .delete("/projects/" + varRef(idVarName(id)))
+                .delete("/api/projects/" + varRef(idVarName(id)))
                 .accept(APPLICATION_JSON_VALUE);
             http().client(SERVER_ID).receive()
                 .response(HttpStatus.OK)

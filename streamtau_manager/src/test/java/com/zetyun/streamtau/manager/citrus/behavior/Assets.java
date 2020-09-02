@@ -45,7 +45,7 @@ public final class Assets {
         @Override
         public void apply() {
             http().client(SERVER_ID).send()
-                .post("/projects/" + varRef(Projects.idVarName(projectId)) + "/assets/")
+                .post("/api/projects/" + varRef(Projects.idVarName(projectId)) + "/assets/")
                 .accept(APPLICATION_JSON_VALUE)
                 .payload(pea, JSON_MAPPER);
             http().client(SERVER_ID).receive()
@@ -68,7 +68,7 @@ public final class Assets {
         @Override
         public void apply() {
             http().client(SERVER_ID).send()
-                .delete("/projects/" + varRef(Projects.idVarName(projectId)) + "/assets/" + varRef(idVarName(id)))
+                .delete("/api/projects/" + varRef(Projects.idVarName(projectId)) + "/assets/" + varRef(idVarName(id)))
                 .accept(APPLICATION_JSON_VALUE);
             http().client(SERVER_ID).receive()
                 .response(HttpStatus.OK)

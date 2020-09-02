@@ -70,7 +70,7 @@ public class TestProjectController {
         dto.setName("testListAll");
         when(projectService.listAll()).thenReturn(Collections.singletonList(dto));
         mvc.perform(
-            get("/projects")
+            get("/api/projects")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
@@ -90,7 +90,7 @@ public class TestProjectController {
             return dto;
         });
         mvc.perform(
-            post("/projects")
+            post("/api/projects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"testCreate\"}")
         )
@@ -106,7 +106,7 @@ public class TestProjectController {
     public void testUpdate() throws Exception {
         when(projectService.update(any(ProjectDto.class))).then(returnsFirstArg());
         mvc.perform(
-            put("/projects/AAA")
+            put("/api/projects/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"testUpdate\"}")
         )
@@ -121,7 +121,7 @@ public class TestProjectController {
     @Test
     public void testDelete() throws Exception {
         mvc.perform(
-            delete("/projects/AAA")
+            delete("/api/projects/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
@@ -134,7 +134,7 @@ public class TestProjectController {
         Locale.setDefault(Locale.ENGLISH);
         doThrow(new StreamTauException("10001", "AAA")).when(projectService).delete("AAA");
         mvc.perform(
-            delete("/projects/AAA")
+            delete("/api/projects/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
@@ -147,7 +147,7 @@ public class TestProjectController {
         Locale.setDefault(Locale.ENGLISH);
         doThrow(new RuntimeException("unknown")).when(projectService).delete("AAA");
         mvc.perform(
-            delete("/projects/AAA")
+            delete("/api/projects/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
@@ -157,7 +157,7 @@ public class TestProjectController {
     @Test
     public void testValidation() throws Exception {
         mvc.perform(
-            post("/projects")
+            post("/api/projects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"\"}")
         )

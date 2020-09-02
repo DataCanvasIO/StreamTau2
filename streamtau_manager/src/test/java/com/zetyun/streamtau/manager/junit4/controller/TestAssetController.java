@@ -79,7 +79,7 @@ public class TestAssetController {
         pea.setCmd("ls");
         when(assetService.listAll(2L)).thenReturn(Collections.singletonList(pea));
         mvc.perform(
-            get("/projects/ABC/assets")
+            get("/api/projects/ABC/assets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
@@ -101,7 +101,7 @@ public class TestAssetController {
             return pea;
         });
         mvc.perform(
-            post("/projects/ABC/assets")
+            post("/api/projects/ABC/assets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"testCreate\", \"type\": \"Host\", \"hostname\": \"localhost\"}")
         )
@@ -118,7 +118,7 @@ public class TestAssetController {
     @Test
     public void testCreateWrongFormat() throws Exception {
         mvc.perform(
-            post("/projects/ABC/assets")
+            post("/api/projects/ABC/assets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"testCreate\", \"format\": \"json\"}")
         )
@@ -131,7 +131,7 @@ public class TestAssetController {
     public void testUpdate() throws Exception {
         when(assetService.update(eq(2L), any(AssetPea.class))).then(returnsSecondArg());
         mvc.perform(
-            put("/projects/ABC/assets/AAA")
+            put("/api/projects/ABC/assets/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"testUpdate\", \"type\": \"Host\", \"hostname\": \"localhost\"}")
         )
@@ -148,7 +148,7 @@ public class TestAssetController {
     @Test
     public void testDelete() throws Exception {
         mvc.perform(
-            delete("/projects/ABC/assets/AAA")
+            delete("/api/projects/ABC/assets/AAA")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())

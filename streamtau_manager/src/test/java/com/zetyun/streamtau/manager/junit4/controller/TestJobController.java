@@ -68,7 +68,7 @@ public class TestJobController {
             return dto;
         });
         mvc.perform(
-            post("/projects/ABC/jobs")
+            post("/api/projects/ABC/jobs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"appId\": \"APP\"}")
         )

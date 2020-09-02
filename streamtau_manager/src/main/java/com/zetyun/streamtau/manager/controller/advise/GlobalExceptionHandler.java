@@ -20,7 +20,7 @@ import com.zetyun.streamtau.manager.exception.StreamTauException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +40,8 @@ public class GlobalExceptionHandler {
     private static ResourceBundle errorMessages = null;
 
     @Nonnull
-    private static StreamTauResponse getApiResponse(String errorCode, @Nullable Object[] args) {
-        loadMeassages();
+    private static StreamTauResponse getApiResponse(String errorCode, @Nullable Object... args) {
+        loadMessages();
         String message;
         try {
             message = String.format(errorMessages.getString(errorCode), args);
@@ -50,7 +51,7 @@ public class GlobalExceptionHandler {
         return new StreamTauResponse(errorCode, message);
     }
 
-    private static void loadMeassages() {
+    private static void loadMessages() {
         if (errorMessages == null || !errorMessages.getLocale().equals(Locale.getDefault())) {
             errorMessages = ResourceBundle.getBundle("messages/error");
         }
@@ -65,14 +66,17 @@ public class GlobalExceptionHandler {
         if (log.isWarnEnabled()) {
             log.warn("Exception thrown: ", exception);
         }
-        // TODO: more friendly messages.
         BindingResult result = ((MethodArgumentNotValidException) exception).getBindingResult();
-        for (ObjectError error : result.getAllErrors()) {
-            if (log.isWarnEnabled()) {
-                log.warn("Error: {}", error);
-            }
-        }
-        return getApiResponse("10201", null);
+        String message = result.getAllErrors().stream()
+            .map(error -> {
+                if (error instanceof FieldError) {
+                    return "\"" + ((FieldError) error).getField() + ("\" ") + error.getDefaultMessage();
+                } else {
+                    return error.getObjectName() + error.getDefaultMessage();
+                }
+            })
+            .collect(Collectors.joining(", "));
+        return getApiResponse("10204", message);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
@@ -84,7 +88,7 @@ public class GlobalExceptionHandler {
         if (log.isErrorEnabled()) {
             log.error("Exception thrown: ", exception);
         }
-        return getApiResponse("10201", null);
+        return getApiResponse("10201");
     }
 
     @ExceptionHandler(value = {StreamTauException.class})
@@ -110,6 +114,6 @@ public class GlobalExceptionHandler {
         if (log.isErrorEnabled()) {
             log.error("Exception thrown: ", exception);
         }
-        return getApiResponse("100000", null);
+        return getApiResponse("100000");
     }
 }
