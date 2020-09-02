@@ -36,7 +36,7 @@ import java.io.IOException;
 
 @Tag(name = "Job APIs")
 @RestController
-@RequestMapping("/projects/{projectId}/jobs")
+@RequestMapping("/api/projects/{projectId}/jobs")
 @JsonView({PeaParser.Public.class})
 public class JobController {
     @Autowired

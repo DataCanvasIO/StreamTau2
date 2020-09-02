@@ -40,7 +40,7 @@ import java.io.IOException;
 
 @Tag(name = "File APIs")
 @RestController
-@RequestMapping("projects/{projectId}/assets/{assetId}")
+@RequestMapping("/api/projects/{projectId}/assets/{assetId}")
 @JsonView({PeaParser.Public.class})
 public class FileController {
     @Autowired

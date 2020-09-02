@@ -40,7 +40,7 @@ import javax.validation.Valid;
 
 @Tag(name = "Project APIs")
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("/api/projects")
 @JsonView({PeaParser.Public.class})
 public class ProjectController {
     @Autowired

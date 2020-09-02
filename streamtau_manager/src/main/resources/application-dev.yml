@@ -8,6 +8,10 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  mvc:
+    static-path-pattern: /public/**
+  resources:
+    static-locations: classpath:/static
   datasource:
     url: 'jdbc:h2:mem:test'
     username: test
@@ -19,10 +23,14 @@ spring:
     enabled: true
     change-log: 'classpath:/db/changelog/changelog-master.yml'
   thymeleaf:
+    enabled: true
+    check-template: true
+    check-template-location: true
     mode: HTML
     encoding: UTF-8
     content-type: text/html
     cache: false
+    prefix: classpath:/view/
 mybatis:
   config-location: 'classpath:/db/mybatis-config.xml'
 springdoc:

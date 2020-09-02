@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="streamtau-frontend" />
         <module name="streamtau-test-hello-world" />
         <module name="streamtau-expr-runtime" />
         <module name="streamtau-core" />

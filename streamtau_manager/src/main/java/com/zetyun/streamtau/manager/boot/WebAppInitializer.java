@@ -24,7 +24,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication(scanBasePackages = {"com.zetyun.streamtau.manager"})
+import javax.annotation.Nonnull;
+
+@SpringBootApplication(scanBasePackages = {
+    "com.zetyun.streamtau.manager",
+    "com.zetyun.streamtau.frontend",
+})
 @MapperScans({@MapperScan("com.zetyun.streamtau.manager.db.mapper")})
 @Slf4j
 public class WebAppInitializer extends SpringBootServletInitializer {
@@ -33,7 +38,7 @@ public class WebAppInitializer extends SpringBootServletInitializer {
     }
 
     @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+    protected SpringApplicationBuilder configure(@Nonnull SpringApplicationBuilder builder) {
         return builder.sources(WebAppInitializer.class);
     }
 }

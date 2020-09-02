@@ -35,7 +35,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- spring -->
-        <spring-boot.version>2.3.1.RELEASE</spring-boot.version>
+        <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
         <spring-data.version>Moore-SR5</spring-data.version>
         <springdoc-openapi.version>1.4.0</springdoc-openapi.version>
 
@@ -104,6 +104,7 @@
         <maven-clean.version>3.1.0</maven-clean.version>
         <native2ascii-maven.version>2.0.1</native2ascii-maven.version>
         <git-commit-id.version>4.0.0</git-commit-id.version>
+        <frontend-maven.version>1.10.0</frontend-maven.version>
     </properties>
 
     <modules>
@@ -115,6 +116,7 @@
         <module>streamtau_streaming_runtime</module>
         <module>streamtau_streaming</module>
         <module>streamtau_test</module>
+        <module>streamtau_frontend</module>
         <module>streamtau_manager</module>
         <module>dist</module>
     </modules>
@@ -441,6 +443,12 @@
                 <artifactId>streamtau-streaming-runtime</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.zetyun.streamtau</groupId>
+                <artifactId>streamtau-frontend</artifactId>
+                <type>war</type>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -524,6 +532,11 @@
                     <groupId>pl.project13.maven</groupId>
                     <artifactId>git-commit-id-plugin</artifactId>
                     <version>${git-commit-id.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

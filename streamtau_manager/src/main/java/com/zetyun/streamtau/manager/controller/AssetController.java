@@ -39,7 +39,7 @@ import java.util.List;
 
 @Tag(name = "Asset APIs")
 @RestController
-@RequestMapping("/projects/{projectId}/assets")
+@RequestMapping("/api/projects/{projectId}/assets")
 @JsonView({PeaParser.Public.class})
 public class AssetController {
     @Autowired
