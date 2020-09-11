@@ -64,6 +64,14 @@
         </where>
     </select>
 
+    <select id="findOfProjectByType" parameterType="map" resultType="Asset">
+        select * from asset a left join project_asset t on a.asset_id = t.asset_id
+        <where>
+            (project_id = #{projectId} or project_id = 1)
+            and a.asset_type = #{assetType}
+        </where>
+    </select>
+
     <select id="findByIdInProject" parameterType="map" resultType="Asset">
         select * from asset a left join project_asset t on a.asset_id = t.asset_id
         <where>

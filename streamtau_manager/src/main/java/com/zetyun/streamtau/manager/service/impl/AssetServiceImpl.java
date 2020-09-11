@@ -57,6 +57,12 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    public List<AssetPea> listByType(Long projectId, String type) throws IOException {
+        List<Asset> models = assetMapper.findOfProjectByType(projectId, type);
+        return getAssetPeas(models);
+    }
+
+    @Override
     public AssetPea findById(Long projectId, String projectAssetId) throws IOException {
         Asset model = assetMapper.findByIdInProject(projectId, projectAssetId);
         return AssetPod.fromModel(model);

@@ -15,35 +15,26 @@
  */
 
 import * as React from "react";
+import { autobind } from "core-decorators";
 
+import { MainFrame } from "../MainFrame";
 import { ProjectDialog } from "./ProjectDialog";
 import { ProjectList } from "./ProjectList";
+import { checkStatusHandler } from "../../api/Api";
+import { ProjectApi, Project } from "../../api/ProjectApi";
 
-import * as superagent from "superagent";
-import { autobind } from "core-decorators";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 
 interface ProjectManagementProps {
-    urlBase: string;
-}
-
-export interface Project {
-    name: string;
-    description: string;
-    type: string;
+    parent: MainFrame;
 }
 
 export class ProjectManagement extends React.Component<ProjectManagementProps, {}> {
-    private static readonly pathPrefix = '/projects';
-    private urlBase: string;
-
     private list: React.RefObject<ProjectList> = React.createRef();
     private dlg: React.RefObject<ProjectDialog> = React.createRef();
 
     public constructor(props: ProjectManagementProps) {
         super(props);
-        this.urlBase = this.props.urlBase + ProjectManagement.pathPrefix;
     }
 
     public componentDidMount(): void {
@@ -69,82 +60,46 @@ export class ProjectManagement extends React.Component<ProjectManagementProps, {
     }
 
     @autobind
-    private checkStatusDo(err: any, res: superagent.Response, callback: (data: any) => void): void {
-        console.log("err = ", err, ", res = ", res);
-        if (res.body.status == '0') {
-            callback(res.body.data);
-        } else {
-            alert(res.body.message);
-        }
-    }
-
-    @autobind
-    public makeProject(data: any): Project {
-        return {
-            name: data.name,
-            description: data.description,
-            type: data.type,
-        }
+    public handleOpenProject(id: string): void {
+        this.props.parent.handleOpenAssetManagement(id);
     }
 
     @autobind
     public getCachedProject(id: string): Project | undefined {
-        return this.list.current?.state[id];
+        return this.list.current?.state.projects[id];
     }
 
     @autobind
     public listProject(): void {
-        superagent
-            .get(this.urlBase)
-            .send()
-            .end((err, res) => this.checkStatusDo(err, res, (data) => {
-                for (const rec of data) {
-                    this.list.current?.setState({
-                        [rec.id]: this.makeProject(rec)
-                    });
-                }
-            }));
+        ProjectApi.listProject(checkStatusHandler(data => {
+            this.list.current?.setProjects(data);
+        }));
     }
 
     @autobind
     public createProject(req: Project): void {
-        superagent
-            .post(this.urlBase)
-            .send(req)
-            .end((err, res) => this.checkStatusDo(err, res, (data) => {
-                this.list.current?.setState({
-                    [data.id]: this.makeProject(data)
-                });
-            }));
+        ProjectApi.createProject(req, checkStatusHandler(_data => {
+            this.listProject();
+        }));
     }
 
     @autobind
     public updateProject(id: string, req: Project): void {
-        superagent
-            .put(this.urlBase + '/' + id)
-            .send(req)
-            .end((err, res) => this.checkStatusDo(err, res, (data) => {
-                this.list.current?.setState({
-                    [data.id]: this.makeProject(data)
-                });
-            }));
+        ProjectApi.updateProject(id, req, checkStatusHandler(_data => {
+            this.listProject();
+        }));
     }
 
     @autobind
     public deleteProject(id: string): void {
-        superagent
-            .delete(this.urlBase + '/' + id)
-            .send()
-            .end((err, res) => this.checkStatusDo(err, res, (_data) => {
-                this.list.current?.setState({
-                    [id]: undefined
-                });
-            }));
+        ProjectApi.deleteProject(id, checkStatusHandler(_data => {
+            this.listProject();
+        }));
     }
 
     public render() {
         return (
-            <Paper>
+            <React.Fragment>
                 <Button
                     variant="outlined"
                     color="primary"
@@ -152,7 +107,7 @@ export class ProjectManagement extends React.Component<ProjectManagementProps, {
                 > Create project </Button>
                 <ProjectList parent={this} ref={this.list} />
                 <ProjectDialog parent={this} ref={this.dlg} />
-            </Paper>
+            </React.Fragment>
         );
     }
 }

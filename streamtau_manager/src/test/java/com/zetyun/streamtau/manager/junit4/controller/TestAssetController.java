@@ -94,6 +94,29 @@ public class TestAssetController {
     }
 
     @Test
+    public void testListByType() throws Exception {
+        CmdLine pea = new CmdLine();
+        pea.setId("AAA");
+        pea.setName("testListAll");
+        pea.setCmd("ls");
+        when(assetService.listByType(2L, "CmdLine"))
+            .thenReturn(Collections.singletonList(pea));
+        mvc.perform(
+            get("/api/projects/ABC/assets?type=CmdLine")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andDo(print())
+            .andExpect(success())
+            .andExpect(jsonPath("$.data.size()").value(1))
+            .andExpect(jsonPath("$.data[0].id").value("AAA"))
+            .andExpect(jsonPath("$.data[0].name").value("testListAll"))
+            .andExpect(jsonPath("$.data[0].type").value("CmdLine"))
+            .andExpect(jsonPath("$.data[0].cmd").value("ls"));
+        verify(projectService, times(1)).mapProjectId("ABC");
+        verify(assetService, times(1)).listByType(2L, "CmdLine");
+    }
+
+    @Test
     public void testCreate() throws Exception {
         when(assetService.create(eq(2L), any(AssetPea.class))).then(args -> {
             AssetPea pea = args.getArgument(1);
@@ -155,6 +178,16 @@ public class TestAssetController {
             .andExpect(success());
         verify(projectService, times(1)).mapProjectId("ABC");
         verify(assetService, times(1)).delete(2L, "AAA");
+    }
+
+    @Test
+    public void testTypes() throws Exception {
+        mvc.perform(
+            get("/api/projects/ABC/assets/types")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andDo(print())
+            .andExpect((success()));
     }
 
     // Mock application

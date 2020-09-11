@@ -17,38 +17,26 @@
 package com.zetyun.streamtau.manager.controller.protocol;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.zetyun.streamtau.manager.db.model.JobStatus;
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobRequest {
+public class AssetType {
     @Schema(
-        description = "The name of the job.",
-        example = "New Job"
+        description = "Type of an asset.",
+        example = "FlinkPipelineApp"
     )
-    @JsonProperty("name")
-    @NotBlank
-    @Size(max = 255)
-    private String name;
+    @JsonProperty("type")
+    private String type;
     @Schema(
-        description = "The id of the app.",
-        required = true,
-        example = "8eeac63d-05c0-4f98-b38b-851db722f640"
+        description = "Category of the asset.",
+        example = "APPLICATION"
     )
-    @JsonProperty("appId")
-    private String appId;
-    @Schema(
-        description = "The initial status of the job.",
-        example = "READY"
-    )
-    @JsonProperty("jobStatus")
-    private JobStatus jobStatus;
+    @JsonProperty("category")
+    private AssetCategory category;
 }

@@ -14,14 +14,35 @@
  * limitations under the License.
  */
 
-import * as React from "react";
+$zIndex     : 1100;
+$drawerWidth: 200px;
 
-import { MainFrame } from "./MainFrame";
+.panel {
+    display: flex;
+}
 
-export class App extends React.Component<{}, {}> {
-    render() {
-        return (
-            <MainFrame />
-        );
+.drawer {
+    z-index    : $zIndex - 100;
+    flex-shrink: 0;
+    width      : $drawerWidth;
+}
+
+.drawer-paper {
+    width: $drawerWidth;
+}
+
+.asset {
+    flex-grow: 1;
+}
+
+.nested-list {
+    padding: {
+        left: 10px !important;
+    }
+}
+
+.selected {
+    background: {
+        color: yellow !important;
     }
 }

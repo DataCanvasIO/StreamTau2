@@ -89,6 +89,13 @@ public class TestAssetMapper {
     }
 
     @Test
+    public void testFindOfProjectByType() {
+        List<Asset> models = assetMapper.findOfProjectByType(2L, "CmdLine");
+        assertThat(models.size(), is(2));
+        assertThat(models, hasItems(assets.get(2), assets.get(3)));
+    }
+
+    @Test
     public void testFindByIdInProject() {
         Asset model = assetMapper.findByIdInProject(2L, "73c3ad25-8de8-4c63-91dd-ac9c69a0243d");
         assertThat(model, is(assets.get(3)));

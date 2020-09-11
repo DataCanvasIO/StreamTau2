@@ -94,6 +94,16 @@ public class TestAssetServiceImpl {
     }
 
     @Test
+    public void testListByType() throws IOException {
+        when(assetMapper.findOfProjectByType(2L, "CmdLine"))
+            .thenReturn(Collections.singletonList(cmdLineAsset));
+        List<AssetPea> peas = assetService.listByType(2L, "CmdLine");
+        assertThat(peas.size(), is(1));
+        assertThat(peas, hasItem(is(cmdLinePea)));
+        verify(assetMapper, times(1)).findOfProjectByType(2L, "CmdLine");
+    }
+
+    @Test
     public void testFindById() throws IOException {
         when(assetMapper.findByIdInProject(2L, "AAA")).thenReturn(cmdLineAsset);
         AssetPea pea = assetService.findById(2L, "AAA");

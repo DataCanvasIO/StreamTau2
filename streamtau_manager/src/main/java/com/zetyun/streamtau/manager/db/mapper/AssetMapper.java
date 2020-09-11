@@ -33,6 +33,11 @@ public interface AssetMapper {
 
     List<Asset> findAllOfProject(@Param("projectId") Long projectId);
 
+    List<Asset> findOfProjectByType(
+        @Param("projectId") Long projectId,
+        @Param("assetType") String assetType
+    );
+
     Asset findByIdInProject(@Param("projectId") Long projectId, @Param("projectAssetId") String projectAssetId);
 
     List<Asset> findByTypeInProject(@Param("projectId") Long projectId, @Param("assetType") String assetType);

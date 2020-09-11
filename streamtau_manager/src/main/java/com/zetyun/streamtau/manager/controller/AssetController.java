@@ -18,7 +18,9 @@ package com.zetyun.streamtau.manager.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.core.pea.PeaParser;
+import com.zetyun.streamtau.manager.controller.protocol.AssetType;
 import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.AssetPeaFactory;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,10 +34,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Asset APIs")
 @RestController
@@ -47,13 +52,17 @@ public class AssetController {
     @Autowired
     private ProjectService projectService;
 
-    @Operation(summary = "List all assets of a project.")
+    @Operation(summary = "List all assets or assets of specified type of a project.")
     @GetMapping("")
     public List<AssetPea> listAll(
         @Parameter(description = "The id of the project.")
-        @PathVariable("projectId") String projectId
+        @PathVariable("projectId") String projectId,
+        @RequestParam(name = "type", required = false) String type
     ) throws IOException {
         Long pid = projectService.mapProjectId(projectId);
+        if (type != null && !type.isEmpty()) {
+            return assetService.listByType(pid, type);
+        }
         return assetService.listAll(pid);
     }
 
@@ -89,5 +98,19 @@ public class AssetController {
         @PathVariable("id") String id) {
         Long pid = projectService.mapProjectId(projectId);
         assetService.delete(pid, id);
+    }
+
+    @Operation(summary = "Get the asset type list.")
+    @GetMapping("/types")
+    public List<AssetType> types() {
+        Map<String, Class<?>> classMap = PeaParser.getSubtypeClasses(AssetPea.class);
+        List<AssetType> assetTypeList = new ArrayList<>(classMap.size());
+        for (String type : classMap.keySet()) {
+            AssetType model = new AssetType();
+            model.setType(type);
+            model.setCategory(AssetPeaFactory.INS.make(type).getCategory());
+            assetTypeList.add(model);
+        }
+        return assetTypeList;
     }
 }

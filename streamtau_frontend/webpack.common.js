@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Zetyun
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -5,16 +21,25 @@ module.exports = {
     entry: './src/main/tsx/index.tsx',
 
     resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx']
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.scss'],
+        alias: {
+            style: path.resolve(__dirname, 'src', 'main', 'scss'),
+        }
     },
 
     output: {
         filename: 'js/main.js',
-        path: path.resolve(__dirname, 'target/classes/static'),
+        path: path.resolve(__dirname, 'target', 'classes', 'static'),
     },
 
     module: {
         rules: [
+            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+            {
+                test: /\.js$/,
+                enforce: 'pre',
+                loader: 'source-map-loader'
+            },
             {
                 test: /\.ts(x?)$/,
                 exclude: /node_modules/,
@@ -24,21 +49,45 @@ module.exports = {
                     }
                 ]
             },
-            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             {
-                enforce: 'pre',
-                test: /\.js$/,
-                loader: 'source-map-loader'
-            },
-            {
-                test: /\.css$/,
+                test: /\.scss$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'style-loader',
+                        options: {
+                            injectType: 'singletonStyleTag',
+                            // Very important for the css-loader output is ES Moudle.
+                            esModule: true,
+                        }
                     },
                     {
-                        loader: 'css-loader'
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                        }
+                    },
+                    {
+                        loader: 'sass-loader'
                     }
+                ]
+            },
+            {
+                test: /\.css/,
+                use: [
+                    {
+                        loader: 'style-loader',
+                        options: {
+                            injectType: 'singletonStyleTag',
+                            // Very important for the css-loader output is ES Moudle.
+                            esModule: true,
+                        }
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                        }
+                    },
                 ]
             },
             {

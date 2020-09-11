@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.controller.protocol;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,16 +36,19 @@ public class ProjectRequest {
     )
     @NotBlank
     @Size(max = 255)
+    @JsonProperty("name")
     private String name;
     @Schema(
         description = "The description of the project.",
         example = "blah blah ..."
     )
     @Size(max = 511)
+    @JsonProperty("description")
     private String description;
     @Schema(
         description = "The type of the project.",
         example = "CONTAINER"
     )
+    @JsonProperty("type")
     private String type;
 }

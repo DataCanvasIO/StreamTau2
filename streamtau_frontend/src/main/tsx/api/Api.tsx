@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-import * as React from "react";
+import * as request from "superagent";
 
-import { MainFrame } from "./MainFrame";
+export const API_URL_BASE = 'http://localhost:13630/api';
 
-export class App extends React.Component<{}, {}> {
-    render() {
-        return (
-            <MainFrame />
-        );
+export type ResponseHandler = (err: any, res: request.Response) => void;
+
+export function checkStatusHandler(callback: (data: any) => void): ResponseHandler {
+    return (err, res) => {
+        console.log("err = ", err, ", res = ", res);
+        if (res.body.status == '0') {
+            callback(res.body.data);
+        } else {
+            alert(res.body.message);
+        }
     }
 }

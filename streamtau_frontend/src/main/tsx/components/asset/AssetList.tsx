@@ -17,8 +17,8 @@
 import * as React from "react";
 import { autobind } from 'core-decorators';
 
-import { Project } from "../../api/ProjectApi";
-import { ProjectManagement } from "./ProjectManagement";
+import { Asset } from "../../api/AssetApi";
+import { AssetManagement } from "./AssetManagement";
 
 import Table from "@material-ui/core/Table";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -26,89 +26,81 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
+import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import Link from "@material-ui/core/Link";
-import Box from "@material-ui/core/Box";
 
-interface Projects {
-    [id: string]: Project;
+interface Assets {
+    [id: string]: Asset;
 }
 
-interface ProjectListProps {
-    parent: ProjectManagement;
+interface AssetListProps {
+    parent: AssetManagement;
 }
 
-interface ProjectListState {
-    projects: Projects;
+interface AssetListState {
+    assets: Assets;
 }
 
-export class ProjectList extends React.Component<ProjectListProps, ProjectListState> {
-    public constructor(props: ProjectListProps) {
+export class AssetList extends React.Component<AssetListProps, AssetListState> {
+    public constructor(props: AssetListProps) {
         super(props);
-        this.state = { projects: {} };
+        this.state = { assets: {} };
     }
 
     @autobind
-    public setProjects(data: any): void {
-        const projects: Projects = {};
+    public setAssets(data: any): void {
+        const assets: Assets = {};
         for (const item of data) {
-            projects[item.id] = {
+            assets[item.id] = {
                 name: item.name,
                 description: item.description,
                 type: item.type,
             };
         }
-        this.setState({ projects: projects });
+        this.setState({ assets: assets });
     }
 
     @autobind
-    private handleUpdate(id: string): void {
-        this.props.parent.handleUpdateProject(id);
+    private handleUpdate(_event: React.MouseEvent<Element>, id: string): void {
+        this.props.parent.handleUpdateAsset(id);
     }
 
     @autobind
-    private handleDelete(id: string): void {
-        this.props.parent.handleDeleteProject(id);
-    }
-
-    @autobind
-    private handleOpenProject(id: string): void {
-        this.props.parent.handleOpenProject(id);
+    private handleDelete(_event: React.MouseEvent<Element>, id: string): void {
+        this.props.parent.handleDeleteAsset(id);
     }
 
     public render() {
         const tableRows = [];
-        for (const id in this.state.projects) {
-            const project = this.state.projects[id];
+        for (const id in this.state.assets) {
+            const asset = this.state.assets[id];
             tableRows.push(
                 <TableRow key={id}>
-                    <TableCell component="th" scope="row">
-                        <Link href="#" onClick={() => this.handleOpenProject(id)}>{id}</Link>
-                    </TableCell>
-                    <TableCell>
-                        <Link href="#" onClick={() => this.handleOpenProject(id)}>{project.name}</Link>
-                    </TableCell>
-                    <TableCell>{project.description}</TableCell>
-                    <TableCell>{project.type}</TableCell>
+                    <TableCell component="th" scope="row">{id}</TableCell>
+                    <TableCell>{asset.name}</TableCell>
+                    <TableCell>{asset.description}</TableCell>
+                    <TableCell>{asset.type}</TableCell>
                     <TableCell>
                         <Button
                             startIcon={<EditIcon />}
-                            onClick={() => this.handleUpdate(id)}
+                            onClick={(event) => this.handleUpdate(event, id)}
+                            disabled={id.startsWith('COMMON_')}
                         > Edit </Button>
                     </TableCell>
                     <TableCell>
                         <Button
                             startIcon={<DeleteIcon />}
-                            onClick={() => this.handleDelete(id)}
+                            onClick={(event) => this.handleDelete(event, id)}
+                            disabled={id.startsWith('COMMON_')}
                         > Delete </Button>
                     </TableCell>
                 </TableRow>
             );
         }
         return (
-            <TableContainer component={Box}>
+            <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>

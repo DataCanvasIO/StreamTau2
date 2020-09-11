@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "outDir": "./target/classes/static/js",
+    "baseUrl": "./",
+    "paths": {
+      "style/*": [
+        "src/main/scss/*"
+      ],
+    },
+    "outDir": "target/classes/static/js",
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "commonjs",
@@ -10,6 +16,6 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
   }
 }

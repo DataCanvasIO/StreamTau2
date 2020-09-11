@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import * as React from "react";
-
-import { MainFrame } from "./MainFrame";
-
-export class App extends React.Component<{}, {}> {
-    render() {
-        return (
-            <MainFrame />
-        );
-    }
+interface CssExports {
+    'app-bar': string;
+    'panel': string;
+    'drawer': string;
+    'drawer-paper': string;
+    'asset': string;
+    'nested-list': string;
+    'selected': string;
 }
+
+export const cssExports: CssExports;
+
+export default cssExports;

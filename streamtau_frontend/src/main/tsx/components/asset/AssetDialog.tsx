@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { autobind } from 'core-decorators';
 
-import { ProjectManagement } from './ProjectManagement';
+import { AssetManagement } from './AssetManagement';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -25,46 +25,44 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import FormLabel from '@material-ui/core/FormLabel';
 
-interface ProjectDialogProps {
-    parent: ProjectManagement;
+interface AssetDialogProps {
+    parent: AssetManagement;
 }
 
-interface ProjectDialogState {
+interface AssetDialogState {
     isOpen: boolean;
     id?: string;
     name: string;
     description?: string;
     type: string;
+    [props: string]: any;
 }
 
-export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDialogState> {
-    public constructor(props: ProjectDialogProps) {
+export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogState> {
+    public constructor(props: AssetDialogProps) {
         super(props);
         this.state = {
             isOpen: false,
             name: '',
-            type: 'CONTAINER',
+            type: props.parent.getSelectedType(),
         };
     }
 
     @autobind
     public open(id?: string): void {
         if (id) {
-            const project = this.props.parent.getCachedProject(id);
-            if (project) {
+            const asset = this.props.parent.getCachedAsset(id);
+            if (asset && asset.type === this.state.type) {
                 this.setState({
                     isOpen: true,
                     id: id,
-                    name: project.name,
-                    description: project.description,
-                    type: project.type,
+                    name: asset.name,
+                    description: asset.description,
                 });
             } else {
-                alert('No project with (id = "' + id + '") exists.');
+                alert('No asset of type "' + this.state.type + '" with (id = "' + id + '") exists.');
                 return;
             }
         } else {
@@ -73,7 +71,6 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
                 id: undefined,
                 name: '',
                 description: '',
-                type: 'CONTAINER',
             });
         }
     }
@@ -104,33 +101,17 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
     }
 
     @autobind
-    private handleSelectChange(
-        event: React.ChangeEvent<{ name?: string, value: unknown }>,
-    ): void {
-        event.preventDefault();
-        event.persist();
-        const target = event.target;
-        if (target != null) {
-            const name = target.name;
-            const value = target.value;
-            if (name == 'type' && typeof value == 'string') {
-                this.setState({ type: value });
-            }
-        }
-    }
-
-    @autobind
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
         event.preventDefault();
-        const project = {
+        const asset = {
             name: this.state.name,
             description: this.state.description,
             type: this.state.type,
         };
         if (this.state.id) {
-            this.props.parent.updateProject(this.state.id, project);
+            this.props.parent.updateAsset(this.state.id, asset);
         } else {
-            this.props.parent.createProject(project);
+            this.props.parent.createAsset(asset);
         }
         this.handleClose();
     }
@@ -138,7 +119,7 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
     public render() {
         return (
             <Dialog disableBackdropClick open={this.state.isOpen} onClose={this.handleClose}>
-                <DialogTitle>Create project</DialogTitle>
+                <DialogTitle>Create {this.state.type}</DialogTitle>
                 <form onSubmit={this.handleSubmit} method="POST">
                     <DialogContent>
                         <FormLabel>Name</FormLabel>
@@ -153,14 +134,6 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
                             value={this.state.description}
                             onChange={this.handleInputChange}
                         />
-                        <FormLabel>Type</FormLabel>
-                        <Select fullWidth
-                            name="type"
-                            value={this.state.type}
-                            onChange={this.handleSelectChange}
-                        >
-                            <MenuItem value="CONTAINER">CONTAINER</MenuItem>
-                        </Select>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose}>Cancel</Button>

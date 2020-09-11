@@ -26,6 +26,8 @@ import java.util.List;
 public interface AssetService {
     List<AssetPea> listAll(Long projectId) throws IOException;
 
+    List<AssetPea> listByType(Long projectId, String type) throws IOException;
+
     AssetPea findById(Long projectId, String projectAssetId) throws IOException;
 
     List<AssetPea> findByType(Long projectId, String assetType) throws IOException;
