@@ -13,6 +13,7 @@
     <pattern value="com.zetyun.streamtau.manager.service.impl.UserServiceAlwaysAdmin" />
     <writeAnnotations>
       <writeAnnotation name="com.fasterxml.jackson.annotation.JsonProperty" />
+      <writeAnnotation name="com.fasterxml.jackson.annotation.JsonValue" />
       <writeAnnotation name="org.springframework.beans.factory.annotation.Autowired" />
     </writeAnnotations>
   </component>

@@ -18,11 +18,10 @@ package com.zetyun.streamtau.manager.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.zetyun.streamtau.core.pea.PeaParser;
-import com.zetyun.streamtau.manager.controller.protocol.AssetType;
 import com.zetyun.streamtau.manager.pea.AssetPea;
-import com.zetyun.streamtau.manager.pea.AssetPeaFactory;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
+import com.zetyun.streamtau.manager.service.dto.AssetType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,9 +37,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import javax.annotation.Nonnull;
 
 @Tag(name = "Asset APIs")
 @RestController
@@ -83,7 +81,7 @@ public class AssetController {
         @PathVariable("projectId") String projectId,
         @Parameter(description = "The id of the asset.")
         @PathVariable("id") String id,
-        @RequestBody AssetPea pea) throws IOException {
+        @RequestBody @Nonnull AssetPea pea) throws IOException {
         pea.setId(id);
         Long pid = projectService.mapProjectId(projectId);
         return assetService.update(pid, pea);
@@ -102,15 +100,7 @@ public class AssetController {
 
     @Operation(summary = "Get the asset type list.")
     @GetMapping("/types")
-    public List<AssetType> types() {
-        Map<String, Class<?>> classMap = PeaParser.getSubtypeClasses(AssetPea.class);
-        List<AssetType> assetTypeList = new ArrayList<>(classMap.size());
-        for (String type : classMap.keySet()) {
-            AssetType model = new AssetType();
-            model.setType(type);
-            model.setCategory(AssetPeaFactory.INS.make(type).getCategory());
-            assetTypeList.add(model);
-        }
-        return assetTypeList;
+    public List<AssetType> types() throws IOException {
+        return assetService.types();
     }
 }

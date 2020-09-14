@@ -16,13 +16,17 @@
 
 package com.zetyun.streamtau.manager.junit4.controller;
 
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.zetyun.streamtau.manager.controller.AssetController;
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
+import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
+import com.zetyun.streamtau.manager.service.dto.AssetType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -182,12 +186,21 @@ public class TestAssetController {
 
     @Test
     public void testTypes() throws Exception {
+        AssetType assetType = new AssetType();
+        assetType.setType("TypeA");
+        assetType.setCategory(AssetCategory.FILE);
+        assetType.setSchema(JsonSchema.minimalForFormat(JsonFormatTypes.INTEGER));
+        when(assetService.types()).thenReturn(Collections.singletonList(assetType));
         mvc.perform(
             get("/api/projects/ABC/assets/types")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
-            .andExpect((success()));
+            .andExpect((success()))
+            .andExpect(jsonPath("$.data[0].type").value("TypeA"))
+            .andExpect(jsonPath("$.data[0].category").value("FILE"))
+            .andExpect(jsonPath("$.data[0].schema.type").value("integer"));
+        verify(assetService, times(1)).types();
     }
 
     // Mock application

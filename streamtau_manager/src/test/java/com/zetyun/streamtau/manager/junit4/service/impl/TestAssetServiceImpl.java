@@ -26,8 +26,10 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.AssetService;
+import com.zetyun.streamtau.manager.service.dto.AssetType;
 import com.zetyun.streamtau.manager.service.impl.AssetServiceImpl;
 import com.zetyun.streamtau.runtime.ScriptFormat;
+import org.hamcrest.CustomMatcher;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -180,5 +182,16 @@ public class TestAssetServiceImpl {
         }
         JobDefPod jobDefPod = assetService.synthesizeJobDef(2L, "APP");
         assertThat(jobDefPod.toJobDefinition(), is(readJsonCompact("/jobdef/cmd_line/cmd_ls.json")));
+    }
+
+    @Test
+    public void testTypes() throws IOException {
+        List<AssetType> assetTypes = assetService.types();
+        assertThat(assetTypes, hasItem(new CustomMatcher<AssetType>("Match \"CmdLineApp\" asset type.") {
+            @Override
+            public boolean matches(Object obj) {
+                return obj instanceof AssetType && ((AssetType) obj).getType().equals("CmdLineApp");
+            }
+        }));
     }
 }

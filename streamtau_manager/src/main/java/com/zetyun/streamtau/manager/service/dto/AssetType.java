@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.controller.protocol;
+package com.zetyun.streamtau.manager.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -39,4 +40,9 @@ public class AssetType {
     )
     @JsonProperty("category")
     private AssetCategory category;
+    @Schema(
+        description = "JSON Schema of the asset."
+    )
+    @JsonProperty("schema")
+    private JsonSchema schema;
 }

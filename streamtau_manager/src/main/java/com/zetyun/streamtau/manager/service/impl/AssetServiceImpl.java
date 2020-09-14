@@ -16,6 +16,8 @@
 
 package com.zetyun.streamtau.manager.service.impl;
 
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.mapper.ProjectAssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
@@ -23,15 +25,18 @@ import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.db.model.ProjectAsset;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.AssetPeaFactory;
 import com.zetyun.streamtau.manager.pea.AssetPod;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.service.AssetService;
+import com.zetyun.streamtau.manager.service.dto.AssetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 
 @Service
@@ -108,10 +113,35 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public JobDefPod synthesizeJobDef(Long projectId, String projectAssetId) throws IOException {
+    public JobDefPod synthesizeJobDef(Long projectId, String projectAssetId) {
         AssetPod assetPod = new AssetPod(assetMapper, projectId);
         JobDefPod jobDefPod = new JobDefPod(projectAssetId);
         assetPod.transfer(projectAssetId, jobDefPod);
         return jobDefPod;
+    }
+
+    @Override
+    public List<AssetType> types() throws IOException {
+        Map<String, Class<?>> classMap = PeaParser.getSubtypeClasses(AssetPea.class);
+        List<AssetType> assetTypeList = new ArrayList<>(classMap.size());
+        for (Map.Entry<String, Class<?>> entry : classMap.entrySet()) {
+            Class<?> clazz = entry.getValue();
+            JsonSchema schema = PeaParser.JSON.createJsonSchema(clazz);
+            // Remove common properties to reduce size.
+            Map<String, JsonSchema> props = schema.asObjectSchema().getProperties();
+            props.remove("id");
+            props.remove("name");
+            props.remove("description");
+            props.remove("type");
+            props.remove("category");
+            schema.asObjectSchema().setProperties(props);
+            String type = entry.getKey();
+            AssetType model = new AssetType();
+            model.setType(type);
+            model.setCategory(AssetPeaFactory.INS.make(type).getCategory());
+            model.setSchema(schema);
+            assetTypeList.add(model);
+        }
+        return assetTypeList;
     }
 }

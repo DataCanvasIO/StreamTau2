@@ -53,7 +53,7 @@
         <flink.version>1.11.1</flink.version>
 
         <!-- jackson -->
-        <jackson.version>2.10.3</jackson.version>
+        <jackson.version>2.11.2</jackson.version>
 
         <!-- antlr4 -->
         <antlr4.version>4.8-1</antlr4.version>
@@ -255,6 +255,11 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-csv</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jsonSchema</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
 

@@ -1,12 +1,12 @@
 {
   type: object,
   properties: {
-    a: {type: integer},
+    a: { type: integer },
     b: {
       type: array,
       items: [
-      {type: string},
-      {type: boolean}
+        { type: string },
+        { type: boolean }
       ],
       additionalItems: false
     }
