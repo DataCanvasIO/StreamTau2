@@ -1,5 +1,5 @@
 "project_id","project_name","project_description"                     ,"project_type"
 1           ,"COMMON"      ,"This project contains all common assets.","CONTAINER"
-2           ,"Project2"    ,"A project to run command on localhost."  ,"COMMAND_LINE"
+2           ,"Project2"    ,"A project to run command on localhost."  ,"CONTAINER"
 3           ,"Project3"    ,"The third project."                      ,"CONTAINER"
 4           ,"Project4"    ,"The fourth project."                     ,"CONTAINER"

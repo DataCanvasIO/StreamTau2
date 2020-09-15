@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.junit4.service.impl;
 
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.zetyun.streamtau.manager.db.mapper.ProjectMapper;
 import com.zetyun.streamtau.manager.db.mapper.UserProjectMapper;
 import com.zetyun.streamtau.manager.db.model.Project;
@@ -33,13 +34,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -136,5 +140,12 @@ public class TestProjectServiceImpl {
             return model;
         });
         assertThat(projectService.mapProjectId("AAA"), is(3L));
+    }
+
+    @Test
+    public void testSchema() throws IOException {
+        JsonSchema schema = projectService.schema();
+        assertTrue(schema.isObjectSchema());
+        assertThat(schema.asObjectSchema().getProperties().keySet(), hasItems("id", "name", "description", "type"));
     }
 }

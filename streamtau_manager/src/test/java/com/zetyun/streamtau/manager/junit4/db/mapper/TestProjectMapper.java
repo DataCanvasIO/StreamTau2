@@ -18,6 +18,7 @@ package com.zetyun.streamtau.manager.junit4.db.mapper;
 
 import com.zetyun.streamtau.manager.db.mapper.ProjectMapper;
 import com.zetyun.streamtau.manager.db.model.Project;
+import com.zetyun.streamtau.manager.db.model.ProjectType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,7 +83,7 @@ public class TestProjectMapper {
     public void testInsert() {
         Project model = new Project();
         model.setProjectName("Project4");
-        model.setProjectType("CONTAINER");
+        model.setProjectType(ProjectType.CONTAINER);
         assertThat(projectMapper.insert(model), is(1));
         assertThat(model.getProjectId(), notNullValue());
         List<Project> modelList = projectMapper.findAll();

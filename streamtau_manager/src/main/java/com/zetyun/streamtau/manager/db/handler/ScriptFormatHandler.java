@@ -24,30 +24,31 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.annotation.Nonnull;
 
 public class ScriptFormatHandler implements TypeHandler<ScriptFormat> {
     @Override
     public void setParameter(
-        PreparedStatement ps,
+        @Nonnull PreparedStatement ps,
         int index,
-        ScriptFormat format,
+        @Nonnull ScriptFormat format,
         JdbcType jdbcType
     ) throws SQLException {
         ps.setString(index, format.getValue());
     }
 
     @Override
-    public ScriptFormat getResult(ResultSet rs, String key) throws SQLException {
+    public ScriptFormat getResult(@Nonnull ResultSet rs, String key) throws SQLException {
         return ScriptFormat.fromString(rs.getString(key));
     }
 
     @Override
-    public ScriptFormat getResult(ResultSet resultSet, int index) throws SQLException {
+    public ScriptFormat getResult(@Nonnull ResultSet resultSet, int index) throws SQLException {
         return ScriptFormat.fromString(resultSet.getString(index));
     }
 
     @Override
-    public ScriptFormat getResult(CallableStatement cs, int index) throws SQLException {
+    public ScriptFormat getResult(@Nonnull CallableStatement cs, int index) throws SQLException {
         return ScriptFormat.fromString(cs.getString(index));
     }
 }

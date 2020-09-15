@@ -26,7 +26,7 @@ import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
-import com.zetyun.streamtau.manager.service.dto.AssetType;
+import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -186,11 +186,11 @@ public class TestAssetController {
 
     @Test
     public void testTypes() throws Exception {
-        AssetType assetType = new AssetType();
-        assetType.setType("TypeA");
-        assetType.setCategory(AssetCategory.FILE);
-        assetType.setSchema(JsonSchema.minimalForFormat(JsonFormatTypes.INTEGER));
-        when(assetService.types()).thenReturn(Collections.singletonList(assetType));
+        AssetTypeInfo assetTypeInfo = new AssetTypeInfo();
+        assetTypeInfo.setType("TypeA");
+        assetTypeInfo.setCategory(AssetCategory.FILE);
+        assetTypeInfo.setSchema(JsonSchema.minimalForFormat(JsonFormatTypes.INTEGER));
+        when(assetService.types()).thenReturn(Collections.singletonList(assetTypeInfo));
         mvc.perform(
             get("/api/projects/ABC/assets/types")
                 .contentType(MediaType.APPLICATION_JSON)

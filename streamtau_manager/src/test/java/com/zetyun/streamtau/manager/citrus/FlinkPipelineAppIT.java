@@ -26,6 +26,7 @@ import com.zetyun.streamtau.manager.citrus.behavior.Projects;
 import com.zetyun.streamtau.manager.controller.protocol.JobRequest;
 import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
+import com.zetyun.streamtau.manager.db.model.ProjectType;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class FlinkPipelineAppIT extends JUnit4CitrusTest {
         String projectId = "test";
         designer.applyBehavior(new Projects.Create(
             projectId,
-            new ProjectRequest("test", "for citrus", "CONTAINER")
+            new ProjectRequest("test", "for citrus", ProjectType.CONTAINER)
         ));
         JobDefPod pod = readJobDef("/jobdef/flink_pipeline/flink_pipeline_app.yml");
         RestPod restPod = new RestPod(designer, projectId);

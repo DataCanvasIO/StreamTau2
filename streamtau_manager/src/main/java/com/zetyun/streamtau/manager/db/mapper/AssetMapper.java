@@ -40,7 +40,10 @@ public interface AssetMapper {
 
     Asset findByIdInProject(@Param("projectId") Long projectId, @Param("projectAssetId") String projectAssetId);
 
-    List<Asset> findByTypeInProject(@Param("projectId") Long projectId, @Param("assetType") String assetType);
+    List<Asset> findByTypeInProject(
+        @Param("projectId") Long projectId,
+        @Param("assetType") String assetType
+    );
 
     List<Asset> findByCategoryInProject(
         @Param("projectId") Long projectId,

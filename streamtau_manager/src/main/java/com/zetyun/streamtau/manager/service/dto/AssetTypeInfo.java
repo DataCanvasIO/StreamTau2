@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssetType {
+public class AssetTypeInfo {
     @Schema(
         description = "Type of an asset.",
         example = "FlinkPipelineApp"

@@ -21,7 +21,7 @@ import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
-import com.zetyun.streamtau.manager.service.dto.AssetType;
+import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -100,7 +100,7 @@ public class AssetController {
 
     @Operation(summary = "Get the asset type list.")
     @GetMapping("/types")
-    public List<AssetType> types() throws IOException {
+    public List<AssetTypeInfo> types() throws IOException {
         return assetService.types();
     }
 }

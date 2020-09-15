@@ -14,24 +14,8 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service;
+package com.zetyun.streamtau.manager.db.model;
 
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.zetyun.streamtau.manager.service.dto.ProjectDto;
-
-import java.io.IOException;
-import java.util.List;
-
-public interface ProjectService {
-    List<ProjectDto> listAll();
-
-    ProjectDto create(ProjectDto dto);
-
-    ProjectDto update(ProjectDto dto);
-
-    void delete(String userProjectId);
-
-    Long mapProjectId(String userProjectId);
-
-    JsonSchema schema() throws IOException;
+public enum ProjectType {
+    CONTAINER,
 }

@@ -26,7 +26,7 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.AssetService;
-import com.zetyun.streamtau.manager.service.dto.AssetType;
+import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
 import com.zetyun.streamtau.manager.service.impl.AssetServiceImpl;
 import com.zetyun.streamtau.runtime.ScriptFormat;
 import org.hamcrest.CustomMatcher;
@@ -186,12 +186,14 @@ public class TestAssetServiceImpl {
 
     @Test
     public void testTypes() throws IOException {
-        List<AssetType> assetTypes = assetService.types();
-        assertThat(assetTypes, hasItem(new CustomMatcher<AssetType>("Match \"CmdLineApp\" asset type.") {
-            @Override
-            public boolean matches(Object obj) {
-                return obj instanceof AssetType && ((AssetType) obj).getType().equals("CmdLineApp");
+        List<AssetTypeInfo> assetTypeInfos = assetService.types();
+        assertThat(assetTypeInfos, hasItem(
+            new CustomMatcher<AssetTypeInfo>("Match \"CmdLineApp\" asset type.") {
+                @Override
+                public boolean matches(Object obj) {
+                    return obj instanceof AssetTypeInfo && ((AssetTypeInfo) obj).getType().equals("CmdLineApp");
+                }
             }
-        }));
+        ));
     }
 }

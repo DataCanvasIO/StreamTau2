@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.service.dto;
 
+import com.zetyun.streamtau.manager.db.model.ProjectType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -28,5 +29,5 @@ public class ProjectDto {
     @Schema(description = "The description of the project.", example = "blah blah...")
     private String description;
     @Schema(description = "The type of the project.", example = "CONTAINER")
-    private String type;
+    private ProjectType type;
 }

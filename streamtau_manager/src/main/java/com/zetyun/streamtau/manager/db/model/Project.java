@@ -30,5 +30,5 @@ public class Project {
     private String userProjectId;
     private String projectName;
     private String projectDescription;
-    private String projectType;
+    private ProjectType projectType;
 }

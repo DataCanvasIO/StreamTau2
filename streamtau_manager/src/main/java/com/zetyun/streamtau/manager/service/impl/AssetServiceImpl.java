@@ -29,7 +29,7 @@ import com.zetyun.streamtau.manager.pea.AssetPeaFactory;
 import com.zetyun.streamtau.manager.pea.AssetPod;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.service.AssetService;
-import com.zetyun.streamtau.manager.service.dto.AssetType;
+import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -121,9 +121,9 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public List<AssetType> types() throws IOException {
+    public List<AssetTypeInfo> types() throws IOException {
         Map<String, Class<?>> classMap = PeaParser.getSubtypeClasses(AssetPea.class);
-        List<AssetType> assetTypeList = new ArrayList<>(classMap.size());
+        List<AssetTypeInfo> assetTypeInfoList = new ArrayList<>(classMap.size());
         for (Map.Entry<String, Class<?>> entry : classMap.entrySet()) {
             Class<?> clazz = entry.getValue();
             JsonSchema schema = PeaParser.JSON.createJsonSchema(clazz);
@@ -136,12 +136,12 @@ public class AssetServiceImpl implements AssetService {
             props.remove("category");
             schema.asObjectSchema().setProperties(props);
             String type = entry.getKey();
-            AssetType model = new AssetType();
+            AssetTypeInfo model = new AssetTypeInfo();
             model.setType(type);
             model.setCategory(AssetPeaFactory.INS.make(type).getCategory());
             model.setSchema(schema);
-            assetTypeList.add(model);
+            assetTypeInfoList.add(model);
         }
-        return assetTypeList;
+        return assetTypeInfoList;
     }
 }

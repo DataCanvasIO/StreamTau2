@@ -19,7 +19,7 @@ package com.zetyun.streamtau.manager.service;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
-import com.zetyun.streamtau.manager.service.dto.AssetType;
+import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,5 +43,5 @@ public interface AssetService {
 
     JobDefPod synthesizeJobDef(Long projectId, String projectAssetId) throws IOException;
 
-    List<AssetType> types() throws IOException;
+    List<AssetTypeInfo> types() throws IOException;
 }
