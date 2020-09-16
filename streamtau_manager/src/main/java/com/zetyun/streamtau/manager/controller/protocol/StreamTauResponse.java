@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.controller.advise;
+package com.zetyun.streamtau.manager.controller.protocol;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -25,8 +27,12 @@ public class StreamTauResponse {
     public static final String OK = "0";
     public static final String SUCCESS = "success";
 
+    @JsonProperty("status")
     private final String status;
+    @JsonProperty("message")
     private final String message;
+    @JsonProperty("data")
+    @JsonSerialize(using = ResponseDataSerializer.class, contentUsing = ResponseDataSerializer.class)
     private final Object data;
 
     public StreamTauResponse(Object data) {

@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.controller.advise;
 
+import com.zetyun.streamtau.manager.controller.protocol.StreamTauResponse;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;

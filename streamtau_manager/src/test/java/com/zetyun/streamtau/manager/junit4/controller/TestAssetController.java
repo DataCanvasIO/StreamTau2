@@ -18,6 +18,7 @@ package com.zetyun.streamtau.manager.junit4.controller;
 
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.zetyun.streamtau.manager.config.DevWebMvcConfig;
 import com.zetyun.streamtau.manager.controller.AssetController;
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
@@ -210,6 +211,7 @@ public class TestAssetController {
         AssetController.class,
         ResponseBodyDecorator.class,
         GlobalExceptionHandler.class,
+        DevWebMvcConfig.class,
     })
     static class Config {
     }

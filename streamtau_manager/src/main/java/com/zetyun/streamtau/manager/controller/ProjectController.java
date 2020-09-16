@@ -17,6 +17,7 @@
 package com.zetyun.streamtau.manager.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.controller.mapper.ProjectRequestMapper;
 import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
 
@@ -75,5 +77,11 @@ public class ProjectController {
         @Parameter(description = "The id of the project.")
         @PathVariable("id") String id) {
         projectService.delete(id);
+    }
+
+    @Operation(summary = "Get the schema of projects.")
+    @GetMapping("/schema")
+    public JsonSchema schema() throws IOException {
+        return projectService.schema();
     }
 }

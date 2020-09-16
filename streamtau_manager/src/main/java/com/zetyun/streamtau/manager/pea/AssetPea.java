@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.pea;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -65,7 +66,7 @@ import javax.annotation.Nonnull;
         FlinkMiniCluster.class,
     }
 )
-@JsonPropertyOrder(alphabetic = true)
+@JsonPropertyOrder(value = {"type"}, alphabetic = true)
 @JsonTypeInfo(property = "type", use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
     // App
@@ -115,13 +116,13 @@ public abstract class AssetPea implements Pea<String, String, AssetPea> {
     @Setter
     private String description;
 
-    // In controller response, the `type` from the class of pea is missing, so make it explicit.
-    // However, for internal use, the `type` is generated from the class of pea, jackson will
-    // generate an additional `type` field if this field is seen.
     @Schema(
         description = "The type of the asset, determines the other fields."
     )
-    @JsonView({PeaParser.Public.class})
+    // Jackson serialize the type id before the other properties.
+    // This must be ignored or there will be two `type` properties.
+    @JsonIgnore
+    @Override
     public String getType() {
         JsonTypeName name = getClass().getAnnotation(JsonTypeName.class);
         return name.value();

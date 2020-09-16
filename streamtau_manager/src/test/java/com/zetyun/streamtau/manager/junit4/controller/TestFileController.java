@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.junit4.controller;
 
+import com.zetyun.streamtau.manager.config.DevWebMvcConfig;
 import com.zetyun.streamtau.manager.controller.FileController;
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
@@ -101,6 +102,7 @@ public class TestFileController {
         FileController.class,
         ResponseBodyDecorator.class,
         GlobalExceptionHandler.class,
+        DevWebMvcConfig.class,
     })
     static class Config {
     }

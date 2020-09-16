@@ -16,6 +16,9 @@
 
 package com.zetyun.streamtau.manager.junit4.controller;
 
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.zetyun.streamtau.manager.config.DevWebMvcConfig;
 import com.zetyun.streamtau.manager.controller.ProjectController;
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
@@ -164,6 +167,19 @@ public class TestProjectController {
             .andDo(print());
     }
 
+    @Test
+    public void testSchema() throws Exception {
+        when(projectService.schema()).thenReturn(JsonSchema.minimalForFormat(JsonFormatTypes.INTEGER));
+        mvc.perform(
+            get("/api/projects/schema")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andDo(print())
+            .andExpect(success())
+            .andExpect(jsonPath("$.data.type").value("integer"));
+        verify(projectService, times(1)).schema();
+    }
+
     // Mock application
     @Configuration
     @EnableAutoConfiguration
@@ -171,6 +187,7 @@ public class TestProjectController {
         ProjectController.class,
         ResponseBodyDecorator.class,
         GlobalExceptionHandler.class,
+        DevWebMvcConfig.class,
     })
     static class Config {
     }

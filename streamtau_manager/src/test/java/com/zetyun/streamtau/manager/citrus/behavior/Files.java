@@ -18,7 +18,7 @@ package com.zetyun.streamtau.manager.citrus.behavior;
 
 import com.consol.citrus.dsl.design.AbstractTestBehavior;
 import com.consol.citrus.message.MessageType;
-import com.zetyun.streamtau.manager.controller.advise.StreamTauResponse;
+import com.zetyun.streamtau.manager.controller.protocol.StreamTauResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;

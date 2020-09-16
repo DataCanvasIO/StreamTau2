@@ -16,7 +16,7 @@
 
 package com.zetyun.streamtau.manager.helper;
 
-import com.zetyun.streamtau.manager.controller.advise.StreamTauResponse;
+import com.zetyun.streamtau.manager.controller.protocol.StreamTauResponse;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultMatcher;
 
