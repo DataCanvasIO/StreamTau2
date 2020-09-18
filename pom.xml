@@ -36,7 +36,6 @@
 
         <!-- spring -->
         <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
-        <spring-data.version>Moore-SR5</spring-data.version>
         <springdoc-openapi.version>1.4.0</springdoc-openapi.version>
 
         <!-- hibernate -->
@@ -54,6 +53,9 @@
 
         <!-- jackson -->
         <jackson.version>2.11.2</jackson.version>
+
+        <!-- json schema -->
+        <jsonschema-generator.version>4.14.0</jsonschema-generator.version>
 
         <!-- antlr4 -->
         <antlr4.version>4.8-1</antlr4.version>
@@ -88,6 +90,7 @@
         <!-- static check -->
         <jsr305.version>3.0.2</jsr305.version>
         <jetbrains-annotations.version>19.0.0</jetbrains-annotations.version>
+        <checkstyle.version>8.30</checkstyle.version>
 
         <!-- plugins -->
         <maven-checkstyle.version>3.1.1</maven-checkstyle.version>
@@ -128,13 +131,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
                 <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-releasetrain</artifactId>
-                <version>${spring-data.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -261,6 +257,18 @@
                 <groupId>com.fasterxml.jackson.module</groupId>
                 <artifactId>jackson-module-jsonSchema</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- json schema -->
+            <dependency>
+                <groupId>com.github.victools</groupId>
+                <artifactId>jsonschema-generator</artifactId>
+                <version>${jsonschema-generator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.victools</groupId>
+                <artifactId>jsonschema-module-jackson</artifactId>
+                <version>${jsonschema-generator.version}</version>
             </dependency>
 
             <!-- antlr4 -->
@@ -411,6 +419,11 @@
                 <artifactId>annotations</artifactId>
                 <version>${jetbrains-annotations.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.puppycrawl.tools</groupId>
+                <artifactId>checkstyle</artifactId>
+                <version>${checkstyle.version}</version>
+            </dependency>
 
             <!-- this project -->
             <dependency>
@@ -542,6 +555,11 @@
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
                     <version>${frontend-maven.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.victools</groupId>
+                    <artifactId>jsonschema-maven-plugin</artifactId>
+                    <version>${jsonschema-generator.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

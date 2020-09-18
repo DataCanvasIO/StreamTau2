@@ -135,6 +135,12 @@
             <artifactId>jackson-module-jsonSchema</artifactId>
         </dependency>
 
+        <!-- json schema -->
+        <dependency>
+            <groupId>com.github.victools</groupId>
+            <artifactId>jsonschema-generator</artifactId>
+        </dependency>
+
         <!-- facilities -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -326,6 +332,43 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.victools</groupId>
+                <artifactId>jsonschema-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaVersion>DRAFT_2019_09</schemaVersion>
+                    <options>
+                        <preset>PLAIN_JSON</preset>
+                        <disabled>
+                            <option>SCHEMA_VERSION_INDICATOR</option>
+                        </disabled>
+                    </options>
+                    <modules>
+                        <module>
+                            <name>Jackson</name>
+                            <options>
+                                <option>IGNORE_TYPE_INFO_TRANSFORM</option>
+                            </options>
+                        </module>
+                        <module>
+                            <className>com.zetyun.streamtau.manager.utils.JacksonRequiredModule</className>
+                        </module>
+                    </modules>
+                    <classNames>
+                        <className>com.zetyun.streamtau.manager.controller.protocol.ProjectRequest</className>
+                    </classNames>
+                    <schemaFilePath>${project.build.outputDirectory}/schema</schemaFilePath>
+                    <schemaFileName>{0}.schema</schemaFileName>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

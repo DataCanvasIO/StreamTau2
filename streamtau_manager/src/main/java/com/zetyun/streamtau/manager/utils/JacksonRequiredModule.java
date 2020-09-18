@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.service;
+package com.zetyun.streamtau.manager.utils;
 
-import com.zetyun.streamtau.manager.service.dto.ProjectDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.victools.jsonschema.generator.Module;
+import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
-public interface ProjectService {
-    List<ProjectDto> listAll();
-
-    ProjectDto create(ProjectDto dto);
-
-    ProjectDto get(String userProjectId);
-
-    ProjectDto update(ProjectDto dto);
-
-    void delete(String userProjectId);
-
-    Long mapProjectId(String userProjectId);
+public class JacksonRequiredModule implements Module {
+    @Override
+    public void applyToConfigBuilder(@Nonnull SchemaGeneratorConfigBuilder configBuilder) {
+        configBuilder.forFields().withRequiredCheck(f -> f.getAnnotation(JsonProperty.class).required());
+    }
 }

@@ -42,7 +42,7 @@ import javax.annotation.Nonnull;
 
 @Tag(name = "Asset APIs")
 @RestController
-@RequestMapping("/api/projects/{projectId}/assets")
+@RequestMapping("/projects/{projectId}/assets")
 @JsonView({PeaParser.Public.class})
 public class AssetController {
     @Autowired

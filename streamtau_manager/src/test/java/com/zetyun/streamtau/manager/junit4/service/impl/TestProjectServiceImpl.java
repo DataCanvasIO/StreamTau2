@@ -16,10 +16,10 @@
 
 package com.zetyun.streamtau.manager.junit4.service.impl;
 
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.zetyun.streamtau.manager.db.mapper.ProjectMapper;
 import com.zetyun.streamtau.manager.db.mapper.UserProjectMapper;
 import com.zetyun.streamtau.manager.db.model.Project;
+import com.zetyun.streamtau.manager.db.model.ProjectType;
 import com.zetyun.streamtau.manager.db.model.UserProject;
 import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.UserService;
@@ -34,16 +34,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -112,6 +109,21 @@ public class TestProjectServiceImpl {
     }
 
     @Test
+    public void testGet() {
+        Project model = new Project();
+        model.setProjectId(2L);
+        model.setUserProjectId("AAA");
+        model.setProjectName("forGet");
+        model.setProjectType(ProjectType.CONTAINER);
+        when(projectMapper.findByIdOfUser("user1", "AAA")).thenReturn(model);
+        ProjectDto dto = projectService.get("AAA");
+        assertThat(dto.getId(), is("AAA"));
+        assertThat(dto.getName(), is("forGet"));
+        assertThat(dto.getType(), is(ProjectType.CONTAINER));
+        verify(projectMapper, times(1)).findByIdOfUser("user1", "AAA");
+    }
+
+    @Test
     public void testUpdate() {
         when(projectMapper.updateForUser(anyString(), any(Project.class))).thenReturn(1);
         ProjectDto dto = new ProjectDto();
@@ -140,12 +152,5 @@ public class TestProjectServiceImpl {
             return model;
         });
         assertThat(projectService.mapProjectId("AAA"), is(3L));
-    }
-
-    @Test
-    public void testSchema() throws IOException {
-        JsonSchema schema = projectService.schema();
-        assertTrue(schema.isObjectSchema());
-        assertThat(schema.asObjectSchema().getProperties().keySet(), hasItems("id", "name", "description", "type"));
     }
 }

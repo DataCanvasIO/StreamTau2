@@ -15,6 +15,7 @@
       <writeAnnotation name="com.fasterxml.jackson.annotation.JsonProperty" />
       <writeAnnotation name="com.fasterxml.jackson.annotation.JsonValue" />
       <writeAnnotation name="org.springframework.beans.factory.annotation.Autowired" />
+      <writeAnnotation name="org.springframework.boot.test.mock.mockito.MockBean" />
     </writeAnnotations>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

@@ -16,8 +16,6 @@
 
 package com.zetyun.streamtau.manager.junit4.controller;
 
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.zetyun.streamtau.manager.config.DevWebMvcConfig;
 import com.zetyun.streamtau.manager.controller.ProjectController;
 import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
@@ -95,13 +93,14 @@ public class TestProjectController {
         mvc.perform(
             post("/api/projects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"testCreate\"}")
+                .content("{\"name\": \"testCreate\", \"type\": \"CONTAINER\"}")
         )
             .andDo(print())
             .andExpect(success())
             .andExpect(jsonPath("$.data.id").value("AAA"))
             .andExpect(jsonPath("$.data.name").value("testCreate"))
-            .andExpect(jsonPath("$.data.description").value(nullValue()));
+            .andExpect(jsonPath("$.data.description").value(nullValue()))
+            .andExpect(jsonPath("$.data.type").value("CONTAINER"));
         verify(projectService, times(1)).create(any(ProjectDto.class));
     }
 
@@ -169,15 +168,17 @@ public class TestProjectController {
 
     @Test
     public void testSchema() throws Exception {
-        when(projectService.schema()).thenReturn(JsonSchema.minimalForFormat(JsonFormatTypes.INTEGER));
         mvc.perform(
             get("/api/projects/schema")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
             .andExpect(success())
-            .andExpect(jsonPath("$.data.type").value("integer"));
-        verify(projectService, times(1)).schema();
+            .andExpect(jsonPath("$.data.type").value("object"))
+            .andExpect(jsonPath("$.data.properties.name.type").value("string"))
+            .andExpect(jsonPath("$.data.properties.description.type").value("string"))
+            .andExpect(jsonPath("$.data.properties.type.type").value("string"))
+            .andExpect(jsonPath("$.data.properties.type.enum").isArray());
     }
 
     // Mock application

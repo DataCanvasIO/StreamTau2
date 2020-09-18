@@ -8,10 +8,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-  mvc:
-    static-path-pattern: /public/**
-  resources:
-    static-locations: classpath:/static
   datasource:
     driver-class-name: 'com.mysql.cj.jdbc.Driver'
     url: 'jdbc:mysql://localhost:3306/streamtau2?useSSL=false'

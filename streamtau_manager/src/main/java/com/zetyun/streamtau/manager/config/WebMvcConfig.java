@@ -16,13 +16,16 @@
 
 package com.zetyun.streamtau.manager.config;
 
+import com.zetyun.streamtau.manager.controller.ProjectController;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.method.HandlerTypePredicate;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -36,6 +39,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         AntPathMatcher matcher = new AntPathMatcher();
         matcher.setCaseSensitive(false);
         configurer.setPathMatcher(matcher);
+        configurer.addPathPrefix(
+            "/api",
+            HandlerTypePredicate.forBasePackageClass(ProjectController.class)
+        );
     }
 
     @Override
@@ -46,5 +53,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(@Nonnull List<HttpMessageConverter<?>> converters) {
+    }
+
+    @Override
+    public void addResourceHandlers(@Nonnull ResourceHandlerRegistry registry) {
+        registry
+            .addResourceHandler("/public/**")
+            .addResourceLocations("classpath:/static/");
+        registry
+            .addResourceHandler("/api/schema/**")
+            .addResourceLocations("classpath:/schema/");
     }
 }

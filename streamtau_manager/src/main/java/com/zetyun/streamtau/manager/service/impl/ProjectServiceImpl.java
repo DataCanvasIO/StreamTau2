@@ -16,8 +16,6 @@
 
 package com.zetyun.streamtau.manager.service.impl;
 
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.db.mapper.ProjectMapper;
 import com.zetyun.streamtau.manager.db.mapper.UserProjectMapper;
 import com.zetyun.streamtau.manager.db.model.Project;
@@ -30,7 +28,6 @@ import com.zetyun.streamtau.manager.service.mapper.ProjectDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +60,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectDto get(String userProjectId) {
+        String userId = userService.getLoginUser();
+        Project model = projectMapper.findByIdOfUser(userId, userProjectId);
+        if (model == null) {
+            throw new StreamTauException("10001", userProjectId);
+        }
+        return ProjectDtoMapper.MAPPER.fromModel(model);
+    }
+
+    @Override
     public ProjectDto update(ProjectDto dto) {
         Project model = ProjectDtoMapper.MAPPER.toModel(dto);
         if (projectMapper.updateForUser(userService.getLoginUser(), model) == 0) {
@@ -87,11 +94,5 @@ public class ProjectServiceImpl implements ProjectService {
             throw new StreamTauException("10001", userProjectId);
         }
         return userProject.getProjectId();
-    }
-
-    @Override
-    public JsonSchema schema() throws IOException {
-        JsonSchema schema = PeaParser.JSON.createJsonSchema(ProjectDto.class);
-        return schema;
     }
 }

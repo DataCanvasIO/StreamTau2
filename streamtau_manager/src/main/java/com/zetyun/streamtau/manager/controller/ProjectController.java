@@ -42,7 +42,7 @@ import javax.validation.Valid;
 
 @Tag(name = "Project APIs")
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/projects")
 @JsonView({PeaParser.Public.class})
 public class ProjectController {
     @Autowired
@@ -58,6 +58,12 @@ public class ProjectController {
     @PostMapping("")
     public ProjectDto create(@Valid @RequestBody ProjectRequest request) {
         return projectService.create(ProjectRequestMapper.MAPPER.toDto(request));
+    }
+
+    @Operation(summary = "Get a project.")
+    @GetMapping("/{id}")
+    public ProjectDto get(@PathVariable("id") String id) {
+        return projectService.get(id);
     }
 
     @Operation(summary = "Update a project.")
@@ -82,6 +88,6 @@ public class ProjectController {
     @Operation(summary = "Get the schema of projects.")
     @GetMapping("/schema")
     public JsonSchema schema() throws IOException {
-        return projectService.schema();
+        return PeaParser.JSON.createJsonSchema(ProjectRequest.class);
     }
 }

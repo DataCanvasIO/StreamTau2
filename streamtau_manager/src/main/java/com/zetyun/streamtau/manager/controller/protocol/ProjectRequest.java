@@ -37,7 +37,7 @@ public class ProjectRequest {
     )
     @NotBlank
     @Size(max = 255)
-    @JsonProperty("name")
+    @JsonProperty(value = "name", required = true)
     private String name;
     @Schema(
         description = "The description of the project.",
@@ -50,6 +50,6 @@ public class ProjectRequest {
         description = "The type of the project.",
         example = "CONTAINER"
     )
-    @JsonProperty("type")
+    @JsonProperty(value = "type", required = true, defaultValue = "CONTAINER")
     private ProjectType type;
 }
