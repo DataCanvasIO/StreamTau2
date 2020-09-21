@@ -41,8 +41,8 @@ public class TestFile {
         String json = PeaParser.JSON.stringShowAll(file);
         assertThat(json, is("{"
             + "\"type\":\"TxtFile\","
-            + "\"category\":\"FILE\","
             + "\"name\":\"text\","
+            + "\"category\":\"FILE\","
             + "\"path\":\"AAA.txt\""
             + "}"));
     }

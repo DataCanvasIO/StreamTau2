@@ -53,11 +53,7 @@ export class AssetList extends React.Component<AssetListProps, AssetListState> {
     public setAssets(data: any): void {
         const assets: Assets = {};
         for (const item of data) {
-            assets[item.id] = {
-                name: item.name,
-                description: item.description,
-                type: item.type,
-            };
+            assets[item.id] = item;
         }
         this.setState({ assets: assets });
     }

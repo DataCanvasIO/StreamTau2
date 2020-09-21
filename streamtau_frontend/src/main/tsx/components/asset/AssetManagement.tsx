@@ -18,7 +18,9 @@ import styles from "style/main.scss";
 
 import * as React from "react";
 import { autobind } from "core-decorators";
+import { JSONSchema7 } from 'json-schema';
 
+import { SchemaApi } from "../../api/SchemaApi";
 import { checkStatusHandler } from "../../api/Api";
 import { AssetApi, Asset } from "../../api/AssetApi";
 import { MainFrame } from "../MainFrame";
@@ -37,7 +39,7 @@ interface AssetManagementProps {
 }
 
 interface AssetManagementState {
-    selectedType?: string;
+    selectedType: string;
 }
 
 export class AssetManagement extends React.Component<AssetManagementProps, AssetManagementState> {
@@ -46,26 +48,25 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
     private dlg: React.RefObject<AssetDialog> = React.createRef();
 
     private readonly assetApi: AssetApi;
+    private schemas: { [type: string]: JSONSchema7 };
 
     public constructor(props: AssetManagementProps) {
         super(props);
         this.assetApi = new AssetApi(props.projectId);
         this.state = {
-            selectedType: "",
+            selectedType: '',
         }
-    }
-
-    public componentDidMount(): void {
-        this.listCategory();
+        this.schemas = {};
     }
 
     @autobind
     public getSelectedType(): string {
-        const type = this.state.selectedType;
-        if (type) {
-            return type;
-        }
-        return '';
+        return this.state.selectedType;
+    }
+
+    @autobind
+    public getSchemaOfType(type: string): JSONSchema7 {
+        return this.schemas[type];
     }
 
     @autobind
@@ -74,11 +75,9 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
     }
 
     @autobind
-    public handleChangeSelectedType(type: string | undefined): void {
+    public handleChangeSelectedType(type: string): void {
         this.setState({ selectedType: type });
-        if (type) {
-            this.dlg.current?.setState({ type: type });
-        }
+        this.dlg.current?.setSelectedType(type);
         this.listAsset(type);
     }
 
@@ -108,6 +107,12 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
     @autobind
     public listCategory(): void {
         this.assetApi.listCategory(checkStatusHandler(data => {
+            for (const item of data) {
+                const type = item.type;
+                SchemaApi.get(type, (_err, res) => {
+                    this.schemas[type] = res.body;
+                });
+            }
             this.cats.current?.setCategories(data);
             this.handleChangeSelectedType('');
         }));
@@ -144,6 +149,10 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
         this.assetApi.deleteAsset(id, checkStatusHandler(_data => {
             this.listAsset(this.getSelectedType());
         }));
+    }
+
+    public componentDidMount(): void {
+        this.listCategory();
     }
 
     public render() {

@@ -54,11 +54,7 @@ export class ProjectList extends React.Component<ProjectListProps, ProjectListSt
     public setProjects(data: any): void {
         const projects: Projects = {};
         for (const item of data) {
-            projects[item.id] = {
-                name: item.name,
-                description: item.description,
-                type: item.type,
-            };
+            projects[item.id] = item;
         }
         this.setState({ projects: projects });
     }

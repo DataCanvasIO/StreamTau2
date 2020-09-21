@@ -3,21 +3,21 @@
   "map": {
     "APP": {
       "type": "JavaJarApp",
+      "name": "app",
       "category": "APPLICATION",
       "jarFile": "JAR",
-      "name": "app",
       "server": "COMMON_EXECUTOR"
     },
     "COMMON_EXECUTOR": {
       "type": "Executor",
+      "name": "Common executor",
       "category": "SERVER",
-      "description": "Thread pool to execute cmdline.",
-      "name": "Common executor"
+      "description": "Thread pool to execute cmdline."
     },
     "JAR": {
       "type": "JarFile",
-      "category": "FILE",
       "name": "jarFile",
+      "category": "FILE",
       "path": "JAVA_JAR_APP.jar"
     }
   }

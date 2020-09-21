@@ -2,15 +2,15 @@ appId: APP
 map:
   APP:
     type: FlinkPipelineApp
-    category: APPLICATION
     name: Flink pipeline app
+    category: APPLICATION
     pipeline: PIPE
     server: COMMON_FLINK_MINI_CLUSTER
   COMMON_FLINK_MINI_CLUSTER:
     type: FlinkMiniCluster
+    name: Common Flink mini cluster
     category: SERVER
     description: Flink mini cluster to run flink job.
-    name: Common Flink mini cluster
   PIPE:
     type: Pipeline
     name: Pipeline

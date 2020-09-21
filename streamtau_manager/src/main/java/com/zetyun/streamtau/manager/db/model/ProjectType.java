@@ -18,4 +18,5 @@ package com.zetyun.streamtau.manager.db.model;
 
 public enum ProjectType {
     CONTAINER,
+    CUSTOMIZED,
 }

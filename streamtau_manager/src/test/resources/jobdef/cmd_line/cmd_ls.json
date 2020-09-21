@@ -3,22 +3,22 @@
   "map": {
     "APP": {
       "type": "CmdLineApp",
+      "name": "app",
       "category": "APPLICATION",
       "cmdLine": "CMD",
-      "name": "app",
       "server": "COMMON_EXECUTOR"
     },
     "CMD": {
       "type": "CmdLine",
+      "name": "cmd",
       "category": "MISCELLANEOUS",
-      "cmd": "ls -l",
-      "name": "cmd"
+      "cmd": "ls -l"
     },
     "COMMON_EXECUTOR": {
       "type": "Executor",
+      "name": "Common executor",
       "category": "SERVER",
-      "description": "Thread pool to execute cmdline.",
-      "name": "Common executor"
+      "description": "Thread pool to execute cmdline."
     }
   }
 }

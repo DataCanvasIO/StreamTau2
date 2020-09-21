@@ -16,18 +16,20 @@
 
 import * as React from 'react';
 import { autobind } from 'core-decorators';
+import { JSONSchema7 } from 'json-schema';
+import { ISubmitEvent } from '@rjsf/core';
 
+import { Project } from '../../api/ProjectApi';
 import { ProjectManagement } from './ProjectManagement';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import FormLabel from '@material-ui/core/FormLabel';
+import MuiForm from "@rjsf/material-ui";
+import Box from '@material-ui/core/Box';
+import { SchemaApi } from '../../api/SchemaApi';
 
 interface ProjectDialogProps {
     parent: ProjectManagement;
@@ -36,9 +38,8 @@ interface ProjectDialogProps {
 interface ProjectDialogState {
     isOpen: boolean;
     id?: string;
-    name: string;
-    description?: string;
-    type: string;
+    schema?: JSONSchema7;
+    data?: Project;
 }
 
 export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDialogState> {
@@ -46,9 +47,14 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
         super(props);
         this.state = {
             isOpen: false,
-            name: '',
-            type: 'CONTAINER',
         };
+    }
+
+    @autobind
+    public setSchema(schema: JSONSchema7): void {
+        this.setState({
+            schema: schema,
+        })
     }
 
     @autobind
@@ -59,9 +65,7 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
                 this.setState({
                     isOpen: true,
                     id: id,
-                    name: project.name,
-                    description: project.description,
-                    type: project.type,
+                    data: project,
                 });
             } else {
                 alert('No project with (id = "' + id + '") exists.');
@@ -71,9 +75,11 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
             this.setState({
                 isOpen: true,
                 id: undefined,
-                name: '',
-                description: '',
-                type: 'CONTAINER',
+                data: {
+                    name: '',
+                    description: '',
+                    type: 'CONTAINER',
+                }
             });
         }
     }
@@ -86,47 +92,8 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
     }
 
     @autobind
-    private handleInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        event.preventDefault();
-        event.persist();
-        const target = event.target;
-        if (target != null) {
-            const name = target.name;
-            const value = target.value;
-            if (value != null) {
-                if (name == 'name') {
-                    this.setState({ name: value });
-                } else if (name == 'description') {
-                    this.setState({ description: value });
-                }
-            }
-        }
-    }
-
-    @autobind
-    private handleSelectChange(
-        event: React.ChangeEvent<{ name?: string, value: unknown }>,
-    ): void {
-        event.preventDefault();
-        event.persist();
-        const target = event.target;
-        if (target != null) {
-            const name = target.name;
-            const value = target.value;
-            if (name == 'type' && typeof value == 'string') {
-                this.setState({ type: value });
-            }
-        }
-    }
-
-    @autobind
-    private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
-        event.preventDefault();
-        const project = {
-            name: this.state.name,
-            description: this.state.description,
-            type: this.state.type,
-        };
+    private handleSubmit(event: ISubmitEvent<any>): void {
+        const project = event.formData;
         if (this.state.id) {
             this.props.parent.updateProject(this.state.id, project);
         } else {
@@ -135,38 +102,38 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
         this.handleClose();
     }
 
+    public componentDidMount(): void {
+        SchemaApi.get('ProjectRequest', (_err, res) => {
+            this.setState({ schema: res.body });
+        });
+    }
+
     public render() {
+        let dlgContent;
+        if (this.state.schema) {
+            dlgContent = (
+                <DialogContent>
+                    <MuiForm
+                        schema={this.state.schema}
+                        formData={this.state.data}
+                        onSubmit={this.handleSubmit}
+                    >
+                        <DialogActions>
+                            <Button type="submit" color="primary">Submit</Button>
+                            <Button onClick={this.handleClose}>Cancel</Button>
+                        </DialogActions>
+                    </MuiForm>
+                </DialogContent>
+            );
+        } else {
+            dlgContent = (
+                <Box />
+            );
+        }
         return (
             <Dialog disableBackdropClick open={this.state.isOpen} onClose={this.handleClose}>
                 <DialogTitle>Create project</DialogTitle>
-                <form onSubmit={this.handleSubmit} method="POST">
-                    <DialogContent>
-                        <FormLabel>Name</FormLabel>
-                        <TextField autoFocus fullWidth
-                            name="name"
-                            value={this.state.name}
-                            onChange={this.handleInputChange}
-                        />
-                        <FormLabel>Description</FormLabel>
-                        <TextField fullWidth
-                            name="description"
-                            value={this.state.description}
-                            onChange={this.handleInputChange}
-                        />
-                        <FormLabel>Type</FormLabel>
-                        <Select fullWidth
-                            name="type"
-                            value={this.state.type}
-                            onChange={this.handleSelectChange}
-                        >
-                            <MenuItem value="CONTAINER">CONTAINER</MenuItem>
-                        </Select>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleClose}>Cancel</Button>
-                        <Button type="submit" color="primary">Submit</Button>
-                    </DialogActions>
-                </form>
+                {dlgContent}
             </Dialog>
         );
     }

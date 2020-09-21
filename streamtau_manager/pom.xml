@@ -130,15 +130,15 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-csv</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jsonSchema</artifactId>
-        </dependency>
 
         <!-- json schema -->
         <dependency>
             <groupId>com.github.victools</groupId>
             <artifactId>jsonschema-generator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.victools</groupId>
+            <artifactId>jsonschema-module-jackson</artifactId>
         </dependency>
 
         <!-- facilities -->
@@ -278,6 +278,89 @@
         </testResources>
         <plugins>
             <plugin>
+                <groupId>com.github.victools</groupId>
+                <artifactId>jsonschema-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaVersion>DRAFT_2019_09</schemaVersion>
+                    <options>
+                        <preset>PLAIN_JSON</preset>
+                        <disabled>
+                            <option>SCHEMA_VERSION_INDICATOR</option>
+                        </disabled>
+                    </options>
+                    <modules>
+                        <module>
+                            <name>Jackson</name>
+                            <options>
+                                <option>IGNORE_TYPE_INFO_TRANSFORM</option>
+                                <option>RESPECT_JSONPROPERTY_ORDER</option>
+                            </options>
+                        </module>
+                        <module>
+                            <className>com.zetyun.streamtau.manager.utils.CustomizedModule</className>
+                        </module>
+                    </modules>
+                    <classNames>
+                        <className>com.zetyun.streamtau.manager.controller.protocol.ProjectRequest</className>
+                        <className>com.zetyun.streamtau.manager.pea.app.CmdLineApp</className>
+                        <className>com.zetyun.streamtau.manager.pea.app.FlinkJarApp</className>
+                        <className>com.zetyun.streamtau.manager.pea.app.FlinkPipelineApp</className>
+                        <className>com.zetyun.streamtau.manager.pea.app.JavaJarApp</className>
+                        <className>com.zetyun.streamtau.manager.pea.file.JarFile</className>
+                        <className>com.zetyun.streamtau.manager.pea.file.TxtFile</className>
+                        <className>com.zetyun.streamtau.manager.pea.misc.CmdLine</className>
+                        <className>com.zetyun.streamtau.manager.pea.misc.Host</className>
+                        <className>com.zetyun.streamtau.manager.pea.misc.Pipeline</className>
+                        <className>com.zetyun.streamtau.manager.pea.misc.SchemaPea</className>
+                        <className>com.zetyun.streamtau.manager.pea.server.Executor</className>
+                        <className>com.zetyun.streamtau.manager.pea.server.FlinkMiniCluster</className>
+                        <className>com.zetyun.streamtau.manager.pea.server.FlinkRemoteCluster</className>
+                    </classNames>
+                    <schemaFilePath>${project.build.outputDirectory}/schema</schemaFilePath>
+                    <schemaFileName>{0}.json</schemaFileName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources-it</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.parent.basedir}/streamtau_test/hello_world/target/</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>streamtau-test-hello-world.jar</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${project.parent.basedir}/streamtau_test/flink_streaming/target/</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>streamtau-test-flink-streaming.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
@@ -329,75 +412,6 @@
                             <srcDir>src/main/resources/messages</srcDir>
                             <targetDir>${project.build.outputDirectory}/messages</targetDir>
                             <includes>**/*.properties</includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.victools</groupId>
-                <artifactId>jsonschema-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <schemaVersion>DRAFT_2019_09</schemaVersion>
-                    <options>
-                        <preset>PLAIN_JSON</preset>
-                        <disabled>
-                            <option>SCHEMA_VERSION_INDICATOR</option>
-                        </disabled>
-                    </options>
-                    <modules>
-                        <module>
-                            <name>Jackson</name>
-                            <options>
-                                <option>IGNORE_TYPE_INFO_TRANSFORM</option>
-                            </options>
-                        </module>
-                        <module>
-                            <className>com.zetyun.streamtau.manager.utils.JacksonRequiredModule</className>
-                        </module>
-                    </modules>
-                    <classNames>
-                        <className>com.zetyun.streamtau.manager.controller.protocol.ProjectRequest</className>
-                    </classNames>
-                    <schemaFilePath>${project.build.outputDirectory}/schema</schemaFilePath>
-                    <schemaFileName>{0}.schema</schemaFileName>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources-it</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/streamtau_test/hello_world/target/</directory>
-                                    <filtering>false</filtering>
-                                    <includes>
-                                        <include>streamtau-test-hello-world.jar</include>
-                                    </includes>
-                                </resource>
-                                <resource>
-                                    <directory>${project.parent.basedir}/streamtau_test/flink_streaming/target/</directory>
-                                    <filtering>false</filtering>
-                                    <includes>
-                                        <include>streamtau-test-flink-streaming.jar</include>
-                                    </includes>
-                                </resource>
-                            </resources>
                         </configuration>
                     </execution>
                 </executions>

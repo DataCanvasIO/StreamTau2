@@ -66,7 +66,7 @@ import javax.annotation.Nonnull;
         FlinkMiniCluster.class,
     }
 )
-@JsonPropertyOrder(value = {"type"}, alphabetic = true)
+@JsonPropertyOrder(value = {"type", "id", "name", "category", "description"}, alphabetic = true)
 @JsonTypeInfo(property = "type", use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
     // App
@@ -97,6 +97,7 @@ public abstract class AssetPea implements Pea<String, String, AssetPea> {
     @JsonView({PeaParser.Public.class})
     @Getter
     @Setter
+    @JsonProperty("id")
     private String id;
     @Schema(
         description = "The name of the asset.",
@@ -106,6 +107,7 @@ public abstract class AssetPea implements Pea<String, String, AssetPea> {
     @JsonView({PeaParser.Show.class, PeaParser.Public.class})
     @Getter
     @Setter
+    @JsonProperty(value = "name", required = true)
     private String name;
     @Schema(
         description = "The description of the asset.",
@@ -114,6 +116,7 @@ public abstract class AssetPea implements Pea<String, String, AssetPea> {
     @JsonView({PeaParser.Show.class, PeaParser.Public.class})
     @Getter
     @Setter
+    @JsonProperty("description")
     private String description;
 
     @Schema(

@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.utils;
+import * as request from "superagent";
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.victools.jsonschema.generator.Module;
-import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
+import { ResponseHandler, API_URL_BASE } from "./Api";
 
-import javax.annotation.Nonnull;
-
-public class JacksonRequiredModule implements Module {
-    @Override
-    public void applyToConfigBuilder(@Nonnull SchemaGeneratorConfigBuilder configBuilder) {
-        configBuilder.forFields().withRequiredCheck(f -> f.getAnnotation(JsonProperty.class).required());
+export class SchemaApi {
+    public static get(name: string, callback: ResponseHandler): void {
+        request
+            .get(API_URL_BASE + '/schema/' + name + '.json')
+            .send()
+            .end(callback);
     }
 }

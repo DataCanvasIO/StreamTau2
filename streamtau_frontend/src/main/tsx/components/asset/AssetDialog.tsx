@@ -16,16 +16,18 @@
 
 import * as React from 'react';
 import { autobind } from 'core-decorators';
+import { JSONSchema7 } from 'json-schema';
+import MuiForm from "@rjsf/material-ui";
 
+import { Asset } from '../../api/AssetApi';
 import { AssetManagement } from './AssetManagement';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import FormLabel from '@material-ui/core/FormLabel';
+import { ISubmitEvent } from '@rjsf/core';
 
 interface AssetDialogProps {
     parent: AssetManagement;
@@ -34,43 +36,61 @@ interface AssetDialogProps {
 interface AssetDialogState {
     isOpen: boolean;
     id?: string;
-    name: string;
-    description?: string;
     type: string;
-    [props: string]: any;
+    schema: JSONSchema7;
+    data?: Asset;
 }
 
 export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogState> {
     public constructor(props: AssetDialogProps) {
         super(props);
+        const type = this.props.parent.getSelectedType();
         this.state = {
             isOpen: false,
-            name: '',
-            type: props.parent.getSelectedType(),
+            type: type,
+            schema: this.props.parent.getSchemaOfType(type),
         };
+    }
+
+    @autobind
+    public setSelectedType(type: string): void {
+        this.setState({
+            type: type,
+            schema: this.props.parent.getSchemaOfType(type),
+        });
     }
 
     @autobind
     public open(id?: string): void {
         if (id) {
             const asset = this.props.parent.getCachedAsset(id);
-            if (asset && asset.type === this.state.type) {
+            if (asset) {
                 this.setState({
                     isOpen: true,
                     id: id,
-                    name: asset.name,
-                    description: asset.description,
+                    data: asset,
+                    schema: this.props.parent.getSchemaOfType(asset.type),
                 });
             } else {
-                alert('No asset of type "' + this.state.type + '" with (id = "' + id + '") exists.');
+                alert('No asset with (id = "' + id + '") exists.');
                 return;
             }
         } else {
+            const type = this.state.type;
+            const schema = this.props.parent.getSchemaOfType(type);
+            if (!type || !schema) {
+                alert("Schema of asset is not known. Please select an Asset Type first.");
+                return;
+            }
             this.setState({
                 isOpen: true,
                 id: undefined,
-                name: '',
-                description: '',
+                data: {
+                    name: '',
+                    description: '',
+                    type: type,
+                    schema: schema,
+                }
             });
         }
     }
@@ -83,31 +103,8 @@ export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogSt
     }
 
     @autobind
-    private handleInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        event.preventDefault();
-        event.persist();
-        const target = event.target;
-        if (target != null) {
-            const name = target.name;
-            const value = target.value;
-            if (value != null) {
-                if (name == 'name') {
-                    this.setState({ name: value });
-                } else if (name == 'description') {
-                    this.setState({ description: value });
-                }
-            }
-        }
-    }
-
-    @autobind
-    private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
-        event.preventDefault();
-        const asset = {
-            name: this.state.name,
-            description: this.state.description,
-            type: this.state.type,
-        };
+    private handleSubmit(event: ISubmitEvent<any>): void {
+        const asset = event.formData;
         if (this.state.id) {
             this.props.parent.updateAsset(this.state.id, asset);
         } else {
@@ -120,26 +117,18 @@ export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogSt
         return (
             <Dialog disableBackdropClick open={this.state.isOpen} onClose={this.handleClose}>
                 <DialogTitle>Create {this.state.type}</DialogTitle>
-                <form onSubmit={this.handleSubmit} method="POST">
-                    <DialogContent>
-                        <FormLabel>Name</FormLabel>
-                        <TextField autoFocus fullWidth
-                            name="name"
-                            value={this.state.name}
-                            onChange={this.handleInputChange}
-                        />
-                        <FormLabel>Description</FormLabel>
-                        <TextField fullWidth
-                            name="description"
-                            value={this.state.description}
-                            onChange={this.handleInputChange}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleClose}>Cancel</Button>
-                        <Button type="submit" color="primary">Submit</Button>
-                    </DialogActions>
-                </form>
+                <DialogContent>
+                    <MuiForm
+                        schema={this.state.schema}
+                        formData={this.state.data}
+                        onSubmit={this.handleSubmit}
+                    >
+                        <DialogActions>
+                            <Button onClick={this.handleClose}>Cancel</Button>
+                            <Button type="submit" color="primary">Submit</Button>
+                        </DialogActions>
+                    </MuiForm>
+                </DialogContent>
             </Dialog>
         );
     }

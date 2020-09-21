@@ -27,15 +27,15 @@ module.exports = merge(common, {
         new CopyPlugin({
             patterns: [
                 {
-                    from: './src/main/html/index.dev.html',
+                    from: 'src/main/html/index.dev.html',
                     to: 'index.html'
                 },
                 {
-                    from: './node_modules/react/umd/react.development.js',
+                    from: 'node_modules/react/umd/react.development.js',
                     to: 'js/lib'
                 },
                 {
-                    from: './node_modules/react-dom/umd/react-dom.development.js',
+                    from: 'node_modules/react-dom/umd/react-dom.development.js',
                     to: 'js/lib'
                 },
             ]
