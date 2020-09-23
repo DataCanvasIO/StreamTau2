@@ -27,7 +27,7 @@ import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.module.jackson.JacksonModule;
 import com.github.victools.jsonschema.module.jackson.JacksonOption;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
-import com.zetyun.streamtau.manager.utils.CustomizedModule;
+import com.zetyun.streamtau.manager.utils.CustomizedJsonSchemaModule;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -35,7 +35,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-public class TestCustomizedModule {
+public class TestCustomizedJsonSchemaModule {
     @Test
     public void testJsonSchemaGenerator() {
         SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(
@@ -47,7 +47,7 @@ public class TestCustomizedModule {
                 JacksonOption.IGNORE_TYPE_INFO_TRANSFORM,
                 JacksonOption.RESPECT_JSONPROPERTY_ORDER
             ))
-            .with(new CustomizedModule());
+            .with(new CustomizedJsonSchemaModule());
         SchemaGeneratorConfig config = configBuilder.build();
         SchemaGenerator generator = new SchemaGenerator(config);
         JsonNode jsonSchema = generator.generateSchema(CmdLine.class);

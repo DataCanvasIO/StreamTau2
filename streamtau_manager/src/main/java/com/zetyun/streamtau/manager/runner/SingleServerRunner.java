@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.runner;
 
+import com.zetyun.streamtau.manager.boot.ApplicationContextProvider;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.instance.server.ServerInstance;
@@ -23,7 +24,6 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.SingleServerApp;
 import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.service.ServerService;
-import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

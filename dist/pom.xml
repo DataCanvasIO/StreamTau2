@@ -51,7 +51,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>distro-assembly</id>
+                        <id>assembly-single</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -69,17 +69,18 @@
                 <artifactId>git-commit-id-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>get-the-git-infos</id>
+                        <id>git-commit-id-revision</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>revision</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>validate-the-git-infos</id>
+                        <id>git-commit-id-validate</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>validateRevision</goal>
                         </goals>
-                        <phase>package</phase>
                     </execution>
                 </executions>
                 <configuration>

@@ -9,12 +9,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="streamtau-frontend" />
         <module name="streamtau-test-hello-world" />
-        <module name="streamtau-expr-runtime" />
         <module name="streamtau-core" />
+        <module name="streamtau-expr-runtime" />
         <module name="streamtau-manager" />
         <module name="streamtau-streaming" />
-        <module name="streamtau-expr" />
         <module name="dist" />
+        <module name="streamtau-expr" />
         <module name="streamtau-expr-annotation" />
         <module name="streamtau-runtime" />
         <module name="streamtau-test-flink-streaming" />

@@ -16,11 +16,11 @@
 
 package com.zetyun.streamtau.manager.instance.server;
 
+import com.zetyun.streamtau.manager.boot.ApplicationContextProvider;
 import com.zetyun.streamtau.manager.pea.server.FlinkRemoteCluster;
 import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.pea.server.ServerStatus;
 import com.zetyun.streamtau.manager.properties.StreamingProperties;
-import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;

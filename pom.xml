@@ -609,7 +609,8 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>analyze</id>
+                        <id>dependency-analyze-only</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>analyze-only</goal>
                         </goals>

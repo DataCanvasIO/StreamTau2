@@ -16,13 +16,13 @@
 
 package com.zetyun.streamtau.manager.runner;
 
+import com.zetyun.streamtau.manager.boot.ApplicationContextProvider;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.instance.server.FlinkClusterInstance;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.FlinkJarApp;
 import com.zetyun.streamtau.manager.pea.file.JarFile;
 import com.zetyun.streamtau.manager.service.StorageService;
-import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.client.program.ProgramInvocationException;
 

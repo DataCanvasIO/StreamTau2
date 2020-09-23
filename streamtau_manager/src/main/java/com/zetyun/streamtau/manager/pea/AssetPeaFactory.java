@@ -19,13 +19,18 @@ package com.zetyun.streamtau.manager.pea;
 import com.zetyun.streamtau.core.pea.PeaFactory;
 import com.zetyun.streamtau.core.pea.PeaParser;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AssetPeaFactory extends PeaFactory<String, String, AssetPea> {
     public static final AssetPeaFactory INS = new AssetPeaFactory();
 
+    private final Map<String, Class<?>> peaClassMap;
+
     private AssetPeaFactory() {
+        peaClassMap = new LinkedHashMap<>(64);
         for (Map.Entry<String, Class<?>> entry : PeaParser.getSubtypeClasses(AssetPea.class).entrySet()) {
+            peaClassMap.put(entry.getKey(), entry.getValue());
             register(entry.getKey(), () -> {
                 try {
                     return (AssetPea) entry.getValue().newInstance();
@@ -35,5 +40,9 @@ public class AssetPeaFactory extends PeaFactory<String, String, AssetPea> {
                 }
             });
         }
+    }
+
+    public Class<?> getPeaClass(String peaType) {
+        return peaClassMap.get(peaType);
     }
 }

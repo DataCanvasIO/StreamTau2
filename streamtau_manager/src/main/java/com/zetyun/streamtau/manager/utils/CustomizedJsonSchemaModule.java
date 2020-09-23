@@ -25,7 +25,7 @@ import com.zetyun.streamtau.core.pea.PeaParser;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
 
-public class CustomizedModule implements Module {
+public class CustomizedJsonSchemaModule implements Module {
     @Override
     public void applyToConfigBuilder(@Nonnull SchemaGeneratorConfigBuilder configBuilder) {
         configBuilder.forFields().withRequiredCheck(f -> {

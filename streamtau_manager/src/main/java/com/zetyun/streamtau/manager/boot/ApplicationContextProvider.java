@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.utils;
+package com.zetyun.streamtau.manager.boot;
 
 import com.zetyun.streamtau.manager.properties.StreamingProperties;
 import com.zetyun.streamtau.manager.service.ServerService;

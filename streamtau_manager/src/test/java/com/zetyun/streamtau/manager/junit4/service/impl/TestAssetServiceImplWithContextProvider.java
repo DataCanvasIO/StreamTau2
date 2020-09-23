@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.junit4.service.impl;
 
+import com.zetyun.streamtau.manager.boot.ApplicationContextProvider;
 import com.zetyun.streamtau.manager.db.mapper.AssetMapper;
 import com.zetyun.streamtau.manager.db.mapper.ProjectAssetMapper;
 import com.zetyun.streamtau.manager.db.model.Asset;
@@ -25,7 +26,6 @@ import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import com.zetyun.streamtau.manager.service.impl.AssetServiceImpl;
-import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

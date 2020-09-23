@@ -103,6 +103,8 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>antlr4</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>antlr4</goal>
                         </goals>

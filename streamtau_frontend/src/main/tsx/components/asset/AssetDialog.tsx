@@ -124,8 +124,8 @@ export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogSt
                         onSubmit={this.handleSubmit}
                     >
                         <DialogActions>
-                            <Button onClick={this.handleClose}>Cancel</Button>
                             <Button type="submit" color="primary">Submit</Button>
+                            <Button onClick={this.handleClose}>Cancel</Button>
                         </DialogActions>
                     </MuiForm>
                 </DialogContent>

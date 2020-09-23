@@ -282,7 +282,8 @@
                 <artifactId>jsonschema-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>pre-integration-test</phase>
+                        <id>jsonschema-generate</id>
+                        <phase>compile</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -305,7 +306,7 @@
                             </options>
                         </module>
                         <module>
-                            <className>com.zetyun.streamtau.manager.utils.CustomizedModule</className>
+                            <className>com.zetyun.streamtau.manager.utils.CustomizedJsonSchemaModule</className>
                         </module>
                     </modules>
                     <classNames>
@@ -319,7 +320,6 @@
                         <className>com.zetyun.streamtau.manager.pea.misc.CmdLine</className>
                         <className>com.zetyun.streamtau.manager.pea.misc.Host</className>
                         <className>com.zetyun.streamtau.manager.pea.misc.Pipeline</className>
-                        <className>com.zetyun.streamtau.manager.pea.misc.SchemaPea</className>
                         <className>com.zetyun.streamtau.manager.pea.server.Executor</className>
                         <className>com.zetyun.streamtau.manager.pea.server.FlinkMiniCluster</className>
                         <className>com.zetyun.streamtau.manager.pea.server.FlinkRemoteCluster</className>
@@ -333,7 +333,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-resources-it</id>
+                        <id>resources-copy-pre-it</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -376,14 +376,14 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>start-spring-boot-server</id>
+                        <id>spring-boot-start</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>start</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>stop-spring-boot-server</id>
+                        <id>spring-boot-stop</id>
                         <phase>post-integration-test</phase>
                         <goals>
                             <goal>stop</goal>
@@ -403,7 +403,7 @@
                 <artifactId>native2ascii-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>native2ascii-process-resources</id>
+                        <id>native2ascii-resources</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>resources</goal>
@@ -421,7 +421,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
+                        <id>dependency-copy</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>

@@ -16,6 +16,7 @@
 
 package com.zetyun.streamtau.manager.junit4.service.impl;
 
+import com.zetyun.streamtau.manager.boot.ApplicationContextProvider;
 import com.zetyun.streamtau.manager.db.mapper.JobMapper;
 import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
@@ -24,7 +25,6 @@ import com.zetyun.streamtau.manager.pea.server.Executor;
 import com.zetyun.streamtau.manager.service.ScheduleService;
 import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.impl.ScheduleServiceImpl;
-import com.zetyun.streamtau.manager.utils.ApplicationContextProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
