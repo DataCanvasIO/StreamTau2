@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.controller.protocol;
+package com.zetyun.streamtau.manager.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+import java.util.Map;
+
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ElementProfile {
     @Schema(
@@ -35,5 +39,16 @@ public class ElementProfile {
         example = "{\"type\": \"object\", \"properties\": {\"name\": {\"type\": \"string\"}}}"
     )
     @JsonProperty("schema")
+    @Getter
+    @Setter
     private JsonNode schema;
+    @Schema(
+        description = "Asset references of the element.",
+        required = false,
+        example = "{\"D6045E32-6C21-4E25-899B-138C8E3FBB0F\": \"CmdLine1\"}"
+    )
+    @JsonProperty("refs")
+    @Getter
+    @Setter
+    private Map<String, String> refs;
 }

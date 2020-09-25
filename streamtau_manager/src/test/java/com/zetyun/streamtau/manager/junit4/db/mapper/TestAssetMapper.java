@@ -76,23 +76,16 @@ public class TestAssetMapper {
     }
 
     @Test
-    public void testDelete() {
-        assertThat(assetMapper.delete(3L), is(1));
+    public void testDeleteById() {
+        assertThat(assetMapper.deleteById(3L), is(1));
         assertThat(assetMapper.findById(3L), nullValue());
     }
 
     @Test
-    public void testFindAllOfProject() {
-        List<Asset> models = assetMapper.findAllOfProject(2L);
+    public void testFindInProject() {
+        List<Asset> models = assetMapper.findInProject(2L);
         assertThat(models.size(), is(4));
         assertThat(models, hasItems(assets.get(0), assets.get(2), assets.get(3), assets.get(5)));
-    }
-
-    @Test
-    public void testFindOfProjectByType() {
-        List<Asset> models = assetMapper.findOfProjectByType(2L, "CmdLine");
-        assertThat(models.size(), is(2));
-        assertThat(models, hasItems(assets.get(2), assets.get(3)));
     }
 
     @Test
@@ -109,8 +102,16 @@ public class TestAssetMapper {
 
     @Test
     public void testFindByTypeInProject() {
-        List<Asset> models = assetMapper.findByTypeInProject(3L, "Host");
-        assertThat(models, hasItems(assets.get(1)));
+        List<Asset> models = assetMapper.findByTypeInProject(2L, "CmdLine");
+        assertThat(models.size(), is(2));
+        assertThat(models, hasItems(assets.get(2), assets.get(3)));
+    }
+
+    @Test
+    public void testFindByTypesInProject() {
+        List<Asset> models = assetMapper.findByTypesInProject(2L, new String[]{"CmdLineApp", "CmdLine"});
+        assertThat(models.size(), is(3));
+        assertThat(models, hasItems(assets.get(5), assets.get(2), assets.get(3)));
     }
 
     @Test
@@ -120,7 +121,7 @@ public class TestAssetMapper {
     }
 
     @Test
-    public void testUpdateForProject() {
+    public void testUpdaterInProject() {
         Asset model = new Asset();
         model.setProjectAssetId("73c3ad25-8de8-4c63-91dd-ac9c69a0243d");
         model.setAssetName("Updated Asset.");
@@ -130,7 +131,7 @@ public class TestAssetMapper {
     }
 
     @Test
-    public void testUpdateForProjectNotOwn() {
+    public void testUpdateInProjectNotOwn() {
         Asset model = new Asset();
         model.setProjectAssetId("26fe1daf-0263-4aee-909b-909b497c7fda");
         model.setAssetName("Updated Asset.");

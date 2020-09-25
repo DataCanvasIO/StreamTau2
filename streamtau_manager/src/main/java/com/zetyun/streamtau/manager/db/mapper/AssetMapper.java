@@ -29,20 +29,23 @@ public interface AssetMapper {
 
     int insert(@Param("model") Asset model);
 
-    int delete(@Param("assetId") Long assetId);
+    int deleteById(@Param("assetId") Long assetId);
 
-    List<Asset> findAllOfProject(@Param("projectId") Long projectId);
+    List<Asset> findInProject(@Param("projectId") Long projectId);
 
-    List<Asset> findOfProjectByType(
+    Asset findByIdInProject(
         @Param("projectId") Long projectId,
-        @Param("assetType") String assetType
+        @Param("projectAssetId") String projectAssetId
     );
-
-    Asset findByIdInProject(@Param("projectId") Long projectId, @Param("projectAssetId") String projectAssetId);
 
     List<Asset> findByTypeInProject(
         @Param("projectId") Long projectId,
         @Param("assetType") String assetType
+    );
+
+    List<Asset> findByTypesInProject(
+        @Param("projectId") Long projectId,
+        @Param("assetTypes") String[] assetTypes
     );
 
     List<Asset> findByCategoryInProject(
@@ -50,5 +53,8 @@ public interface AssetMapper {
         @Param("assetCategory") AssetCategory assetCategory
     );
 
-    int updateInProject(@Param("projectId") Long projectId, @Param("model") Asset model);
+    int updateInProject(
+        @Param("projectId") Long projectId,
+        @Param("model") Asset model
+    );
 }

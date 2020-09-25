@@ -42,7 +42,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> listAll() {
-        List<Project> models = projectMapper.findAllOfUser(userService.getLoginUser());
+        List<Project> models = projectMapper.findAllForUser(userService.getLoginUser());
         return models.stream()
             .map(ProjectDtoMapper.MAPPER::fromModel)
             .collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDto get(String userProjectId) {
         String userId = userService.getLoginUser();
-        Project model = projectMapper.findByIdOfUser(userId, userProjectId);
+        Project model = projectMapper.findByIdForUser(userId, userProjectId);
         if (model == null) {
             throw new StreamTauException("10001", userProjectId);
         }
@@ -87,9 +87,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Long mapProjectId(String userProjectId) {
+    public Long mapId(String userProjectId) {
         String userId = userService.getLoginUser();
-        UserProject userProject = userProjectMapper.getByIds(new UserProject(userId, null, userProjectId));
+        UserProject userProject = userProjectMapper.findById(new UserProject(userId, null, userProjectId));
         if (userProject == null) {
             throw new StreamTauException("10001", userProjectId);
         }

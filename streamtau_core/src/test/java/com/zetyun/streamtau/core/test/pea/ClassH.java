@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import * as request from "superagent";
+package com.zetyun.streamtau.core.test.pea;
 
-import { ResponseHandler, API_URL_BASE } from "./Api";
+import com.zetyun.streamtau.core.pea.PeaId;
+import lombok.Setter;
+import lombok.ToString;
 
-export class SchemaApi {
-    public static get(name: string, callback: ResponseHandler): void {
-        request
-            .get(API_URL_BASE + '/schema/' + name + '.json')
-            .send()
-            .end(callback);
-    }
+@ToString(callSuper = true)
+public class ClassH {
+    @Setter
+    @PeaId.InIt
+    private Media[] media;
 }

@@ -18,8 +18,10 @@ package com.zetyun.streamtau.manager.pea.app;
 
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.pea.AssetPea;
+import lombok.EqualsAndHashCode;
 
-public abstract class App extends AssetPea {
+@EqualsAndHashCode(callSuper = true)
+public class App extends AssetPea {
     @Override
     public AssetCategory getCategory() {
         return AssetCategory.APPLICATION;

@@ -74,7 +74,7 @@ public class TestProjectServiceImpl {
         project.setUserProjectId("AAA");
         project.setProjectName("1st");
         project.setProjectDescription("The first project.");
-        when(projectMapper.findAllOfUser(anyString())).thenReturn(Collections.singletonList(project));
+        when(projectMapper.findAllForUser(anyString())).thenReturn(Collections.singletonList(project));
         List<ProjectDto> dtoList = projectService.listAll();
         assertThat(dtoList.size(), is(1));
         ProjectDto dto = new ProjectDto();
@@ -82,7 +82,7 @@ public class TestProjectServiceImpl {
         dto.setName("1st");
         dto.setDescription("The first project.");
         assertThat(dtoList, hasItem(dto));
-        verify(projectMapper, times(1)).findAllOfUser("user1");
+        verify(projectMapper, times(1)).findAllForUser("user1");
     }
 
     @Test
@@ -115,12 +115,12 @@ public class TestProjectServiceImpl {
         model.setUserProjectId("AAA");
         model.setProjectName("forGet");
         model.setProjectType(ProjectType.CONTAINER);
-        when(projectMapper.findByIdOfUser("user1", "AAA")).thenReturn(model);
+        when(projectMapper.findByIdForUser("user1", "AAA")).thenReturn(model);
         ProjectDto dto = projectService.get("AAA");
         assertThat(dto.getId(), is("AAA"));
         assertThat(dto.getName(), is("forGet"));
         assertThat(dto.getType(), is(ProjectType.CONTAINER));
-        verify(projectMapper, times(1)).findByIdOfUser("user1", "AAA");
+        verify(projectMapper, times(1)).findByIdForUser("user1", "AAA");
     }
 
     @Test
@@ -145,12 +145,12 @@ public class TestProjectServiceImpl {
     }
 
     @Test
-    public void testMapProjectId() {
-        when(userProjectMapper.getByIds(any(UserProject.class))).then(args -> {
+    public void testMapId() {
+        when(userProjectMapper.findById(any(UserProject.class))).then(args -> {
             UserProject model = args.getArgument(0);
             model.setProjectId(3L);
             return model;
         });
-        assertThat(projectService.mapProjectId("AAA"), is(3L));
+        assertThat(projectService.mapId("AAA"), is(3L));
     }
 }

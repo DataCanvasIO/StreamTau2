@@ -21,7 +21,8 @@ import com.zetyun.streamtau.manager.db.model.Job;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.instance.server.ServerInstance;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
-import com.zetyun.streamtau.manager.pea.app.SingleServerApp;
+import com.zetyun.streamtau.manager.pea.app.App;
+import com.zetyun.streamtau.manager.pea.app.WithSingleServer;
 import com.zetyun.streamtau.manager.pea.server.Server;
 import com.zetyun.streamtau.manager.service.ServerService;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +39,8 @@ public class SingleServerRunner implements Runner {
     @Override
     public void run(@Nonnull Job job, Runnable onFinish) throws IOException {
         JobDefPod pod = JobDefPod.fromJobDefinition(job.getJobDefinition());
-        SingleServerApp app = (SingleServerApp) pod.getApp();
-        Server server = (Server) pod.load(app.getServer());
+        App app = (App) pod.getApp();
+        Server server = (Server) pod.load(((WithSingleServer) app).getServer());
         ServerService serverService = ApplicationContextProvider.getServerService();
         ServerInstance serverInstance = serverService.getInstance(
             job.getProjectId(),

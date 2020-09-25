@@ -24,6 +24,15 @@
         select * from user_project
     </select>
 
+    <select id="findById" parameterType="UserProject" resultType="UserProject">
+        select * from user_project
+        <where>
+            user_id = #{model.userId}
+            <if test="model.projectId != null">and project_id = #{model.projectId},</if>
+            <if test="model.userProjectId != null">and user_project_id = #{model.userProjectId}</if>
+        </where>
+    </select>
+
     <insert id="addToUser" parameterType="UserProject">
         <selectKey keyProperty="model.userProjectId" resultType="String" order="BEFORE">
             select uuid()
@@ -39,14 +48,5 @@
             and user_project_id = #{model.userProjectId}
         </where>
     </delete>
-
-    <select id="getByIds" parameterType="UserProject" resultType="UserProject">
-        select * from user_project
-        <where>
-            user_id = #{model.userId}
-            <if test="model.projectId != null">and project_id = #{model.projectId},</if>
-            <if test="model.userProjectId != null">and user_project_id = #{model.userProjectId}</if>
-        </where>
-    </select>
 
 </mapper>

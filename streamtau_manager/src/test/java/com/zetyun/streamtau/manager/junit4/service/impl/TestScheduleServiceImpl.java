@@ -69,12 +69,12 @@ public class TestScheduleServiceImpl {
         job.setVersion(1);
         job.setJobStatus(JobStatus.READY);
         job.setJobDefinition(readJsonCompact("/jobdef/cmd_line/cmd_ls.json"));
-        when(jobMapper.findJobOfStatus(JobStatus.READY)).thenReturn(Collections.singletonList(job));
+        when(jobMapper.findByStatus(JobStatus.READY)).thenReturn(Collections.singletonList(job));
         ExecutorInstance executorInstance = new ExecutorInstance(new Executor());
         when(serverService.getInstance(2L, "COMMON_EXECUTOR")).thenReturn(executorInstance);
         scheduleService.schedule();
-        verify(jobMapper, times(1)).findJobOfStatus(JobStatus.READY);
-        verify(jobMapper, times(1)).updateJobStatus(1L, JobStatus.SUBMITTED);
+        verify(jobMapper, times(1)).findByStatus(JobStatus.READY);
+        verify(jobMapper, times(1)).updateStatus(1L, JobStatus.SUBMITTED);
         verify(serverService, times(1)).getInstance(2L, "COMMON_EXECUTOR");
     }
 }

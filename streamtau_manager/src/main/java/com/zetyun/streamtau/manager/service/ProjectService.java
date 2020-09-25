@@ -31,5 +31,5 @@ public interface ProjectService {
 
     void delete(String userProjectId);
 
-    Long mapProjectId(String userProjectId);
+    Long mapId(String userProjectId);
 }

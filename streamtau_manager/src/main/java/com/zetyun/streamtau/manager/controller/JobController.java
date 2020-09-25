@@ -21,6 +21,7 @@ import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.controller.mapper.JobRequestMapper;
 import com.zetyun.streamtau.manager.controller.protocol.JobRequest;
 import com.zetyun.streamtau.manager.service.JobService;
+import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.dto.JobDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,6 +42,8 @@ import java.io.IOException;
 public class JobController {
     @Autowired
     private JobService jobService;
+    @Autowired
+    private ProjectService projectService;
 
     @Operation(summary = "Create a job.")
     @PostMapping("")
@@ -49,6 +52,7 @@ public class JobController {
         @PathVariable("projectId") String projectId,
         @RequestBody JobRequest jobRequest) throws IOException {
         JobDto dto = JobRequestMapper.MAPPER.toDto(jobRequest);
-        return jobService.create(projectId, dto);
+        Long pid = projectService.mapId(projectId);
+        return jobService.create(pid, dto);
     }
 }

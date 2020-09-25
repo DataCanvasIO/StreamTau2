@@ -17,6 +17,7 @@
 package com.zetyun.streamtau.manager.boot;
 
 import com.zetyun.streamtau.manager.properties.StreamingProperties;
+import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ServerService;
 import com.zetyun.streamtau.manager.service.StorageService;
 import org.springframework.beans.BeansException;
@@ -37,6 +38,11 @@ public class ApplicationContextProvider implements ApplicationContextAware {
     @Override
     public void setApplicationContext(@Nonnull ApplicationContext ctx) throws BeansException {
         context = ctx;
+    }
+
+    @Nonnull
+    public static AssetService getAssetService() {
+        return context.getBean(AssetService.class);
     }
 
     @Nonnull

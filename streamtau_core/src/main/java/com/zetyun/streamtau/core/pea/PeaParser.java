@@ -19,7 +19,6 @@ package com.zetyun.streamtau.core.pea;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
@@ -28,8 +27,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.zetyun.streamtau.runtime.ScriptFormat;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -121,11 +118,6 @@ public class PeaParser {
 
     public String stringHideSome(Object pea) throws IOException {
         return mapper.writerWithView(Hide.class).writeValueAsString(pea);
-    }
-
-    public JsonSchema createJsonSchema(Class<?> clazz) throws JsonMappingException {
-        JsonSchemaGenerator generator = new JsonSchemaGenerator(mapper);
-        return generator.generateSchema(clazz);
     }
 
     public static class Show {

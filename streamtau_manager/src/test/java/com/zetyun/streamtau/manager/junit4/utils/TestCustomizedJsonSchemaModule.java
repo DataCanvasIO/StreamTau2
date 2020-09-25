@@ -51,7 +51,6 @@ public class TestCustomizedJsonSchemaModule {
         SchemaGeneratorConfig config = configBuilder.build();
         SchemaGenerator generator = new SchemaGenerator(config);
         JsonNode jsonSchema = generator.generateSchema(CmdLine.class);
-        System.out.println(jsonSchema);
         assertThat(jsonSchema, instanceOf(ObjectNode.class));
         assertThat(jsonSchema.get("type").asText(), is("object"));
         assertThat(jsonSchema.get("required").get(0).asText(), is("name"));

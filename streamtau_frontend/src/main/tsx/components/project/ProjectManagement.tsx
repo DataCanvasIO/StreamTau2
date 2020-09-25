@@ -16,9 +16,8 @@
 
 import * as React from "react";
 import { autobind } from "core-decorators";
-import { JSONSchema7 } from 'json-schema';
 
-import { SchemaApi } from "../../api/SchemaApi";
+import { Profile, ProfileApi } from "../../api/ProfileApi";
 import { ProjectApi, Project } from "../../api/ProjectApi";
 import { checkStatusHandler } from "../../api/Api";
 import { MainFrame } from "../MainFrame";
@@ -35,7 +34,7 @@ export class ProjectManagement extends React.Component<ProjectManagementProps, {
     private list: React.RefObject<ProjectList> = React.createRef();
     private dlg: React.RefObject<ProjectDialog> = React.createRef();
 
-    private schema: JSONSchema7 | undefined;
+    private profile: Profile | undefined;
 
     public constructor(props: ProjectManagementProps) {
         super(props);
@@ -98,10 +97,10 @@ export class ProjectManagement extends React.Component<ProjectManagementProps, {
     }
 
     public componentDidMount(): void {
-        SchemaApi.get('ProjectRequest', (_err, res) => {
-            this.schema = res.body;
-            if (this.schema) {
-                this.dlg.current?.setSchema(this.schema);
+        ProfileApi.get('Project', (_err, res) => {
+            this.profile = res.body;
+            if (this.profile) {
+                this.dlg.current?.setProfile(this.profile);
             }
         });
         this.listProject();

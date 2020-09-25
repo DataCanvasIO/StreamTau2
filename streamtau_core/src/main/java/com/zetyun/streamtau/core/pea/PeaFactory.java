@@ -16,18 +16,45 @@
 
 package com.zetyun.streamtau.core.pea;
 
+import lombok.Getter;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import javax.annotation.Nullable;
 
 public class PeaFactory<I, T, P extends Pea<I, T, P>> {
-    private final Map<T, Supplier<P>> peaSupplierMap = new LinkedHashMap<>(64);
+    public static final int CAPACITY = 64;
 
+    @Getter
+    private final Map<T, Class<?>> peaClassMap = new LinkedHashMap<>(CAPACITY);
+    private final Map<T, Supplier<P>> peaSupplierMap = new LinkedHashMap<>(CAPACITY);
+
+    @SuppressWarnings("unchecked")
     public P make(T type) {
-        return peaSupplierMap.get(type).get();
+        Supplier<P> supplier = peaSupplierMap.get(type);
+        if (supplier != null) {
+            return supplier.get();
+        }
+        try {
+            return (P) peaClassMap.get(type).newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Cannot make pea of type \"" + type + "\".", e);
+        }
     }
 
-    public void register(T type, Supplier<P> supplier) {
-        peaSupplierMap.put(type, supplier);
+    public Class<?> classOf(T type) {
+        return peaClassMap.get(type);
+    }
+
+    public void register(T type, Class<?> peaClass) {
+        register(type, peaClass, null);
+    }
+
+    public void register(T type, Class<?> peaClass, @Nullable Supplier<P> supplier) {
+        peaClassMap.put(type, peaClass);
+        if (supplier != null) {
+            peaSupplierMap.put(type, supplier);
+        }
     }
 }

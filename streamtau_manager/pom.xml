@@ -305,25 +305,7 @@
                                 <option>RESPECT_JSONPROPERTY_ORDER</option>
                             </options>
                         </module>
-                        <module>
-                            <className>com.zetyun.streamtau.manager.utils.CustomizedJsonSchemaModule</className>
-                        </module>
                     </modules>
-                    <classNames>
-                        <className>com.zetyun.streamtau.manager.controller.protocol.ProjectRequest</className>
-                        <className>com.zetyun.streamtau.manager.pea.app.CmdLineApp</className>
-                        <className>com.zetyun.streamtau.manager.pea.app.FlinkJarApp</className>
-                        <className>com.zetyun.streamtau.manager.pea.app.FlinkPipelineApp</className>
-                        <className>com.zetyun.streamtau.manager.pea.app.JavaJarApp</className>
-                        <className>com.zetyun.streamtau.manager.pea.file.JarFile</className>
-                        <className>com.zetyun.streamtau.manager.pea.file.TxtFile</className>
-                        <className>com.zetyun.streamtau.manager.pea.misc.CmdLine</className>
-                        <className>com.zetyun.streamtau.manager.pea.misc.Host</className>
-                        <className>com.zetyun.streamtau.manager.pea.misc.Pipeline</className>
-                        <className>com.zetyun.streamtau.manager.pea.server.Executor</className>
-                        <className>com.zetyun.streamtau.manager.pea.server.FlinkMiniCluster</className>
-                        <className>com.zetyun.streamtau.manager.pea.server.FlinkRemoteCluster</className>
-                    </classNames>
                     <schemaFilePath>${project.build.outputDirectory}/schema</schemaFilePath>
                     <schemaFileName>{0}.json</schemaFileName>
                 </configuration>

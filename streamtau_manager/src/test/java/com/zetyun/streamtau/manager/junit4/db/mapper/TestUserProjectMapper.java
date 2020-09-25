@@ -65,6 +65,13 @@ public class TestUserProjectMapper {
     }
 
     @Test
+    public void testFindById() {
+        UserProject model = new UserProject("user1", null, "14b96595-f7f1-4800-a98a-c3d44d9c7e03");
+        model = userProjectMapper.findById(model);
+        assertThat(model.getProjectId(), is(2L));
+    }
+
+    @Test
     public void testAddToUser() {
         UserProject model = new UserProject("user1", 3L, null);
         assertThat(userProjectMapper.addToUser(model), is(1));
@@ -73,7 +80,10 @@ public class TestUserProjectMapper {
 
     @Test
     public void testDeleteFromUser() {
-        UserProject model = new UserProject("user1", null, "14b96595-f7f1-4800-a98a-c3d44d9c7e03");
+        UserProject model = new UserProject(
+            "user1",
+            null,
+            "14b96595-f7f1-4800-a98a-c3d44d9c7e03");
         assertThat(userProjectMapper.deleteFromUser(model), is(1));
     }
 

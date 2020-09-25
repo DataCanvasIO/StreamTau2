@@ -25,27 +25,32 @@ import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.module.jackson.JacksonModule;
 import com.github.victools.jsonschema.module.jackson.JacksonOption;
-import com.zetyun.streamtau.core.pea.PeaParser;
-import com.zetyun.streamtau.manager.controller.protocol.ElementProfile;
 import com.zetyun.streamtau.manager.controller.protocol.ProjectRequest;
 import com.zetyun.streamtau.manager.exception.StreamTauException;
 import com.zetyun.streamtau.manager.pea.AssetPeaFactory;
+import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProfileService;
+import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
+import com.zetyun.streamtau.manager.service.dto.ElementProfile;
 import com.zetyun.streamtau.manager.utils.CustomizedJsonSchemaModule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
+    private final CustomizedJsonSchemaModule module;
     private final SchemaGenerator generator;
 
-    private final Map<String, String> profileCache;
+    @Autowired
+    private AssetService assetService;
 
     public ProfileServiceImpl() {
+        module = new CustomizedJsonSchemaModule();
         SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(
             SchemaVersion.DRAFT_2019_09,
             OptionPreset.PLAIN_JSON
@@ -55,35 +60,43 @@ public class ProfileServiceImpl implements ProfileService {
                 JacksonOption.IGNORE_TYPE_INFO_TRANSFORM,
                 JacksonOption.RESPECT_JSONPROPERTY_ORDER
             ))
-            .with(new CustomizedJsonSchemaModule());
+            .with(module);
         SchemaGeneratorConfig config = configBuilder.build();
         generator = new SchemaGenerator(config);
-        profileCache = new LinkedHashMap<>(65);
     }
 
     @Override
-    public String get(String element) {
-        return profileCache.computeIfAbsent(element, this::generateProfile);
-    }
-
-    private String generateProfile(@Nonnull String element) {
+    public ElementProfile getInProject(Long projectId, @Nonnull String element) {
         ElementProfile profile = new ElementProfile();
         if (element.equals("Project")) {
             JsonNode jsonSchema = generator.generateSchema(ProjectRequest.class);
             profile.setSchema(jsonSchema);
+            return profile;
         } else {
-            Class<?> peaClass = AssetPeaFactory.INS.getPeaClass(element);
+            Class<?> peaClass = AssetPeaFactory.INS.classOf(element);
             if (peaClass != null) {
+                module.clearRefs();
+                module.setProjectId(projectId);
                 JsonNode jsonSchema = generator.generateSchema(peaClass);
                 profile.setSchema(jsonSchema);
-            }
-        }
-        if (profile.getSchema() != null) {
-            try {
-                return PeaParser.JSON.stringShowAll(profile);
-            } catch (IOException ignored) {
+                profile.setRefs(module.getRefs());
+                return profile;
             }
         }
         throw new StreamTauException("10003", element);
+    }
+
+    @Override
+    public List<AssetTypeInfo> listAssetTypesInProject(Long projectId) {
+        module.setProjectId(projectId);
+        Map<String, Class<?>> peaClassMap = AssetPeaFactory.INS.getPeaClassMap();
+        List<AssetTypeInfo> assetTypeInfoList = new ArrayList<>(peaClassMap.size());
+        for (String type : peaClassMap.keySet()) {
+            AssetTypeInfo model = new AssetTypeInfo();
+            model.setType(type);
+            model.setCategory(AssetPeaFactory.INS.make(type).getCategory());
+            assetTypeInfoList.add(model);
+        }
+        return assetTypeInfoList;
     }
 }

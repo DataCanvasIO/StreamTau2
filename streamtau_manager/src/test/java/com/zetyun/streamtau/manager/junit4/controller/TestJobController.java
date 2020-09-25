@@ -22,7 +22,9 @@ import com.zetyun.streamtau.manager.controller.advise.GlobalExceptionHandler;
 import com.zetyun.streamtau.manager.controller.advise.ResponseBodyDecorator;
 import com.zetyun.streamtau.manager.db.model.JobStatus;
 import com.zetyun.streamtau.manager.service.JobService;
+import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.dto.JobDto;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +56,17 @@ public class TestJobController {
     private MockMvc mvc;
     @MockBean
     private JobService jobService;
+    @MockBean
+    private ProjectService projectService;
+
+    @Before
+    public void setup() {
+        when(projectService.mapId("ABC")).thenReturn(2L);
+    }
 
     @Test
     public void testCreate() throws Exception {
-        when(jobService.create(eq("ABC"), any(JobDto.class))).then(args -> {
+        when(jobService.create(eq(2L), any(JobDto.class))).then(args -> {
             JobDto dto = args.getArgument(1);
             dto.setId(5L);
             if (dto.getName() == null) {
@@ -78,7 +87,8 @@ public class TestJobController {
             .andExpect(jsonPath("$.data.id").value(5))
             .andExpect(jsonPath("$.data.name").value("New Job"))
             .andExpect(jsonPath("$.data.jobStatus").value("READY"));
-        verify(jobService, times(1)).create(eq("ABC"), any(JobDto.class));
+        verify(projectService, times(1)).mapId("ABC");
+        verify(jobService, times(1)).create(eq(2L), any(JobDto.class));
     }
 
     // Mock application

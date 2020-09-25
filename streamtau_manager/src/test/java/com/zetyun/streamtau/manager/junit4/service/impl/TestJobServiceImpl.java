@@ -23,7 +23,6 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.app.CmdLineApp;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.JobService;
-import com.zetyun.streamtau.manager.service.ProjectService;
 import com.zetyun.streamtau.manager.service.ScheduleService;
 import com.zetyun.streamtau.manager.service.dto.JobDto;
 import com.zetyun.streamtau.manager.service.impl.JobServiceImpl;
@@ -58,13 +57,10 @@ public class TestJobServiceImpl {
     @MockBean
     private AssetService assetService;
     @MockBean
-    private ProjectService projectService;
-    @MockBean
     private ScheduleService scheduleService;
 
     @Test
     public void testCreate() throws IOException {
-        when(projectService.mapProjectId("PRJ")).thenReturn(2L);
         when(assetService.synthesizeJobDef(eq(2L), anyString())).then(args -> {
             String appId = args.getArgument(1);
             JobDefPod pod = new JobDefPod(appId);
@@ -82,12 +78,12 @@ public class TestJobServiceImpl {
         dto.setName("forCreate");
         dto.setAppId("AAA");
         dto.setJobStatus(JobStatus.READY);
-        dto = jobService.create("PRJ", dto);
+        dto = jobService.create(2L, dto);
         assertThat(dto.getId(), is(1L));
         assertThat(dto.getName(), is("forCreate"));
         assertThat(dto.getAppType(), is("CmdLineApp"));
-        verify(projectService, times(1)).mapProjectId("PRJ");
         verify(assetService, times(1)).synthesizeJobDef(2L, "AAA");
         verify(jobMapper, times(1)).insert(any(Job.class));
+        verify(scheduleService, times(1)).schedule();
     }
 }

@@ -34,10 +34,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void schedule() throws IOException {
-        List<Job> jobs = jobMapper.findJobOfStatus(JobStatus.READY);
+        List<Job> jobs = jobMapper.findByStatus(JobStatus.READY);
         for (Job job : jobs) {
-            RunnerFactory.get().run(job, () -> jobMapper.updateJobStatus(job.getJobId(), JobStatus.FINISHED));
-            jobMapper.updateJobStatus(job.getJobId(), JobStatus.SUBMITTED);
+            RunnerFactory.get().run(job, () -> jobMapper.updateStatus(job.getJobId(), JobStatus.FINISHED));
+            jobMapper.updateStatus(job.getJobId(), JobStatus.SUBMITTED);
         }
     }
 }

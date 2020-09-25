@@ -21,11 +21,13 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class TestStringfySchema {
     @Test
     public void testScalar() throws IOException {
-        String str = "{type: string}";
         SchemaSpec spec = new SchemaSpecInteger();
-        System.out.println(PeaParser.JSON.stringShowAll(spec));
+        assertThat(PeaParser.JSON.stringShowAll(spec), is("{\"type\":\"integer\"}"));
     }
 }

@@ -21,4 +21,5 @@ public enum AssetCategory {
     SERVER,
     APPLICATION,
     MISCELLANEOUS,
+    ALL,
 }

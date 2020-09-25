@@ -49,26 +49,18 @@
         )
     </insert>
 
-    <delete id="delete" parameterType="long">
+    <delete id="deleteById" parameterType="long">
         delete from asset
         <where>
             asset_id = #{assetId}
         </where>
     </delete>
 
-    <select id="findAllOfProject" parameterType="long" resultType="Asset">
+    <select id="findInProject" parameterType="long" resultType="Asset">
         select * from asset a left join project_asset t on a.asset_id = t.asset_id
         <where>
             project_id = #{projectId}
             or project_id = 1
-        </where>
-    </select>
-
-    <select id="findOfProjectByType" parameterType="map" resultType="Asset">
-        select * from asset a left join project_asset t on a.asset_id = t.asset_id
-        <where>
-            (project_id = #{projectId} or project_id = 1)
-            and a.asset_type = #{assetType}
         </where>
     </select>
 
@@ -85,6 +77,17 @@
         <where>
             (t.project_id = #{projectId} or t.project_id = 1)
             and a.asset_type = #{assetType}
+        </where>
+    </select>
+
+    <select id="findByTypesInProject" parameterType="map" resultType="Asset">
+        select * from asset a left join project_asset t on a.asset_id = t.asset_id
+        <where>
+            (project_id = #{projectId} or project_id = 1)
+            and a.asset_type in
+            <foreach collection="assetTypes" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </where>
     </select>
 

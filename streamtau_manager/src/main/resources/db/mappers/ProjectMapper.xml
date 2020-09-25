@@ -65,14 +65,14 @@
         </where>
     </delete>
 
-    <select id="findAllOfUser" parameterType="String" resultType="Project">
+    <select id="findAllForUser" parameterType="String" resultType="Project">
         select p.*, t.user_project_id from project p left join user_project t on p.project_id = t.project_id
         <where>
             t.user_id = #{userId}
         </where>
     </select>
 
-    <select id="findByIdOfUser" parameterType="map" resultType="Project">
+    <select id="findByIdForUser" parameterType="map" resultType="Project">
         select p.*, t.user_project_id from project p left join user_project t on p.project_id = t.project_id
         <where>
             t.user_project_id = #{userProjectId}

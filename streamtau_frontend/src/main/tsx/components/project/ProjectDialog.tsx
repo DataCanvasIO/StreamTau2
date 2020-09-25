@@ -16,11 +16,11 @@
 
 import * as React from 'react';
 import { autobind } from 'core-decorators';
-import { JSONSchema7 } from 'json-schema';
 import { ISubmitEvent } from '@rjsf/core';
 
 import { Project } from '../../api/ProjectApi';
 import { ProjectManagement } from './ProjectManagement';
+import { Profile } from '../../api/ProfileApi';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -29,7 +29,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MuiForm from "@rjsf/material-ui";
 import Box from '@material-ui/core/Box';
-import { SchemaApi } from '../../api/SchemaApi';
 
 interface ProjectDialogProps {
     parent: ProjectManagement;
@@ -38,7 +37,7 @@ interface ProjectDialogProps {
 interface ProjectDialogState {
     isOpen: boolean;
     id?: string;
-    schema?: JSONSchema7;
+    profile?: Profile;
     data?: Project;
 }
 
@@ -51,9 +50,9 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
     }
 
     @autobind
-    public setSchema(schema: JSONSchema7): void {
+    public setProfile(profile: Profile): void {
         this.setState({
-            schema: schema,
+            profile: profile,
         })
     }
 
@@ -103,27 +102,22 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
     }
 
     public componentDidMount(): void {
-        SchemaApi.get('ProjectRequest', (_err, res) => {
-            this.setState({ schema: res.body });
-        });
     }
 
     public render() {
         let dlgContent;
-        if (this.state.schema) {
+        if (this.state.profile) {
             dlgContent = (
-                <DialogContent>
-                    <MuiForm
-                        schema={this.state.schema}
-                        formData={this.state.data}
-                        onSubmit={this.handleSubmit}
-                    >
-                        <DialogActions>
-                            <Button type="submit" color="primary">Submit</Button>
-                            <Button onClick={this.handleClose}>Cancel</Button>
-                        </DialogActions>
-                    </MuiForm>
-                </DialogContent>
+                <MuiForm
+                    schema={this.state.profile.schema}
+                    formData={this.state.data}
+                    onSubmit={this.handleSubmit}
+                >
+                    <DialogActions>
+                        <Button type="submit" color="primary">Submit</Button>
+                        <Button onClick={this.handleClose}>Cancel</Button>
+                    </DialogActions>
+                </MuiForm>
             );
         } else {
             dlgContent = (
@@ -132,8 +126,8 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
         }
         return (
             <Dialog disableBackdropClick open={this.state.isOpen} onClose={this.handleClose}>
-                <DialogTitle>Create project</DialogTitle>
-                {dlgContent}
+                <DialogTitle>{this.state.id ? 'Update' : 'Create'} project</DialogTitle>
+                <DialogContent>{dlgContent}</DialogContent>
             </Dialog>
         );
     }

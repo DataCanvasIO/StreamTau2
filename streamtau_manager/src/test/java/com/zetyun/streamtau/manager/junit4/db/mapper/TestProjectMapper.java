@@ -122,21 +122,21 @@ public class TestProjectMapper {
     }
 
     @Test
-    public void testFindAllOfUser() {
-        List<Project> modelList = projectMapper.findAllOfUser("user1");
+    public void testFindAllForUser() {
+        List<Project> modelList = projectMapper.findAllForUser("user1");
         assertThat(modelList.size(), is(1));
         assertThat(modelList, hasItems(projects.get(1)));
     }
 
     @Test
-    public void testFindByIdOfUser() {
-        Project model = projectMapper.findByIdOfUser("user1", "14b96595-f7f1-4800-a98a-c3d44d9c7e03");
+    public void testFindByIdForUser() {
+        Project model = projectMapper.findByIdForUser("user1", "14b96595-f7f1-4800-a98a-c3d44d9c7e03");
         assertThat(model, is(projects.get(1)));
     }
 
     @Test
-    public void testFindByIdOfUserNotExists() {
-        Project model = projectMapper.findByIdOfUser("user1", "ed648217-5f79-4a92-80dd-5592118b0ef8");
+    public void testFindByIdForUserNotExists() {
+        Project model = projectMapper.findByIdForUser("user1", "ed648217-5f79-4a92-80dd-5592118b0ef8");
         assertThat(model, nullValue());
     }
 

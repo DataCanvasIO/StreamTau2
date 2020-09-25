@@ -27,7 +27,7 @@
         </where>
     </select>
 
-    <select id="findJobOfStatus" parameterType="JobStatus" resultType="Job">
+    <select id="findByStatus" parameterType="JobStatus" resultType="Job">
         select * from job
         <where>
             job_status = #{jobStatus}
@@ -58,7 +58,7 @@
         )
     </insert>
 
-    <update id="updateJobStatus" parameterType="Job">
+    <update id="updateStatus" parameterType="Job">
         update job
         <set>
             job_status = #{jobStatus}

@@ -21,7 +21,6 @@ import com.zetyun.streamtau.core.pea.PeaParser;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.service.AssetService;
 import com.zetyun.streamtau.manager.service.ProjectService;
-import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,7 +56,7 @@ public class AssetController {
         @PathVariable("projectId") String projectId,
         @RequestParam(name = "type", required = false) String type
     ) throws IOException {
-        Long pid = projectService.mapProjectId(projectId);
+        Long pid = projectService.mapId(projectId);
         if (type != null && !type.isEmpty()) {
             return assetService.listByType(pid, type);
         }
@@ -70,7 +69,7 @@ public class AssetController {
         @Parameter(description = "The id of the project.")
         @PathVariable("projectId") String projectId,
         @RequestBody AssetPea pea) throws IOException {
-        Long pid = projectService.mapProjectId(projectId);
+        Long pid = projectService.mapId(projectId);
         return assetService.create(pid, pea);
     }
 
@@ -83,7 +82,7 @@ public class AssetController {
         @PathVariable("id") String id,
         @RequestBody @Nonnull AssetPea pea) throws IOException {
         pea.setId(id);
-        Long pid = projectService.mapProjectId(projectId);
+        Long pid = projectService.mapId(projectId);
         return assetService.update(pid, pea);
     }
 
@@ -94,13 +93,7 @@ public class AssetController {
         @PathVariable("projectId") String projectId,
         @Parameter(description = "The id of the asset.")
         @PathVariable("id") String id) {
-        Long pid = projectService.mapProjectId(projectId);
+        Long pid = projectService.mapId(projectId);
         assetService.delete(pid, id);
-    }
-
-    @Operation(summary = "Get the asset type list.")
-    @GetMapping("/types")
-    public List<AssetTypeInfo> types() throws IOException {
-        return assetService.types();
     }
 }

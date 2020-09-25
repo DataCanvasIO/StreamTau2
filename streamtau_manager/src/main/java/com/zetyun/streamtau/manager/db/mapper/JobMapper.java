@@ -27,9 +27,9 @@ import java.util.List;
 public interface JobMapper {
     Job findById(@Param("jobId") Long jobId);
 
-    List<Job> findJobOfStatus(@Param("jobStatus") JobStatus jobStatus);
+    List<Job> findByStatus(@Param("jobStatus") JobStatus jobStatus);
 
     int insert(@Param("model") Job model);
 
-    int updateJobStatus(@Param("jobId") Long jobId, @Param("jobStatus") JobStatus jobStatus);
+    int updateStatus(@Param("jobId") Long jobId, @Param("jobStatus") JobStatus jobStatus);
 }

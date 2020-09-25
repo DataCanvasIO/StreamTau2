@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package com.zetyun.streamtau.manager.pea.app;
+package com.zetyun.streamtau.core.test.pea;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zetyun.streamtau.core.pea.PeaId;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@EqualsAndHashCode(callSuper = true)
-public abstract class SingleServerApp extends App {
-    @Schema(
-        description = "The id of the server to run on.",
-        example = "44ED169D-F7FC-4720-8EDA-BADA8E3E006E"
-    )
-    @JsonProperty("server")
+@ToString(callSuper = true)
+public class ClassB extends ClassA {
     @Getter
     @Setter
     @PeaId
-    private String server;
+    private Integer pea3;
+
+    public ClassB(Integer id) {
+        super(id);
+    }
 }

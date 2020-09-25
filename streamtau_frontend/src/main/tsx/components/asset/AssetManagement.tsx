@@ -18,9 +18,8 @@ import styles from "style/main.scss";
 
 import * as React from "react";
 import { autobind } from "core-decorators";
-import { JSONSchema7 } from 'json-schema';
 
-import { SchemaApi } from "../../api/SchemaApi";
+import { Profile, ProfileApi } from "../../api/ProfileApi";
 import { checkStatusHandler } from "../../api/Api";
 import { AssetApi, Asset } from "../../api/AssetApi";
 import { MainFrame } from "../MainFrame";
@@ -48,7 +47,7 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
     private dlg: React.RefObject<AssetDialog> = React.createRef();
 
     private readonly assetApi: AssetApi;
-    private schemas: { [type: string]: JSONSchema7 };
+    private profiles: { [type: string]: Profile };
 
     public constructor(props: AssetManagementProps) {
         super(props);
@@ -56,7 +55,7 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
         this.state = {
             selectedType: '',
         }
-        this.schemas = {};
+        this.profiles = {};
     }
 
     @autobind
@@ -65,8 +64,8 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
     }
 
     @autobind
-    public getSchemaOfType(type: string): JSONSchema7 {
-        return this.schemas[type];
+    public getProfileOfType(type: string): Profile {
+        return this.profiles[type];
     }
 
     @autobind
@@ -77,7 +76,7 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
     @autobind
     public handleChangeSelectedType(type: string): void {
         this.setState({ selectedType: type });
-        this.dlg.current?.setSelectedType(type);
+        this.dlg.current?.setType(type);
         this.listAsset(type);
     }
 
@@ -109,8 +108,8 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
         this.assetApi.listCategory(checkStatusHandler(data => {
             for (const item of data) {
                 const type = item.type;
-                SchemaApi.get(type, (_err, res) => {
-                    this.schemas[type] = res.body;
+                ProfileApi.get(type, (_err, res) => {
+                    this.profiles[type] = res.body;
                 });
             }
             this.cats.current?.setCategories(data);

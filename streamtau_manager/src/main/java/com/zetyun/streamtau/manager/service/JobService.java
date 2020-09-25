@@ -21,5 +21,5 @@ import com.zetyun.streamtau.manager.service.dto.JobDto;
 import java.io.IOException;
 
 public interface JobService {
-    JobDto create(String userProjectId, JobDto dto) throws IOException;
+    JobDto create(Long projectId, JobDto dto) throws IOException;
 }

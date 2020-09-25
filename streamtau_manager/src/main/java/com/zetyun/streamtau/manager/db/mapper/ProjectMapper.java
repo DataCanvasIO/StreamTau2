@@ -34,9 +34,9 @@ public interface ProjectMapper {
 
     int delete(@Param("projectId") Long projectId);
 
-    List<Project> findAllOfUser(@Param("userId") String userId);
+    List<Project> findAllForUser(@Param("userId") String userId);
 
-    Project findByIdOfUser(@Param("userId") String userId, @Param("userProjectId") String userProjectId);
+    Project findByIdForUser(@Param("userId") String userId, @Param("userProjectId") String userProjectId);
 
     int updateForUser(@Param("userId") String userId, @Param("model") Project model);
 }

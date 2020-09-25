@@ -18,14 +18,38 @@ package com.zetyun.streamtau.manager.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.github.victools.jsonschema.generator.FieldScope;
 import com.github.victools.jsonschema.generator.Module;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
+import com.zetyun.streamtau.core.pea.PeaId;
 import com.zetyun.streamtau.core.pea.PeaParser;
+import com.zetyun.streamtau.manager.boot.ApplicationContextProvider;
+import com.zetyun.streamtau.manager.pea.AssetPea;
+import com.zetyun.streamtau.manager.pea.PeaType;
+import com.zetyun.streamtau.manager.service.AssetService;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 public class CustomizedJsonSchemaModule implements Module {
+    @Getter
+    @Setter
+    private Long projectId;
+    @Getter
+    @Setter
+    private Map<String, String> refs;
+
+    public void clearRefs() {
+        refs = new HashMap<>();
+    }
+
     @Override
     public void applyToConfigBuilder(@Nonnull SchemaGeneratorConfigBuilder configBuilder) {
         configBuilder.forFields().withRequiredCheck(f -> {
@@ -36,6 +60,22 @@ public class CustomizedJsonSchemaModule implements Module {
             JsonView jsonView = f.getAnnotation(JsonView.class);
             return jsonView != null
                 && Arrays.stream(jsonView.value()).noneMatch(PeaParser.Show.class::equals);
+        });
+        configBuilder.forFields().withEnumResolver((FieldScope f) -> {
+            PeaId peaId = f.getAnnotation(PeaId.class);
+            if (peaId != null) {
+                PeaType peaType = f.getAnnotation(PeaType.class);
+                if (peaType != null) {
+                    try {
+                        AssetService assetService = ApplicationContextProvider.getAssetService();
+                        List<AssetPea> peaList = assetService.listByTypes(projectId, peaType.value());
+                        peaList.forEach(p -> refs.put(p.getId(), p.getName()));
+                        return peaList.stream().map(AssetPea::getId).collect(Collectors.toList());
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
+            return null;
         });
     }
 }

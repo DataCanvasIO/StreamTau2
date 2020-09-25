@@ -19,7 +19,6 @@ package com.zetyun.streamtau.manager.service;
 import com.zetyun.streamtau.manager.db.model.AssetCategory;
 import com.zetyun.streamtau.manager.pea.AssetPea;
 import com.zetyun.streamtau.manager.pea.JobDefPod;
-import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,11 +28,11 @@ public interface AssetService {
 
     List<AssetPea> listByType(Long projectId, String type) throws IOException;
 
-    AssetPea findById(Long projectId, String projectAssetId) throws IOException;
+    List<AssetPea> listByTypes(Long projectId, String[] types) throws IOException;
 
-    List<AssetPea> findByType(Long projectId, String assetType) throws IOException;
+    List<AssetPea> listByCategory(Long projectId, AssetCategory category) throws IOException;
 
-    List<AssetPea> findByCategory(Long projectId, AssetCategory assetCategory) throws IOException;
+    AssetPea get(Long projectId, String projectAssetId) throws IOException;
 
     AssetPea create(Long projectId, AssetPea pea) throws IOException;
 
@@ -42,6 +41,4 @@ public interface AssetService {
     void delete(Long projectId, String projectAssetId);
 
     JobDefPod synthesizeJobDef(Long projectId, String projectAssetId) throws IOException;
-
-    List<AssetTypeInfo> types() throws IOException;
 }

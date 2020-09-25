@@ -64,14 +64,14 @@ public class TestJobMapper {
     }
 
     @Test
-    public void testFindJobOfStatus() {
-        List<Job> jobList = jobMapper.findJobOfStatus(JobStatus.READY);
+    public void testFindByStatus() {
+        List<Job> jobList = jobMapper.findByStatus(JobStatus.READY);
         assertThat(jobList, hasItems(jobs.get(0)));
     }
 
     @Test
-    public void testFindJobOfStatusNone() {
-        List<Job> jobList = jobMapper.findJobOfStatus(JobStatus.WAITING);
+    public void testFindByStatusNone() {
+        List<Job> jobList = jobMapper.findByStatus(JobStatus.WAITING);
         assertThat(jobList, empty());
     }
 
@@ -90,8 +90,8 @@ public class TestJobMapper {
     }
 
     @Test
-    public void testUpdateJobStatus() {
-        assertThat(jobMapper.updateJobStatus(1L, JobStatus.FINISHED), is(1));
+    public void testUpdateStatus() {
+        assertThat(jobMapper.updateStatus(1L, JobStatus.FINISHED), is(1));
         Job model = jobMapper.findById(1L);
         assertThat(model.getJobStatus(), is(JobStatus.FINISHED));
     }

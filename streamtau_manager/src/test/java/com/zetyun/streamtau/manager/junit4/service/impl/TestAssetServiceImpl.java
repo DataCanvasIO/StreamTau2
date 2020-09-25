@@ -26,10 +26,8 @@ import com.zetyun.streamtau.manager.pea.JobDefPod;
 import com.zetyun.streamtau.manager.pea.misc.CmdLine;
 import com.zetyun.streamtau.manager.pea.misc.Host;
 import com.zetyun.streamtau.manager.service.AssetService;
-import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
 import com.zetyun.streamtau.manager.service.impl.AssetServiceImpl;
 import com.zetyun.streamtau.runtime.ScriptFormat;
-import org.hamcrest.CustomMatcher;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,48 +86,49 @@ public class TestAssetServiceImpl {
 
     @Test
     public void testListAll() throws IOException {
-        when(assetMapper.findAllOfProject(2L)).thenReturn(Collections.singletonList(cmdLineAsset));
+        when(assetMapper.findInProject(2L)).thenReturn(Collections.singletonList(cmdLineAsset));
         List<AssetPea> peas = assetService.listAll(2L);
         assertThat(peas.size(), is(1));
         assertThat(peas, hasItem(is(cmdLinePea)));
-        verify(assetMapper, times(1)).findAllOfProject(2L);
+        verify(assetMapper, times(1)).findInProject(2L);
     }
 
     @Test
     public void testListByType() throws IOException {
-        when(assetMapper.findOfProjectByType(2L, "CmdLine"))
+        when(assetMapper.findByTypeInProject(2L, "CmdLine"))
             .thenReturn(Collections.singletonList(cmdLineAsset));
         List<AssetPea> peas = assetService.listByType(2L, "CmdLine");
         assertThat(peas.size(), is(1));
         assertThat(peas, hasItem(is(cmdLinePea)));
-        verify(assetMapper, times(1)).findOfProjectByType(2L, "CmdLine");
-    }
-
-    @Test
-    public void testFindById() throws IOException {
-        when(assetMapper.findByIdInProject(2L, "AAA")).thenReturn(cmdLineAsset);
-        AssetPea pea = assetService.findById(2L, "AAA");
-        assertThat(pea, is(cmdLinePea));
-        verify(assetMapper, times(1)).findByIdInProject(2L, "AAA");
-    }
-
-    @Test
-    public void testFindByType() throws IOException {
-        when(assetMapper.findByTypeInProject(2L, "CmdLine"))
-            .thenReturn(Collections.singletonList(cmdLineAsset));
-        List<AssetPea> peas = assetService.findByType(2L, "CmdLine");
-        assertThat(peas, hasItem(cmdLinePea));
         verify(assetMapper, times(1)).findByTypeInProject(2L, "CmdLine");
     }
 
     @Test
-    public void testFindByCategory() throws IOException {
+    public void testListByTypes() throws IOException {
+        when(assetMapper.findByTypesInProject(eq(2L), any(String[].class)))
+            .thenReturn(Collections.singletonList(cmdLineAsset));
+        List<AssetPea> peas = assetService.listByTypes(2L, new String[]{});
+        assertThat(peas.size(), is(1));
+        assertThat(peas, hasItem(is(cmdLinePea)));
+        verify(assetMapper, times(1)).findByTypesInProject(eq(2L), any(String[].class));
+    }
+
+    @Test
+    public void testListByCategory() throws IOException {
         when(assetMapper.findByCategoryInProject(2L, AssetCategory.MISCELLANEOUS))
             .thenReturn(Collections.singletonList(cmdLineAsset));
-        List<AssetPea> peas = assetService.findByCategory(2L, AssetCategory.MISCELLANEOUS);
+        List<AssetPea> peas = assetService.listByCategory(2L, AssetCategory.MISCELLANEOUS);
         assertThat(peas, hasItem(cmdLinePea));
         verify(assetMapper, times(1))
             .findByCategoryInProject(2L, AssetCategory.MISCELLANEOUS);
+    }
+
+    @Test
+    public void testGet() throws IOException {
+        when(assetMapper.findByIdInProject(2L, "AAA")).thenReturn(cmdLineAsset);
+        AssetPea pea = assetService.get(2L, "AAA");
+        assertThat(pea, is(cmdLinePea));
+        verify(assetMapper, times(1)).findByIdInProject(2L, "AAA");
     }
 
     @Test
@@ -182,18 +181,5 @@ public class TestAssetServiceImpl {
         }
         JobDefPod jobDefPod = assetService.synthesizeJobDef(2L, "APP");
         assertThat(jobDefPod.toJobDefinition(), is(readJsonCompact("/jobdef/cmd_line/cmd_ls.json")));
-    }
-
-    @Test
-    public void testTypes() throws IOException {
-        List<AssetTypeInfo> assetTypeInfos = assetService.types();
-        assertThat(assetTypeInfos, hasItem(
-            new CustomMatcher<AssetTypeInfo>("Match \"CmdLineApp\" asset type.") {
-                @Override
-                public boolean matches(Object obj) {
-                    return obj instanceof AssetTypeInfo && ((AssetTypeInfo) obj).getType().equals("CmdLineApp");
-                }
-            }
-        ));
     }
 }

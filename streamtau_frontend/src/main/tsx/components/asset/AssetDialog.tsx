@@ -16,9 +16,10 @@
 
 import * as React from 'react';
 import { autobind } from 'core-decorators';
-import { JSONSchema7 } from 'json-schema';
 import MuiForm from "@rjsf/material-ui";
+import { ISubmitEvent } from '@rjsf/core';
 
+import { Profile } from '../../api/ProfileApi';
 import { Asset } from '../../api/AssetApi';
 import { AssetManagement } from './AssetManagement';
 
@@ -27,7 +28,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { ISubmitEvent } from '@rjsf/core';
+import Box from '@material-ui/core/Box';
 
 interface AssetDialogProps {
     parent: AssetManagement;
@@ -36,27 +37,24 @@ interface AssetDialogProps {
 interface AssetDialogState {
     isOpen: boolean;
     id?: string;
-    type: string;
-    schema: JSONSchema7;
+    type?: string;
+    profile?: Profile;
     data?: Asset;
 }
 
 export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogState> {
     public constructor(props: AssetDialogProps) {
         super(props);
-        const type = this.props.parent.getSelectedType();
         this.state = {
             isOpen: false,
-            type: type,
-            schema: this.props.parent.getSchemaOfType(type),
         };
     }
 
     @autobind
-    public setSelectedType(type: string): void {
+    public setType(type: string): void {
         this.setState({
             type: type,
-            schema: this.props.parent.getSchemaOfType(type),
+            profile: this.props.parent.getProfileOfType(type),
         });
     }
 
@@ -69,17 +67,16 @@ export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogSt
                     isOpen: true,
                     id: id,
                     data: asset,
-                    schema: this.props.parent.getSchemaOfType(asset.type),
                 });
+                this.setType(asset.type);
             } else {
                 alert('No asset with (id = "' + id + '") exists.');
                 return;
             }
         } else {
             const type = this.state.type;
-            const schema = this.props.parent.getSchemaOfType(type);
-            if (!type || !schema) {
-                alert("Schema of asset is not known. Please select an Asset Type first.");
+            if (!type) {
+                alert("Profile of asset is not known. Please select an Asset Type first.");
                 return;
             }
             this.setState({
@@ -89,7 +86,6 @@ export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogSt
                     name: '',
                     description: '',
                     type: type,
-                    schema: schema,
                 }
             });
         }
@@ -114,21 +110,30 @@ export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogSt
     }
 
     public render() {
+        let dlgContent;
+        if (this.state.profile) {
+            dlgContent = (
+                <MuiForm
+                    schema={this.state.profile.schema}
+                    formData={this.state.data}
+                    onSubmit={this.handleSubmit}
+                >
+                    <DialogActions>
+                        <Button type="submit" color="primary">Submit</Button>
+                        <Button onClick={this.handleClose}>Cancel</Button>
+                    </DialogActions>
+                </MuiForm>
+
+            );
+        } else {
+            dlgContent = (
+                <Box />
+            );
+        }
         return (
             <Dialog disableBackdropClick open={this.state.isOpen} onClose={this.handleClose}>
-                <DialogTitle>Create {this.state.type}</DialogTitle>
-                <DialogContent>
-                    <MuiForm
-                        schema={this.state.schema}
-                        formData={this.state.data}
-                        onSubmit={this.handleSubmit}
-                    >
-                        <DialogActions>
-                            <Button type="submit" color="primary">Submit</Button>
-                            <Button onClick={this.handleClose}>Cancel</Button>
-                        </DialogActions>
-                    </MuiForm>
-                </DialogContent>
+                <DialogTitle>{this.state.id ? 'Update ' : 'Create '} {this.state.type}</DialogTitle>
+                <DialogContent>{dlgContent}</DialogContent>
             </Dialog>
         );
     }

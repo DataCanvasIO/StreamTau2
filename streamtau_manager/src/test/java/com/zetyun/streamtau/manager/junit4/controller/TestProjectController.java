@@ -166,21 +166,6 @@ public class TestProjectController {
             .andDo(print());
     }
 
-    @Test
-    public void testSchema() throws Exception {
-        mvc.perform(
-            get("/api/projects/schema")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andDo(print())
-            .andExpect(success())
-            .andExpect(jsonPath("$.data.type").value("object"))
-            .andExpect(jsonPath("$.data.properties.name.type").value("string"))
-            .andExpect(jsonPath("$.data.properties.description.type").value("string"))
-            .andExpect(jsonPath("$.data.properties.type.type").value("string"))
-            .andExpect(jsonPath("$.data.properties.type.enum").isArray());
-    }
-
     // Mock application
     @Configuration
     @EnableAutoConfiguration

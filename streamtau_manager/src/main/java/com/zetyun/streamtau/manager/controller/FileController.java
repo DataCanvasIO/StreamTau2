@@ -60,8 +60,8 @@ public class FileController {
         @Parameter(description = "The file to upload.")
         @RequestPart("file") MultipartFile file
     ) throws IOException {
-        Long pid = projectService.mapProjectId(projectId);
-        File pea = (File) assetService.findById(pid, assetId);
+        Long pid = projectService.mapId(projectId);
+        File pea = (File) assetService.get(pid, assetId);
         String fileName = file.getOriginalFilename();
         if (fileName == null) {
             throw new StreamTauException("10202");

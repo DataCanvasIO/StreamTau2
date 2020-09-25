@@ -16,7 +16,15 @@
 
 package com.zetyun.streamtau.manager.service;
 
-@FunctionalInterface
+import com.zetyun.streamtau.manager.service.dto.AssetTypeInfo;
+import com.zetyun.streamtau.manager.service.dto.ElementProfile;
+
+import java.io.IOException;
+import java.util.List;
+import javax.annotation.Nonnull;
+
 public interface ProfileService {
-    String get(String element);
+    ElementProfile getInProject(Long projectId, @Nonnull String element);
+
+    List<AssetTypeInfo> listAssetTypesInProject(Long projectId) throws IOException;
 }

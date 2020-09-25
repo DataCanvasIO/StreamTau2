@@ -64,8 +64,8 @@ public class TestFileController {
 
     @Test
     public void testUpload() throws Exception {
-        when(projectService.mapProjectId("ABC")).thenReturn(2L);
-        when(assetService.findById(2L, "AAA")).then(args -> {
+        when(projectService.mapId("ABC")).thenReturn(2L);
+        when(assetService.get(2L, "AAA")).then(args -> {
             JarFile pea = new JarFile();
             pea.setId("AAA");
             pea.setName("testJar");
@@ -89,7 +89,7 @@ public class TestFileController {
             .andExpect(jsonPath("$.data.name").value("testJar"))
             .andExpect(jsonPath("$.data.description").value("A jar file."))
             .andExpect(jsonPath("$.data.type").value("JarFile"));
-        verify(assetService, times(1)).findById(eq(2L), eq("AAA"));
+        verify(assetService, times(1)).get(eq(2L), eq("AAA"));
         verify(assetService, times(1)).update(eq(2L), any(JarFile.class));
         verify(storageService, times(1)).createFile("jar");
         verify(storageService, times(1)).saveFile(eq("file://abc"), any(MultipartFile.class));

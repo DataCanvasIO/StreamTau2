@@ -26,9 +26,9 @@ import java.util.List;
 public interface UserProjectMapper {
     List<UserProject> findAll();
 
+    UserProject findById(@Param("model") UserProject userProject);
+
     int addToUser(@Param("model") UserProject userProject);
 
     int deleteFromUser(@Param("model") UserProject userProject);
-
-    UserProject getByIds(@Param("model") UserProject userProject);
 }
