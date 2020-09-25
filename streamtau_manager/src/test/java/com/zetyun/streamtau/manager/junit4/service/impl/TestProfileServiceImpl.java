@@ -56,13 +56,18 @@ public class TestProfileServiceImpl {
 
     @Test
     public void testGetProject() {
-        ElementProfile profile = profileService.getInProject(2L, "Project");
+        ElementProfile profile = profileService.get("Project");
         assertThat(profile.getSchema().get("type").asText(), is("object"));
         assertThat(profile.getSchema().get("properties").get("name").get("type").asText(), is("string"));
     }
 
+    @Test(expected = StreamTauException.class)
+    public void testGetNonExist() {
+        ElementProfile profile = profileService.get("XXX");
+    }
+
     @Test
-    public void testGetAssetPea() throws IOException {
+    public void testGetInProject() throws IOException {
         CmdLine cmdLine1 = new CmdLine();
         cmdLine1.setId("CmdLine1");
         cmdLine1.setName("The first cmdline");
@@ -76,14 +81,14 @@ public class TestProfileServiceImpl {
     }
 
     @Test(expected = StreamTauException.class)
-    public void testGetNonExist() {
+    public void testGetInProjectNonExist() {
         ElementProfile profile = profileService.getInProject(2L, "XXX");
     }
 
     @Test
     public void testListAssetTypes() throws IOException {
-        List<AssetTypeInfo> assetTypeInfos = profileService.listAssetTypesInProject(2L);
-        assertThat(assetTypeInfos, hasItem(
+        List<AssetTypeInfo> types = profileService.listAssetTypes();
+        assertThat(types, hasItem(
             new CustomMatcher<AssetTypeInfo>("Match \"CmdLineApp\" asset type.") {
                 @Override
                 public boolean matches(Object obj) {

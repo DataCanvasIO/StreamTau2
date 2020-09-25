@@ -41,13 +41,37 @@ export class ProjectManagement extends React.Component<ProjectManagementProps, {
     }
 
     @autobind
+    private doWithProfile(fun: (p: Profile) => void): void {
+        if (this.profile) {
+            fun(this.profile);
+        } else {
+            ProfileApi.profile("Project", checkStatusHandler(data => {
+                this.profile = data;
+                if (this.profile) {
+                    fun(this.profile);
+                }
+            }));
+        }
+    }
+
+    @autobind
     private handleCreateProject(): void {
-        this.dlg.current?.open();
+        const project = {
+            name: '',
+            description: '',
+            type: 'CONTAINER',
+        };
+        this.doWithProfile(p => this.dlg.current?.open(p, project));
     }
 
     @autobind
     public handleUpdateProject(id: string): void {
-        this.dlg.current?.open(id);
+        const project = this.list.current?.state.projects[id];
+        if (project) {
+            this.doWithProfile(p => this.dlg.current?.open(p, project, id));
+        } else {
+            alert('No project with (id = "' + id + '") exists.');
+        }
     }
 
     @autobind
@@ -64,45 +88,34 @@ export class ProjectManagement extends React.Component<ProjectManagementProps, {
     }
 
     @autobind
-    public getCachedProject(id: string): Project | undefined {
-        return this.list.current?.state.projects[id];
-    }
-
-    @autobind
     public listProject(): void {
-        ProjectApi.listProject(checkStatusHandler(data => {
+        ProjectApi.listAll(checkStatusHandler(data => {
             this.list.current?.setProjects(data);
         }));
     }
 
     @autobind
     public createProject(req: Project): void {
-        ProjectApi.createProject(req, checkStatusHandler(_data => {
+        ProjectApi.create(req, checkStatusHandler(_data => {
             this.listProject();
         }));
     }
 
     @autobind
     public updateProject(id: string, req: Project): void {
-        ProjectApi.updateProject(id, req, checkStatusHandler(_data => {
+        ProjectApi.update(id, req, checkStatusHandler(_data => {
             this.listProject();
         }));
     }
 
     @autobind
     public deleteProject(id: string): void {
-        ProjectApi.deleteProject(id, checkStatusHandler(_data => {
+        ProjectApi.delete(id, checkStatusHandler(_data => {
             this.listProject();
         }));
     }
 
     public componentDidMount(): void {
-        ProfileApi.get('Project', (_err, res) => {
-            this.profile = res.body;
-            if (this.profile) {
-                this.dlg.current?.setProfile(this.profile);
-            }
-        });
         this.listProject();
     }
 

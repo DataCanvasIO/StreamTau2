@@ -35,17 +35,17 @@ interface Categories {
     }
 }
 
-interface AssetCategoryProps {
+interface AssetTypesTreeProps {
     parent: AssetManagement;
 }
 
-interface AssetCategoryState {
+interface AssetTypesTreeState {
     categories: Categories;
     selectedType?: string;
 }
 
-export class AssetCategory extends React.Component<AssetCategoryProps, AssetCategoryState> {
-    public constructor(props: AssetCategoryProps) {
+export class AssetTypesTree extends React.Component<AssetTypesTreeProps, AssetTypesTreeState> {
+    public constructor(props: AssetTypesTreeProps) {
         super(props);
         this.state = {
             categories: {},

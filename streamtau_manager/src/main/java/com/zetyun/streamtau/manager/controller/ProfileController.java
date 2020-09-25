@@ -24,23 +24,29 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projects/{projectId}")
 public class ProfileController {
     @Autowired
     private ProfileService profileService;
     @Autowired
     private ProjectService projectService;
 
-    @Operation(summary = "Get the profile of the specified asset type.")
+    @Operation(summary = "Get the profile of the specified element.")
     @GetMapping("/profile/{element}")
-    public ElementProfile getProfile(
+    public ElementProfile profile(
+        @PathVariable("element") String element
+    ) {
+        return profileService.get(element);
+    }
+
+    @Operation(summary = "Get the profile of an asset type in specified project.")
+    @GetMapping("/projects/{projectId}/profile/{element}")
+    public ElementProfile profileInProject(
         @PathVariable("projectId") String projectId,
         @PathVariable("element") String element
     ) {
@@ -48,12 +54,9 @@ public class ProfileController {
         return profileService.getInProject(pid, element);
     }
 
-    @Operation(summary = "Get the asset type list.")
+    @Operation(summary = "Get the asset type list in specified project.")
     @GetMapping("/assetTypes")
-    public List<AssetTypeInfo> listAssetTypes(
-        @PathVariable("projectId") String projectId
-    ) throws IOException {
-        Long pid = projectService.mapId(projectId);
-        return profileService.listAssetTypesInProject(pid);
+    public List<AssetTypeInfo> assetTypesInProject() throws IOException {
+        return profileService.listAssetTypes();
     }
 }

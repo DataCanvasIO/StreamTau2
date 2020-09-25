@@ -24,7 +24,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public interface ProfileService {
+    ElementProfile get(@Nonnull String element);
+
     ElementProfile getInProject(Long projectId, @Nonnull String element);
 
-    List<AssetTypeInfo> listAssetTypesInProject(Long projectId) throws IOException;
+    List<AssetTypeInfo> listAssetTypes() throws IOException;
 }

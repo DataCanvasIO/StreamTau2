@@ -23,7 +23,7 @@ import { Profile, ProfileApi } from "../../api/ProfileApi";
 import { checkStatusHandler } from "../../api/Api";
 import { AssetApi, Asset } from "../../api/AssetApi";
 import { MainFrame } from "../MainFrame";
-import { AssetCategory } from "./AssetCategory";
+import { AssetTypesTree } from "./AssetTypesTree";
 import { AssetDialog } from "./AssetDialog";
 import { AssetList } from "./AssetList";
 
@@ -42,30 +42,15 @@ interface AssetManagementState {
 }
 
 export class AssetManagement extends React.Component<AssetManagementProps, AssetManagementState> {
-    private cats: React.RefObject<AssetCategory> = React.createRef();
+    private cats: React.RefObject<AssetTypesTree> = React.createRef();
     private list: React.RefObject<AssetList> = React.createRef();
     private dlg: React.RefObject<AssetDialog> = React.createRef();
 
-    private readonly assetApi: AssetApi;
-    private profiles: { [type: string]: Profile };
-
     public constructor(props: AssetManagementProps) {
         super(props);
-        this.assetApi = new AssetApi(props.projectId);
         this.state = {
             selectedType: '',
         }
-        this.profiles = {};
-    }
-
-    @autobind
-    public getSelectedType(): string {
-        return this.state.selectedType;
-    }
-
-    @autobind
-    public getProfileOfType(type: string): Profile {
-        return this.profiles[type];
     }
 
     @autobind
@@ -76,42 +61,53 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
     @autobind
     public handleChangeSelectedType(type: string): void {
         this.setState({ selectedType: type });
-        this.dlg.current?.setType(type);
         this.listAsset(type);
     }
 
     @autobind
+    private doWithProfile(type: string, fun: (p: Profile) => void): void {
+        ProfileApi.profileInProject(this.props.projectId, type, checkStatusHandler(data => {
+            fun(data);
+        }));
+    }
+
+    @autobind
     private handleCreateAsset(): void {
-        this.dlg.current?.open();
+        const type = this.state.selectedType;
+        if (type) {
+            const asset = {
+                name: '',
+                description: '',
+                type: type,
+            };
+            this.doWithProfile(type, p => this.dlg.current?.open(type, p, asset));
+        } else {
+            alert("Profile of asset is not known. Please select an Asset Type first.");
+        }
     }
 
     @autobind
     public handleUpdateAsset(id: string): void {
-        this.dlg.current?.open(id);
+        const asset = this.list.current?.state.assets[id];
+        if (asset) {
+            const type = asset.type;
+            this.doWithProfile(type, p => this.dlg.current?.open(type, p, asset, id));
+        } else {
+            alert('No asset with (id = "' + id + '") exists.');
+        }
     }
 
     @autobind
     public handleDeleteAsset(id: string): void {
-        const ans = confirm('Are you sure to delete project ' + id + '?');
+        const ans = confirm('Are you sure to delete asset ' + id + '?');
         if (ans) {
             this.deleteAsset(id);
         }
     }
 
     @autobind
-    public getCachedAsset(id: string): Asset | undefined {
-        return this.list.current?.state.assets[id];
-    }
-
-    @autobind
-    public listCategory(): void {
-        this.assetApi.listCategory(checkStatusHandler(data => {
-            for (const item of data) {
-                const type = item.type;
-                ProfileApi.get(type, (_err, res) => {
-                    this.profiles[type] = res.body;
-                });
-            }
+    public listAssetTypes(): void {
+        ProfileApi.listAssetTypes(checkStatusHandler(data => {
             this.cats.current?.setCategories(data);
             this.handleChangeSelectedType('');
         }));
@@ -123,35 +119,35 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
             this.list.current?.setAssets(data);
         });
         if (type) {
-            this.assetApi.listAssetByType(type, handler);
+            AssetApi.listByType(this.props.projectId, type, handler);
         } else {
-            this.assetApi.listAllAsset(handler);
+            AssetApi.listAll(this.props.projectId, handler);
         }
     }
 
     @autobind
     public createAsset(req: Asset): void {
-        this.assetApi.createAsset(req, checkStatusHandler(_data => {
-            this.listAsset(this.getSelectedType());
+        AssetApi.create(this.props.projectId, req, checkStatusHandler(_data => {
+            this.listAsset(this.state.selectedType);
         }));
     }
 
     @autobind
     public updateAsset(id: string, req: Asset): void {
-        this.assetApi.updateAsset(id, req, checkStatusHandler(_data => {
-            this.listAsset(this.getSelectedType());
+        AssetApi.update(this.props.projectId, id, req, checkStatusHandler(_data => {
+            this.listAsset(this.state.selectedType);
         }));
     }
 
     @autobind
     public deleteAsset(id: string): void {
-        this.assetApi.deleteAsset(id, checkStatusHandler(_data => {
-            this.listAsset(this.getSelectedType());
+        AssetApi.delete(this.props.projectId, id, checkStatusHandler(_data => {
+            this.listAsset(this.state.selectedType);
         }));
     }
 
     public componentDidMount(): void {
-        this.listCategory();
+        this.listAssetTypes();
     }
 
     public render() {
@@ -165,7 +161,7 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
                         classes={{ paper: styles['drawer-paper'] }}
                     >
                         <Toolbar></Toolbar>
-                        <AssetCategory parent={this} ref={this.cats} />
+                        <AssetTypesTree parent={this} ref={this.cats} />
                     </Drawer>
                     <Box className={styles['asset']}>
                         <Button

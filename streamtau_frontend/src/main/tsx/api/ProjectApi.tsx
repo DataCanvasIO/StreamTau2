@@ -27,28 +27,28 @@ export interface Project {
 export class ProjectApi {
     public static readonly URL_BASE = API_URL_BASE + '/projects';
 
-    public static listProject(callback: ResponseHandler): void {
+    public static listAll(callback: ResponseHandler): void {
         request
             .get(ProjectApi.URL_BASE)
             .send()
             .end(callback);
     }
 
-    public static createProject(req: Project, callback: ResponseHandler): void {
+    public static create(req: Project, callback: ResponseHandler): void {
         request
             .post(ProjectApi.URL_BASE)
             .send(req)
             .end(callback);
     }
 
-    public static updateProject(id: string, req: Project, callback: ResponseHandler): void {
+    public static update(id: string, req: Project, callback: ResponseHandler): void {
         request
             .put(ProjectApi.URL_BASE + '/' + id)
             .send(req)
             .end(callback);
     }
 
-    public static deleteProject(id: string, callback: ResponseHandler): void {
+    public static delete(id: string, callback: ResponseHandler): void {
         request
             .delete(ProjectApi.URL_BASE + '/' + id)
             .send()

@@ -66,29 +66,33 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ElementProfile getInProject(Long projectId, @Nonnull String element) {
+    public ElementProfile get(@Nonnull String element) {
         ElementProfile profile = new ElementProfile();
         if (element.equals("Project")) {
             JsonNode jsonSchema = generator.generateSchema(ProjectRequest.class);
             profile.setSchema(jsonSchema);
             return profile;
-        } else {
-            Class<?> peaClass = AssetPeaFactory.INS.classOf(element);
-            if (peaClass != null) {
-                module.clearRefs();
-                module.setProjectId(projectId);
-                JsonNode jsonSchema = generator.generateSchema(peaClass);
-                profile.setSchema(jsonSchema);
-                profile.setRefs(module.getRefs());
-                return profile;
-            }
         }
         throw new StreamTauException("10003", element);
     }
 
     @Override
-    public List<AssetTypeInfo> listAssetTypesInProject(Long projectId) {
-        module.setProjectId(projectId);
+    public ElementProfile getInProject(Long projectId, @Nonnull String element) {
+        ElementProfile profile = new ElementProfile();
+        Class<?> peaClass = AssetPeaFactory.INS.classOf(element);
+        if (peaClass != null) {
+            module.clearRefs();
+            module.setProjectId(projectId);
+            JsonNode jsonSchema = generator.generateSchema(peaClass);
+            profile.setSchema(jsonSchema);
+            profile.setRefs(module.getRefs());
+            return profile;
+        }
+        throw new StreamTauException("10003", element);
+    }
+
+    @Override
+    public List<AssetTypeInfo> listAssetTypes() {
         Map<String, Class<?>> peaClassMap = AssetPeaFactory.INS.getPeaClassMap();
         List<AssetTypeInfo> assetTypeInfoList = new ArrayList<>(peaClassMap.size());
         for (String type : peaClassMap.keySet()) {

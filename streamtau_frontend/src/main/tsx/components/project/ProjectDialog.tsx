@@ -50,37 +50,13 @@ export class ProjectDialog extends React.Component<ProjectDialogProps, ProjectDi
     }
 
     @autobind
-    public setProfile(profile: Profile): void {
+    public open(profile: Profile, data: Project, id?: string): void {
         this.setState({
+            isOpen: true,
+            id: id,
             profile: profile,
-        })
-    }
-
-    @autobind
-    public open(id?: string): void {
-        if (id) {
-            const project = this.props.parent.getCachedProject(id);
-            if (project) {
-                this.setState({
-                    isOpen: true,
-                    id: id,
-                    data: project,
-                });
-            } else {
-                alert('No project with (id = "' + id + '") exists.');
-                return;
-            }
-        } else {
-            this.setState({
-                isOpen: true,
-                id: undefined,
-                data: {
-                    name: '',
-                    description: '',
-                    type: 'CONTAINER',
-                }
-            });
-        }
+            data: data,
+        });
     }
 
     @autobind

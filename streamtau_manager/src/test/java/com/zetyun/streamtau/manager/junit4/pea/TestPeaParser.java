@@ -28,7 +28,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BasePeaParser {
+public class TestPeaParser {
     @Test
     public void testGetSubtypeClasses() {
         Map<String, Class<?>> map = PeaParser.getSubtypeClasses(AssetPea.class);

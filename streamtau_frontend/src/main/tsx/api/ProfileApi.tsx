@@ -17,16 +17,32 @@
 import * as request from "superagent";
 import { JSONSchema7 } from 'json-schema';
 
-import { ResponseHandler, API_URL_BASE } from "./Api";
+import { API_URL_BASE, ResponseHandler } from "./Api";
+import { ProjectApi } from "./ProjectApi";
 
 export interface Profile {
     schema: JSONSchema7;
+    refs?: { [key: string]: string };
 }
 
 export class ProfileApi {
-    public static get(name: string, callback: ResponseHandler): void {
+    public static profile(name: string, callback: ResponseHandler): void {
         request
             .get(API_URL_BASE + '/profile/' + name)
+            .send()
+            .end(callback);
+    }
+
+    public static profileInProject(projectId: string, name: string, callback: ResponseHandler): void {
+        request
+            .get(ProjectApi.URL_BASE + '/' + projectId + '/profile/' + name)
+            .send()
+            .end(callback);
+    }
+
+    public static listAssetTypes(callback: ResponseHandler): void {
+        request
+            .get(API_URL_BASE + '/assetTypes')
             .send()
             .end(callback);
     }

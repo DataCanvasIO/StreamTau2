@@ -15,7 +15,6 @@
  */
 
 import * as request from "superagent";
-import { autobind } from "core-decorators";
 
 import { ResponseHandler } from "./Api";
 import { ProjectApi } from "./ProjectApi";
@@ -28,57 +27,38 @@ export interface Asset {
 }
 
 export class AssetApi {
-    private readonly urlBase: string;
-
-    public constructor(projectId: string) {
-        this.urlBase = ProjectApi.URL_BASE + '/' + projectId + '/assets';
-    }
-
-    @autobind
-    public listAllAsset(callback: ResponseHandler): void {
+    public static listAll(projectId: string, callback: ResponseHandler): void {
         request
-            .get(this.urlBase)
+            .get(ProjectApi.URL_BASE + '/' + projectId + '/assets')
             .send()
             .end(callback);
     }
 
-    @autobind
-    public listAssetByType(type: string, callback: ResponseHandler): void {
+    public static listByType(projectId: string, type: string, callback: ResponseHandler): void {
         request
-            .get(this.urlBase)
+            .get(ProjectApi.URL_BASE + '/' + projectId + '/assets')
             .query({ type: type })
             .send()
             .end(callback);
     }
 
-    @autobind
-    public createAsset(req: Asset, callback: ResponseHandler): void {
+    public static create(projectId: string, req: Asset, callback: ResponseHandler): void {
         request
-            .post(this.urlBase)
+            .post(ProjectApi.URL_BASE + '/' + projectId + '/assets')
             .send(req)
             .end(callback);
     }
 
-    @autobind
-    public updateAsset(id: string, req: Asset, callback: ResponseHandler): void {
+    public static update(projectId: string, id: string, req: Asset, callback: ResponseHandler): void {
         request
-            .put(this.urlBase + '/' + id)
+            .put(ProjectApi.URL_BASE + '/' + projectId + '/assets/' + id)
             .send(req)
             .end(callback);
     }
 
-    @autobind
-    public deleteAsset(id: string, callback: ResponseHandler): void {
+    public static delete(projectId: string, id: string, callback: ResponseHandler): void {
         request
-            .delete(this.urlBase + '/' + id)
-            .send()
-            .end(callback);
-    }
-
-    @autobind
-    public listCategory(callback: ResponseHandler): void {
-        request
-            .get(this.urlBase + '/types')
+            .delete(ProjectApi.URL_BASE + '/' + projectId + '/assets/' + id)
             .send()
             .end(callback);
     }

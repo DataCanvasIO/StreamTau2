@@ -46,6 +46,7 @@ import java.util.Collections;
 import static com.zetyun.streamtau.manager.helper.WebMvcTestUtils.success;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -69,19 +70,39 @@ public class TestProfileController {
     }
 
     @Test
-    public void testGetProfile() throws Exception {
+    public void testProfile() throws Exception {
         ElementProfile profile = new ElementProfile();
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
         jsonNode.put("type", "object");
         profile.setSchema(jsonNode);
-        when(profileService.getInProject(2L, "Project")).thenReturn(profile);
+        when(profileService.get("Project")).thenReturn(profile);
         mvc.perform(
-            get("/api/projects/PRJ/profile/Project")
+            get("/api/profile/Project")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.schema.type").value("object"));
+        verifyNoInteractions(projectService);
+        verify(profileService, times(1)).get("Project");
+    }
+
+    @Test
+    public void testProfileInProject() throws Exception {
+        ElementProfile profile = new ElementProfile();
+        ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
+        jsonNode.put("type", "object");
+        profile.setSchema(jsonNode);
+        when(profileService.getInProject(2L, "CmdLine")).thenReturn(profile);
+        mvc.perform(
+            get("/api/projects/PRJ/profile/CmdLine")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.schema.type").value("object"));
+        verify(projectService, times(1)).mapId("PRJ");
+        verify(profileService, times(1)).getInProject(2L, "CmdLine");
     }
 
     @Test
@@ -89,16 +110,17 @@ public class TestProfileController {
         AssetTypeInfo assetTypeInfo = new AssetTypeInfo();
         assetTypeInfo.setType("TypeA");
         assetTypeInfo.setCategory(AssetCategory.FILE);
-        when(profileService.listAssetTypesInProject(2L)).thenReturn(Collections.singletonList(assetTypeInfo));
+        when(profileService.listAssetTypes()).thenReturn(Collections.singletonList(assetTypeInfo));
         mvc.perform(
-            get("/api/projects/PRJ/assetTypes")
+            get("/api/assetTypes")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(print())
             .andExpect((success()))
             .andExpect(jsonPath("$.data[0].type").value("TypeA"))
             .andExpect(jsonPath("$.data[0].category").value("FILE"));
-        verify(profileService, times(1)).listAssetTypesInProject(2L);
+        verifyNoInteractions(projectService);
+        verify(profileService, times(1)).listAssetTypes();
     }
 
     // Mock application

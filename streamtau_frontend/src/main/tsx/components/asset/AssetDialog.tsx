@@ -51,44 +51,14 @@ export class AssetDialog extends React.Component<AssetDialogProps, AssetDialogSt
     }
 
     @autobind
-    public setType(type: string): void {
+    public open(type: string, profile: Profile, data: Asset, id?: string): void {
         this.setState({
+            isOpen: true,
+            id: id,
             type: type,
-            profile: this.props.parent.getProfileOfType(type),
+            profile: profile,
+            data: data,
         });
-    }
-
-    @autobind
-    public open(id?: string): void {
-        if (id) {
-            const asset = this.props.parent.getCachedAsset(id);
-            if (asset) {
-                this.setState({
-                    isOpen: true,
-                    id: id,
-                    data: asset,
-                });
-                this.setType(asset.type);
-            } else {
-                alert('No asset with (id = "' + id + '") exists.');
-                return;
-            }
-        } else {
-            const type = this.state.type;
-            if (!type) {
-                alert("Profile of asset is not known. Please select an Asset Type first.");
-                return;
-            }
-            this.setState({
-                isOpen: true,
-                id: undefined,
-                data: {
-                    name: '',
-                    description: '',
-                    type: type,
-                }
-            });
-        }
     }
 
     @autobind
