@@ -30,6 +30,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import BackupIcon from "@material-ui/icons/Backup";
 
 interface Assets {
     [id: string]: Asset;
@@ -59,13 +60,18 @@ export class AssetList extends React.Component<AssetListProps, AssetListState> {
     }
 
     @autobind
-    private handleUpdate(_event: React.MouseEvent<Element>, id: string): void {
+    private handleUpdate(id: string): void {
         this.props.parent.handleUpdateAsset(id);
     }
 
     @autobind
-    private handleDelete(_event: React.MouseEvent<Element>, id: string): void {
+    private handleDelete(id: string): void {
         this.props.parent.handleDeleteAsset(id);
+    }
+
+    @autobind
+    private handlePublish(id: string): void {
+        this.props.parent.handlePublishApp(id);
     }
 
     public render() {
@@ -81,16 +87,19 @@ export class AssetList extends React.Component<AssetListProps, AssetListState> {
                     <TableCell>
                         <Button
                             startIcon={<EditIcon />}
-                            onClick={(event) => this.handleUpdate(event, id)}
+                            onClick={() => this.handleUpdate(id)}
                             disabled={id.startsWith('COMMON_')}
                         > Edit </Button>
-                    </TableCell>
-                    <TableCell>
                         <Button
                             startIcon={<DeleteIcon />}
-                            onClick={(event) => this.handleDelete(event, id)}
+                            onClick={() => this.handleDelete(id)}
                             disabled={id.startsWith('COMMON_')}
                         > Delete </Button>
+                        {asset.category == 'APPLICATION' && (
+                            <Button
+                                startIcon={<BackupIcon />}
+                                onClick={() => this.handlePublish(id)}
+                            > Publish </Button>)}
                     </TableCell>
                 </TableRow>
             );
@@ -104,7 +113,7 @@ export class AssetList extends React.Component<AssetListProps, AssetListState> {
                             <TableCell>Name</TableCell>
                             <TableCell>Description</TableCell>
                             <TableCell>Type</TableCell>
-                            <TableCell colSpan={2}>Actions</TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

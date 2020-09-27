@@ -31,6 +31,7 @@ import Button from "@material-ui/core/Button";
 import Drawer from "@material-ui/core/Drawer";
 import Box from "@material-ui/core/Box";
 import Toolbar from "@material-ui/core/Toolbar";
+import { JobApi } from "../../api/JobApi";
 
 interface AssetManagementProps {
     parent: MainFrame;
@@ -102,6 +103,21 @@ export class AssetManagement extends React.Component<AssetManagementProps, Asset
         const ans = confirm('Are you sure to delete asset ' + id + '?');
         if (ans) {
             this.deleteAsset(id);
+        }
+    }
+
+    @autobind
+    public handlePublishApp(id: string): void {
+        const app = this.list.current?.state.assets[id];
+        if (app) {
+            JobApi.create(this.props.projectId, {
+                name: app.name,
+                appId: app.id,
+                appType: app.type,
+                status: 'READY',
+            }, checkStatusHandler(_data => { }))
+        } else {
+            alert('No app with (id = "' + id + '") exists.');
         }
     }
 

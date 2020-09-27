@@ -93,8 +93,6 @@ export class ProjectList extends React.Component<ProjectListProps, ProjectListSt
                             startIcon={<EditIcon />}
                             onClick={() => this.handleUpdate(id)}
                         > Edit </Button>
-                    </TableCell>
-                    <TableCell>
                         <Button
                             startIcon={<DeleteIcon />}
                             onClick={() => this.handleDelete(id)}
@@ -112,7 +110,7 @@ export class ProjectList extends React.Component<ProjectListProps, ProjectListSt
                             <TableCell>Name</TableCell>
                             <TableCell>Description</TableCell>
                             <TableCell>Type</TableCell>
-                            <TableCell colSpan={2}>Actions</TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

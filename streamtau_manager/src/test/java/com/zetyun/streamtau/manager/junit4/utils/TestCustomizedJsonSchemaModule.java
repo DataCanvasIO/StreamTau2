@@ -43,6 +43,7 @@ public class TestCustomizedJsonSchemaModule {
             OptionPreset.PLAIN_JSON
         )
             .without(Option.SCHEMA_VERSION_INDICATOR)
+            .with(Option.ENUM_KEYWORD_FOR_SINGLE_VALUES)
             .with(new JacksonModule(
                 JacksonOption.IGNORE_TYPE_INFO_TRANSFORM,
                 JacksonOption.RESPECT_JSONPROPERTY_ORDER

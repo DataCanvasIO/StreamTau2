@@ -55,7 +55,7 @@
         <jackson.version>2.11.2</jackson.version>
 
         <!-- json schema -->
-        <jsonschema-generator.version>4.14.0</jsonschema-generator.version>
+        <jsonschema-generator.version>4.16.0</jsonschema-generator.version>
 
         <!-- antlr4 -->
         <antlr4.version>4.8-1</antlr4.version>
