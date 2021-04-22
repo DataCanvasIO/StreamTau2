@@ -42,7 +42,7 @@
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
 
         <!-- db -->
-        <mybatis.version>3.5.4</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <mybatis-spring-boot.version>2.1.1</mybatis-spring-boot.version>
         <liquibase.version>3.8.7</liquibase.version>
         <h2.version>1.4.200</h2.version>
