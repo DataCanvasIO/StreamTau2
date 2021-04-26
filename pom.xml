@@ -68,7 +68,7 @@
         <javapoet.version>1.12.1</javapoet.version>
 
         <!-- apache commons -->
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-text.version>1.8</commons-text.version>
         <configuration2.version>2.7</configuration2.version>
         <commons-lang3.version>3.10</commons-lang3.version>
