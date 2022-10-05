@@ -52,7 +52,7 @@
         <flink.version>1.11.1</flink.version>
 
         <!-- jackson -->
-        <jackson.version>2.11.2</jackson.version>
+        <jackson.version>2.12.6.1</jackson.version>
 
         <!-- json schema -->
         <jsonschema-generator.version>4.16.0</jsonschema-generator.version>
